@@ -1,0 +1,17 @@
+{% extends 'default/mainPage.html.twig' %}
+
+{% block title %}
+    {{title}}
+{% endblock %}
+
+{% block main %}
+    
+    <div class="col-md-8 col-md-offset-2">
+        <h2>Persönliche Einstellungen</h2>        
+        
+        {{ form_start(form) }}
+            {{ form_widget(form) }}
+        {{ form_end(form) }}
+    </div>
+
+{% endblock %}
