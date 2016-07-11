@@ -1,0 +1,18 @@
+{% extends 'mainPage.html.twig' %}
+
+{% block title %}
+    {{title}}
+{% endblock %}
+
+{% block main %}
+
+    <div class="row">
+		<div id="control_panel" class="col-md-2">
+			<a href="create-user" class="btn btn-default btn-block">Benutzer einfügen</a>
+		</div>
+		<div id="content" class="col-md-10">
+			<h2>Übersicht aller Benutzer</h2>
+		</div>
+	</div>
+
+{% endblock %}

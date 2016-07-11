@@ -6,9 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="sys_user") 
+ * @ORM\Table(name="patient") 
  */
-class SysUser
+class Patient
 {
     /**
      * @ORM\Column(type="integer")
@@ -16,13 +16,7 @@ class SysUser
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    /**
-    * @ORM\ManyToOne(targetEntity="UserGroup", inversedBy="sysUsers") 
-    * @ORM\JoinColumn(name="user_group_id", referencedColumnName="id") 
-    */
-    private $userGroup;
-
+    
     /**
      * @ORM\Column(type="string", length=50)
      */
@@ -43,10 +37,6 @@ class SysUser
      */
     private $phoneNumber;
 
-    /**
-     * @ORM\Column(type="string")
-     */
-    private $password;
 
 
     /**
@@ -64,7 +54,7 @@ class SysUser
      *
      * @param string $firstName
      *
-     * @return Sys_User
+     * @return Patient
      */
     public function setFirstName($firstName)
     {
@@ -88,7 +78,7 @@ class SysUser
      *
      * @param string $lastName
      *
-     * @return Sys_User
+     * @return Patient
      */
     public function setLastName($lastName)
     {
@@ -112,7 +102,7 @@ class SysUser
      *
      * @param string $email
      *
-     * @return Sys_User
+     * @return Patient
      */
     public function setEmail($email)
     {
@@ -132,35 +122,11 @@ class SysUser
     }
 
     /**
-     * Set password
-     *
-     * @param string $password
-     *
-     * @return Sys_User
-     */
-    public function setPassword($password)
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    /**
-     * Get password
-     *
-     * @return string
-     */
-    public function getPassword()
-    {
-        return $this->password;
-    }
-
-    /**
      * Set phoneNumber
      *
      * @param string $phoneNumber
      *
-     * @return SysUser
+     * @return Patient
      */
     public function setPhoneNumber($phoneNumber)
     {
@@ -177,53 +143,5 @@ class SysUser
     public function getPhoneNumber()
     {
         return $this->phoneNumber;
-    }
-
-    /**
-     * Set userGroupsId
-     *
-     * @param \AppBundle\Entity\UserGroup $userGroupsId
-     *
-     * @return SysUser
-     */
-    public function setUserGroupsId(\AppBundle\Entity\UserGroup $userGroupsId = null)
-    {
-        $this->userGroupsId = $userGroupsId;
-
-        return $this;
-    }
-
-    /**
-     * Get userGroupsId
-     *
-     * @return \AppBundle\Entity\UserGroup
-     */
-    public function getUserGroupsId()
-    {
-        return $this->userGroupsId;
-    }
-
-    /**
-     * Set userGroup
-     *
-     * @param \AppBundle\Entity\UserGroup $userGroup
-     *
-     * @return SysUser
-     */
-    public function setUserGroup(\AppBundle\Entity\UserGroup $userGroup = null)
-    {
-        $this->userGroup = $userGroup;
-
-        return $this;
-    }
-
-    /**
-     * Get userGroup
-     *
-     * @return \AppBundle\Entity\UserGroup
-     */
-    public function getUserGroup()
-    {
-        return $this->userGroup;
     }
 }

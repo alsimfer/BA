@@ -1,0 +1,41 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="patient") 
+ */
+class Patient
+{
+    /**
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    
+    /**
+     * @ORM\Column(type="string", length=50)
+     */
+    private $firstName;
+    
+    /**
+     * @ORM\Column(type="string", length=50)
+     */
+    private $lastName;
+
+    /**
+     * @ORM\Column(type="string", unique=true, length=150)
+     */
+    private $email;
+
+    /**
+     * @ORM\Column(type="string", unique=true, length=20)
+     */
+    private $phoneNumber;
+
+
+}

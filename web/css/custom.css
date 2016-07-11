@@ -17,8 +17,12 @@
     background-color: #bbb;*/
 }
 
-.table-striped tbody tr.highlight { 
-    background-color: orange; 
+.table-striped tbody tr.selected { 
+    background-color: #99ccff; 
+}
+
+a.selected {
+    background-color: #99ccff;    
 }
 
 #content { 

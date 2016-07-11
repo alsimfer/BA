@@ -1,13 +1,34 @@
 // JQuery Dialog.
-$(function() {
-    var dialog = $('.dialog').dialog({
-        autoOpen: false,
-        modal: true,
-        width: 'auto',
-        modal: true
+$(function() {    
+console.log('clicked');
+
+    var table = $('#patients_table').DataTable({});
+
+    var trClicked = function (tr) {
+        var data = table.row(tr).data();
+        console.log(data);
+    }
+    
+    $('#patients_table tbody').on( 'click', 'tr', function () {
+        trClicked(this);
+
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+            $("#edit_button").removeClass("btn-warning");
+            $("#delete_button").removeClass("btn-danger");
+        }
+        else {
+            table.$("tr.selected").removeClass("selected");
+            $(this).addClass("selected");
+            $("#edit_button").addClass("btn-warning");
+            $("#delete_button").addClass("btn-danger");
+        }
     });
-    
-    
+ 
+    $('#edit_button').click( function () {
+        table.row('.selected').remove().draw( false );
+    } );
+
 });
 
 
@@ -137,194 +158,3 @@ function trClickListener(table) {
     });
                
 }
-
-
-function showDialog(class_name, article_id) {
-    console.log(article_id);
-    
-    $.ajax({
-        type: 'post',
-        url: 'ajax.php',
-        data: {'class_name': class_name, 'article_id': article_id},
-           
-        success: function(result) {
-            var response = JSON.parse(result);                        
-                   
-            if (typeof response.messages !== 'undefined') {
-                showMessages(response.messages);    
-            } else {                
-                var dialog = $('.dialog').dialog();
-                dialog.dialog('option', 'title', 'Загрузить новую картинку.');
-                dialog.html(response);
-                dialog.dialog('open');
-                                
-            }            
-        },
-        error: function(result) {
-            alert(result);
-        }
-    });    
-    
-    
-}
-
-function ajax_request(params) {    
-    $.ajax({
-        type: 'post',
-        url: 'ajax.php',
-        data: params,
-           
-        success: function(result) {
-            var response = JSON.parse(result);
-
-            $('#message').empty();
-            if (typeof response.messages !== 'undefined') {
-                showMessages(response.messages);    
-            }
-
-            $.each(response, function(i, val) {
-                $('#' + val.id).html(val.html);
-            });          
-            
-            if (typeof response.script !== 'undefined') {
-                $('#script' ).html('<script>' + response.script + '</script>');
-            }
-                                                           
-        },
-        error: function(result) {
-            alert(result);
-        }
-    });
-}
-
-function showMessages(messages) {
-    if (typeof messages.success !== 'undefined' && messages.success.length > 0) {
-        $('#message').prepend('<div class=\'alert alert-success\' role=\'alert\'>' + messages.success + '</div>');
-    }
-    
-    if (typeof messages.info !== 'undefined' && messages.info.length > 0) {
-        $('#message').prepend('<div class=\'alert alert-info\' role=\'alert\'>' + messages.info + '</div>');
-    }
-    
-    if (typeof messages.warning !== 'undefined' && messages.warning.length > 0) {
-        $('#message').prepend('<div class=\'alert alert-warning\' role=\'alert\'>' + messages.warning + '</div>');
-    }
-    
-    if (messages.danger !== null && typeof messages.danger !== 'undefined' && messages.danger.length > 0) {
-        $('#message').prepend('<div class=\'alert alert-danger\' role=\'alert\'>' + messages.danger + '</div>');
-    }
-    
-}
-
-/**
- * Create a DataTable.
- * sClassName - class where the table data is prepared.
- * bClickable - if this table should be clickable.
- */ 
-
-$.fn.tableConstructor = function(sClassName, bClickable) {
-    var table = $(this);    
-    $.ajax({
-        type: 'post',
-        url: 'table_ajax.php',
-        data: {'class_name': sClassName},
-           
-        success: function(result) {
-            response = JSON.parse(result);
-            if (typeof response.messages !== 'undefined') {
-                showMessages(response.messages);
-                return;
-            }      
-            
-            // Add a footer
-            var footerHTML = '<tfoot><tr>';
-            for (var i = 0; i < response.aoColumns.length; i++) {
-                footerHTML += '<td></td>';
-            }
-            footerHTML += '</tr></tfoot>';
-            table.append(footerHTML);
-            
-            response.footerCallback = function ( row, data, start, end, display ) {
-                var api = this.api(), data;     
-                // Remove the formatting to get integer data for summation
-                var intVal = function ( i ) {
-                    return typeof i === 'string' ?
-                        i.replace(/[\$,]/g, '')*1 :
-                        typeof i === 'number' ?
-                            i : 0;
-                };
-   
-                // Add a sum to footer according to sClassName. 
-                $(response.abSum).each(function(index) {
-                    if (this == true) {                       
-                        total = api
-                        .column(index)
-                        .data()
-                        .reduce( function (a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0 );
-
-                        // Total over this page
-                        pageTotal = api
-                            .column(index, { page: 'current'})
-                            .data()
-                            .reduce( function (a, b) {
-                                return intVal(a) + intVal(b);
-                            }, 0 );
-   
-                        // Update footer
-                        $(api.column(index).footer()).html(
-                            pageTotal.toFixed(2) +' / '+ total.toFixed(2)
-                        );
-                    }
-                });
-            };
-            
-            // When datatable is completed. 
-            response.fnInitComplete = function(oSettings, json) {
-                // Set a table reference to DataTable object.
-                table = table.DataTable();
-                if (bClickable == true) {
-                    trClickListener(table);    
-                }
-                
-                // This should be somewhere else.
-                $(".thumbnail").click(function() {
-                    var tableRow = $(this).closest( "tr" );
-                    var rowData = table.row(tableRow).data();
-                    
-                    showDialog('ajax_dialog_UploadPicture', rowData.id);
-                });
-
-                // Add classes to headers.
-                if (typeof response.asHeaderClasses !== 'undefined') {
-                    var columnsAmount = response.aoColumns.length;
-                
-                    for (var i = 0; i < columnsAmount; i++) {
-                        var title = table.column(i).header();
-                        
-                        if (response.asHeaderClasses[i].length > 0) {
-                            var className = response.asHeaderClasses[i];
-                            $(title).addClass(className);    
-                        }                         
-                    }
-                }
-
-                                           
-            };
-            
-            return table.DataTable(response);
-            
-        },
-        error: function(result) {
-            alert(result);       
-        }
-    });
-    
-        
-    
-    
-};
-
-
-
