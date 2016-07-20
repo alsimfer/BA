@@ -19,10 +19,13 @@
             </div>
             <div id="navbar" class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="patients">Patienten</a></li>
-                    <li><a href="arrangements">Kurse</a></li>
-                    {% if user.userGroup.name == ("root" or "admin") %}
-                        <li><a href="users">Benutzer</a></li>
+                    <li><a href="/patients">Patienten</a></li>
+                    <li><a href="/arrangements">Kurse</a></li>
+                    <li><a href="/progress">Verlaufsweg</a></li>
+                    <li><a href="/med-checkups">Zwischenuntersuchungen</a></li>
+                    <li><a href="/log">Änderungsprotokoll</a></li>
+                    {% if user.userGroup.name is defined and user.userGroup.name == ("root" or "admin") %}
+                        <li><a href="/users">Benutzer</a></li>
                     {% endif %}
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
@@ -32,8 +35,8 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="user-settings">Einstellungen</a></li>
-                            <li><a href="logout">Logout</a></li>
+                            <li><a href="/user/settings">Einstellungen</a></li>
+                            <li><a href="/logout">Logout</a></li>
                         </ul>
                     </li>
                 </ul>                

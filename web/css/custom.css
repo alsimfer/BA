@@ -1,12 +1,8 @@
 @CHARSET "UTF-8";
 
-#main {
-    overflow: auto;
-    height: 100%;
-    margin-top: 70px; 
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
+/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+  padding-top: 70px;
 }
 
 #control_panel {
@@ -18,22 +14,12 @@
 }
 
 .table-striped tbody tr.selected { 
-    background-color: #99ccff; 
+    background-color: #ea9c45; 
+    color: white;
 }
 
 a.selected {
     background-color: #99ccff;    
-}
-
-#content { 
-    /*float: left;
-    display: inline-block;
-    height: 100%;
-
-    background-color: #ccc;*/    
-} 
-
-#message {
 }
 
 #extra_button {
@@ -64,9 +50,9 @@ span.success {
     color: green;
 }
 
-button {
+/*button {
     text-align: left !important;
-} 
+} */
 
 .vcenter {
     display: inline-block;

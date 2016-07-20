@@ -1,18 +1,26 @@
-{% extends 'mainPage.html.twig' %}
+{% extends 'default/objectListPage.html.twig' %}
 
-{% block title %}
-    {{title}}
-{% endblock %}
+{% block table %}
 
-{% block main %}
+	<table id="users_table" class="table table-striped table-bordered">
+		<thead>
+            <tr>
+            	<th>Id</th>
+                <th>Name</th>
+                <th>E-Mail</th>
+                <th>Tel. Nummer</th>
+                <th>Gruppe</th>
+            </tr>
+        </thead>
 
-    <div class="row">
-		<div id="control_panel" class="col-md-2">
-			<a href="create-user" class="btn btn-default btn-block">Benutzer einfügen</a>
-		</div>
-		<div id="content" class="col-md-10">
-			<h2>Übersicht aller Benutzer</h2>
-		</div>
-	</div>
-
+	    {% for u in users %}
+	        <tr>
+	        	<td>{{ u.id }}</td>
+	            <td>{{ u.firstName ~ " " ~ u.lastName }}</td>
+	            <td>{{ u.email }}</td>
+	            <td>{{ u.phoneNumber }}</td>
+	            <td>{{ u.userGroup }}</td>
+	        </tr>
+	    {% endfor %}
+    </table>
 {% endblock %}

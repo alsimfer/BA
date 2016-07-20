@@ -3,10 +3,18 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="sys_user") 
+ * @UniqueEntity(
+ *     fields={"email"}, 
+ *     groups={"registration"},
+ *     message="Diese E-Mail wird bereits verwendet"
+ * )
  */
 class SysUser
 {
@@ -25,28 +33,51 @@ class SysUser
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Assert\Length(
+     *      max = 50,
+     *      maxMessage = "Der Vorname darf nicht länger als {{ limit }} Zeichen sein."
+     * )
      */
-    private $firstName;
+    private $firstName = '';
     
     /**
      * @ORM\Column(type="string", length=50)
+     * @Assert\Length(
+     *      max = 50,
+     *      maxMessage = "Der Nachname darf nicht länger als {{ limit }} Zeichen sein."
+     * )
      */
-    private $lastName;
+    private $lastName = '';
 
     /**
      * @ORM\Column(type="string", unique=true, length=150)
+     * @Assert\Email(
+     *     message = "Der Wert '{{ value }}' ist keine gültige E-Mail.",
+     *     checkMX = true
+     * )
+     * @Assert\Length(
+     *     max = 150,
+     *     maxMessage = "Die E-Mail darf nicht länger als {{ limit }} Zeichen sein."
+     * )
+     * @Assert\NotBlank(groups={"registration"}) 
      */
-    private $email;
+    private $email = '';
 
     /**
-     * @ORM\Column(type="string", unique=true, length=20)
+     * @ORM\Column(type="string", length=20)
+     * @Assert\Length(
+     *      min = 4,
+     *      max = 15,
+     *      minMessage = "Die Nummer darf nicht kürzer als {{ limit }} Zeichen sein",
+     *      maxMessage = "Die Nummer darf nicht länger als {{ limit }} Zeichen sein",
+     * )
      */
-    private $phoneNumber;
+    private $phoneNumber = '';
 
     /**
      * @ORM\Column(type="string")
      */
-    private $password;
+    private $password = '';
 
 
     /**
@@ -68,7 +99,7 @@ class SysUser
      */
     public function setFirstName($firstName)
     {
-        $this->firstName = $firstName;
+        $this->firstName = !isset($firstName) ? '' : $firstName;
 
         return $this;
     }
@@ -92,7 +123,7 @@ class SysUser
      */
     public function setLastName($lastName)
     {
-        $this->lastName = $lastName;
+        $this->lastName = !isset($lastName) ? '' : $lastName;
 
         return $this;
     }
@@ -164,7 +195,7 @@ class SysUser
      */
     public function setPhoneNumber($phoneNumber)
     {
-        $this->phoneNumber = $phoneNumber;
+        $this->phoneNumber = !isset($phoneNumber) ? '' : $phoneNumber;
 
         return $this;
     }
@@ -179,29 +210,6 @@ class SysUser
         return $this->phoneNumber;
     }
 
-    /**
-     * Set userGroupsId
-     *
-     * @param \AppBundle\Entity\UserGroup $userGroupsId
-     *
-     * @return SysUser
-     */
-    public function setUserGroupsId(\AppBundle\Entity\UserGroup $userGroupsId = null)
-    {
-        $this->userGroupsId = $userGroupsId;
-
-        return $this;
-    }
-
-    /**
-     * Get userGroupsId
-     *
-     * @return \AppBundle\Entity\UserGroup
-     */
-    public function getUserGroupsId()
-    {
-        return $this->userGroupsId;
-    }
 
     /**
      * Set userGroup

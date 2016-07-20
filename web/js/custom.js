@@ -1,160 +1,65 @@
-// JQuery Dialog.
+// Document ready.
 $(function() {    
-console.log('clicked');
+    console.log('clicked');
 
-    var table = $('#patients_table').DataTable({});
+    var table = $('table').DataTable({
+        "language": {
+            "lengthMenu": "_MENU_ Datensätze pro Seite",
+            "zeroRecords": "Nichts gefunden",
+            "info": "Seite _PAGE_ von _PAGES_",
+            "infoEmpty": "Keine Datensätze verfügbar",
+            "infoFiltered": "(von insgesamt _MAX_ Einträge gefiltert)",
+            "search": "Suchen:",
+            "paginate": {
+                "first":      "erste",
+                "last":       "letzte",
+                "next":       "nächste",
+                "previous":   "vorherige"
+            },
+        },
+        "columnDefs": [
+            { "visible": false, "targets": 0 }
+        ]
 
-    var trClicked = function (tr) {
-        var data = table.row(tr).data();
-        console.log(data);
-    }
+    });
     
-    $('#patients_table tbody').on( 'click', 'tr', function () {
-        trClicked(this);
-
+    // Listener on any table row click.
+    $('table > tbody').on( 'click', 'tr', function () {
+        // If clicked already selected row.
         if ($(this).hasClass('selected')) {
             $(this).removeClass('selected');
+
             $("#edit_button").removeClass("btn-warning");
+            $("#edit_button").attr("href", "#");
+            $("#modal_toggle_button").removeClass("btn-danger");
+            $("#modal_toggle_button").removeAttr("data-target");
             $("#delete_button").removeClass("btn-danger");
+            $("#delete_button").removeAttr("href");
         }
         else {
             table.$("tr.selected").removeClass("selected");
             $(this).addClass("selected");
+
+            // Adjust hyperlinks on the edit and delete buttons.
+            // Need to find out on what page we are currenly on and extract object id of the current table row.
+            var currentUrl = $(location).attr('href');
+            var arr = currentUrl.split('/');    
+            var objectType = arr[arr.length - 1];
+            var objectId = table.row($(this)).data()[0];
+            var editTargetUrl = "/" + objectType + "/edit/" + objectId;
+            var deleteTargetUrl = "/" + objectType + "/delete/" + objectId;
+
             $("#edit_button").addClass("btn-warning");
-            $("#delete_button").addClass("btn-danger");
+            $("#edit_button").attr("href", editTargetUrl);
+            $("#modal_toggle_button").addClass("btn-danger");
+            $("#modal_toggle_button").attr("data-target", "#confirmDialog");
+            $("#delete_button").attr("href", deleteTargetUrl);
         }
+        
     });
  
-    $('#edit_button').click( function () {
-        table.row('.selected').remove().draw( false );
-    } );
 
 });
 
 
-// Object types are customer, payment, article, deal, shipment.
-function trClickListener(table) {
-    
-    // Find out what table we are currently browsing (customers/articles/payments...).
-    var table_id = $(table.table().node()).attr('id');
-
-    var arr = table_id.split('_');    
-    var object_type = arr[0];
-    
-    // Save the HTML of the first button.
-    var add_button = $('#extra_button :first').prop("outerHTML");    
-    
-    // When clicked.
-    $('#' + table_id).on('click', 'tr', function() {
-        // Hide form.
-        $('#extra_content').html('');
-        
-        $(this).addClass('highlight').siblings().removeClass('highlight');
-        var data = table.row(this).data();
-        var id = $(this).attr('id');
-      
-        if (object_type == 'customers') {
-            // Create edit button.
-            var params = {'class_name': 'ajax_accounting_AjaxCustomer', 'action': 'generate_form', 'id': id};
-            params.row_data = data;            
-            var request = JSON.stringify(params);
-            
-            var edit_button = '<button id=\'edit_button\' class=\'btn btn-default btn-block btn-warning text-left\' ' + 
-                    'onclick=\'ajax_request(' + request + ')\' ' + 
-                    'name=\'button\' type=\'button\'><span class=\'glyphicon glyphicon-edit\' aria-hidden=\'true\'>&nbsp</span>Изменить</button>';
-            
-            // Create delete button.
-            params = {'class_name': 'ajax_accounting_AjaxCustomer', 'action': 'delete_customer', 'id': id};
-            request = JSON.stringify(params);
-            
-            var delete_button = '<button id=\'delete_button\' class=\'btn btn-default btn-block btn-danger text-left\' ' +   
-                    'onclick=\'ajax_request(' + request + ')\' ' + 
-                    'name=\'button\' type=\'button\'><span class=\'glyphicon glyphicon-remove\' aria-hidden=\'true\'>&nbsp</span>Удалить</button>';
-            
-            // Put new buttons on the screen.
-            $('#extra_button').html(add_button + edit_button + delete_button);
-        } else if (object_type == 'articles') {
-            // Create edit button.
-            var params = {'class_name': 'ajax_accounting_AjaxArticle', 'action': 'generate_form', 'id': id};
-            params.row_data = data;            
-            var request = JSON.stringify(params);
-            
-            var edit_button = '<button id=\'edit_button\' class=\'btn btn-default btn-block btn-warning text-left\' ' + 
-                    'onclick=\'ajax_request(' + request + ')\' ' + 
-                    'name=\'button\' type=\'button\'><span class=\'glyphicon glyphicon-edit\' aria-hidden=\'true\'>&nbsp</span>Изменить</button>';
-            
-            // Create delete button.
-            params = {'class_name': 'ajax_accounting_AjaxArticle', 'action': 'delete_article', 'id': id};
-            request = JSON.stringify(params);
-            
-            var delete_button = '<button id=\'delete_button\' class=\'btn btn-default btn-block btn-danger text-left\' ' +   
-                    'onclick=\'ajax_request(' + request + ')\' ' + 
-                    'name=\'button\' type=\'button\'><span class=\'glyphicon glyphicon-remove\' aria-hidden=\'true\'>&nbsp</span>Удалить</button>';
-            
-            // Put new buttons on the screen.
-            $('#extra_button').html(add_button + edit_button + delete_button);
-        } else if (object_type == 'payments') {
-            // Create edit button.
-            var params = {'class_name': 'ajax_accounting_AjaxPayment', 'action': 'generate_form', 'id': id};
-            params.row_data = data;            
-            var request = JSON.stringify(params);
-            
-            var edit_button = '<button id=\'edit_button\' class=\'btn btn-default btn-block btn-warning text-left\' ' + 
-                    'onclick=\'ajax_request(' + request + ')\' ' + 
-                    'name=\'button\' type=\'button\'><span class=\'glyphicon glyphicon-edit\' aria-hidden=\'true\'>&nbsp</span>Изменить</button>';
-            
-            // Create delete button.
-            params = {'class_name': 'ajax_accounting_AjaxPayment', 'action': 'delete_payment', 'id': id};
-            request = JSON.stringify(params);
-            
-            var delete_button = '<button id=\'delete_button\' class=\'btn btn-default btn-block btn-danger text-left\' ' +   
-                    'onclick=\'ajax_request(' + request + ')\' ' + 
-                    'name=\'button\' type=\'button\'><span class=\'glyphicon glyphicon-remove\' aria-hidden=\'true\'>&nbsp</span>Удалить</button>';
-            
-            // Put new buttons on the screen.
-            $('#extra_button').html(edit_button);
-        } else if (object_type == 'shipments') {
-            // Create edit button.
-            var params = {'class_name': 'ajax_accounting_AjaxShipment', 'action': 'generate_form', 'id': id};
-            params.row_data = data;            
-            var request = JSON.stringify(params);
-            
-            var edit_button = '<button id=\'edit_button\' class=\'btn btn-default btn-block btn-warning text-left\' ' + 
-                    'onclick=\'ajax_request(' + request + ')\' ' + 
-                    'name=\'button\' type=\'button\'><span class=\'glyphicon glyphicon-edit\' aria-hidden=\'true\'>&nbsp</span>Изменить</button>';
-            
-            // Create delete button.
-            params = {'class_name': 'ajax_accounting_AjaxShipment', 'action': 'delete_shipment', 'id': id};
-            request = JSON.stringify(params);
-            
-            var delete_button = '<button id=\'delete_button\' class=\'btn btn-default btn-block btn-danger text-left\' ' +   
-                    'onclick=\'ajax_request(' + request + ')\' ' + 
-                    'name=\'button\' type=\'button\'><span class=\'glyphicon glyphicon-remove\' aria-hidden=\'true\'>&nbsp</span>Удалить</button>';
-            
-            // Put new buttons on the screen.
-            $('#extra_button').html(edit_button);
-        } else if (object_type == 'deals') {
-            // Create edit button.
-            var params = {'class_name': 'ajax_accounting_AjaxDeal', 'action': 'generate_form', 'id': id};
-            params.row_data = data;            
-            var request = JSON.stringify(params);
-            
-            var edit_button = '<button id=\'edit_button\' class=\'btn btn-default btn-block btn-warning text-left\' ' + 
-                    'onclick=\'ajax_request(' + request + ')\' ' + 
-                    'name=\'button\' type=\'button\'><span class=\'glyphicon glyphicon-edit\' aria-hidden=\'true\'>&nbsp</span>Изменить</button>';
-
-            // Create delete button.
-            params = {'class_name': 'ajax_accounting_AjaxDeal', 'action': 'delete_deal', 'id': id};
-            request = JSON.stringify(params);
-            
-            var delete_button = '<button id=\'delete_button\' class=\'btn btn-default btn-block btn-danger text-left\' ' +   
-                    'onclick=\'ajax_request(' + request + ')\' ' + 
-                    'name=\'button\' type=\'button\'><span class=\'glyphicon glyphicon-remove\' aria-hidden=\'true\'>&nbsp</span>Удалить</button>';
-            
-            // Put new buttons on the screen.
-            $('#extra_button').html(add_button + edit_button + delete_button);
-        }
-                
-    });
                
-}

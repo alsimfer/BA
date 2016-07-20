@@ -3,6 +3,8 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -19,21 +21,41 @@ class Arrangement
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(
+     *      max = 255,
+     *      maxMessage = "Der Name darf nicht länger als {{ limit }} Zeichen sein."
+     * )
      */
-    private $name;
+    private $name = '';
     
     /**
-     * @ORM\Column(type="string", length=1024)
+     * @ORM\Column(type="string", length=1023)
+     * @Assert\Length(
+     *      max = 1023,
+     *      maxMessage = "Die Beschreibung darf nicht länger als {{ limit }} Zeichen sein."
+     * )
      */
-    private $description;
+    private $description = '';
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\DateTime()
      */
     private $dateTime;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\Type(
+     *     type="integer",
+     *     message="Der Wert {{ value }} ist keine gültige {{ type }}."
+     * )
+     * @Assert\NotBlank(
+     *     message = "Muss mehr als 0 sein."
+     * )
+     * @Assert\GreaterThanOrEqual(
+     *     value = 1,
+     *     message = "Muss mehr als 0 sein."
+     * )
      */
     private $maxParticipants;
     
@@ -57,7 +79,7 @@ class Arrangement
      */
     public function setName($name)
     {
-        $this->name = $name;
+        $this->name = !isset($name) ? '' : $name;
 
         return $this;
     }
@@ -81,7 +103,7 @@ class Arrangement
      */
     public function setDescription($description)
     {
-        $this->description = $description;
+        $this->description = !isset($description) ? '' : $description;
 
         return $this;
     }

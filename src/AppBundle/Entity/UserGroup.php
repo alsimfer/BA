@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -20,8 +21,21 @@ class UserGroup
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Assert\Length(
+     *      max = 50,
+     *      maxMessage = "Der Name darf nicht länger als {{ limit }} Zeichen sein."
+     * )     
      */
-    private $name;
+    private $name = '';
+
+    /**
+     * @ORM\Column(type="string", length=500)
+     * @Assert\Length(
+     *      max = 500,
+     *      maxMessage = "Der Nachname darf nicht länger als {{ limit }} Zeichen sein."
+     * )
+     */
+    private $description = '';
 
 	/**
 	* @ORM\OneToMany(targetEntity="SysUser", mappedBy="userGroup") 
@@ -30,7 +44,7 @@ class UserGroup
 
 	public function __construct() 
 	{
-		$this->products = new ArrayCollection();
+		$this->sysUsers = new ArrayCollection();
 	}
 
     /**
@@ -109,5 +123,34 @@ class UserGroup
     public function getSysUsers()
     {
         return $this->sysUsers;
+    }
+
+    public function __toString() 
+    {
+        return $this->getName();
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     *
+     * @return UserGroup
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 }

@@ -1,13 +1,9 @@
 {% extends 'mainPage.html.twig' %}
 
-{% block title %}
-    {{title}}
-{% endblock %}
-
 {% block main %}
     
     <div class="col-md-8 col-md-offset-2">
-        <h2>Neuen Kurs einfügen</h2>        
+        <h2 class="page-header">{{ pageHeader }}</h2>        
         
         {{ form_start(form) }}
             {{ form_widget(form) }}

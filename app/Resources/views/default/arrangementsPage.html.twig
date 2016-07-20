@@ -1,18 +1,27 @@
-{% extends 'mainPage.html.twig' %}
+{% extends 'default/objectListPage.html.twig' %}
 
-{% block title %}
-    {{title}}
-{% endblock %}
+{% block table %}
 
-{% block main %}
-	
-    <div class="row">
-		<div id="control_panel" class="col-md-2">
-			<a href="create-arrangement" class="btn btn-default btn-block">Kurs einfügen</a>
-		</div>
-		<div id="content" class="col-md-10">
-			<h2>Übersicht aller Kursen</h2>
-		</div>
-	</div>
+	<table id="arrangements_table" class="table table-striped table-bordered">
+		<thead>
+            <tr>
+            	<th>Id</th>
+                <th>Name</th>
+                <th>Beschreibung</th>
+                <th>Datum</th>
+                <th>Max. Teilnehmer</th>
+            </tr>
+        </thead>
 
+	    {% for a in arrangements %}
+	        <tr>
+	        	<td>{{ a.id }}</td>
+	            <td>{{ a.name }}</td>
+	            <td>{{ a.description }}</td>
+	            <td>{{ a.dateTime | date('d.m.Y') ~ ", um " ~ a.dateTime | date('H:i') }}</td>
+	            <td>{{ a.maxParticipants }}</td>
+	        </tr>
+	    {% endfor %}
+    </table>
+	    
 {% endblock %}
