@@ -1,0 +1,31 @@
+{% extends 'mainPage.html.twig' %}
+
+{% block main %}
+    
+    <div class="col-md-8 col-md-offset-2">
+	    <ul class="nav nav-tabs">
+		    <li class="active"><a data-toggle="tab" href="#menu1">Stammdaten</a></li>
+		    <li><a data-toggle="tab" href="#menu2">Patient</a></li>
+		    
+		</ul>
+
+		<div class="tab-content">
+		    <div id="menu1" class="tab-pane fade in active">
+		    	<p style="margin-top: 15px"></p>
+	      		{{ include('medCheckup/medCheckupGeneral.html.twig') }}
+		    					       
+		    </div>
+
+		    <div id="menu2" class="tab-pane fade col_md_2">
+		    	<p style="margin-top: 15px"></p>
+		      	{{ include('patient/patientGeneral.html.twig', {patient: medCheckup.patient}) }}
+				{{ dump(app.request.attributes.get('_route')) }}
+				{{ dump(app.request.uri) }}
+		    </div>
+		    
+
+		</div>
+        
+    </div>
+
+{% endblock %}

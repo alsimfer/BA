@@ -1,0 +1,68 @@
+{% extends 'mainPage.html.twig' %}
+
+{% block main %}
+    
+    <div class="col-md-8 col-md-offset-2">
+        <h2 class="page-header">Patient bearbeiten</h2>        
+        
+        {{ form_start(form) }}
+		{{ form_errors(form) }}
+			
+			<div class="form-group">
+				{{ form_label(form.firstName) }}
+				{{ form_errors(form.firstName) }}
+				{{ form_widget(form.firstName) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(form.lastName) }}
+				{{ form_errors(form.lastName) }}
+				{{ form_widget(form.lastName) }}
+			</div>
+			<div id="dateTimePickerContainer" class="form-group">
+				{{ form_label(form.birthDate) }}
+				{{ form_errors(form.birthDate) }}
+
+                <div class="input-group date">
+        			{{ form_widget(form.birthDate) }}
+        			<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+				</div>
+            
+			</div>
+			<div class="form-group">
+				{{ form_label(form.sex) }}
+				{{ form_errors(form.sex) }}
+				{{ form_widget(form.sex) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(form.email) }}
+				{{ form_errors(form.email) }}
+				{{ form_widget(form.email) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(form.phoneNumber) }}
+				{{ form_errors(form.phoneNumber) }}
+				{{ form_widget(form.phoneNumber) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(form.address) }}
+				{{ form_errors(form.address) }}
+				{{ form_widget(form.address) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(form.hospital) }}
+				{{ form_errors(form.hospital) }}
+				{{ form_widget(form.hospital) }}
+			</div>    
+
+			<div class="form-group">
+				{{ form_label(form.caretaker) }}
+				{{ form_errors(form.caretaker) }}
+				{{ form_widget(form.caretaker) }}
+			</div>    
+
+
+			
+		{{ form_end(form) }}
+	</div>
+
+{% endblock %}

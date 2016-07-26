@@ -10,7 +10,11 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity
  * @ORM\Table(name="sys_user") 
- * @UniqueEntity("email")
+ * @UniqueEntity(
+ *     fields={"email"}, 
+ *     groups={"registration"},
+ *     message="Diese E-Mail wird bereits verwendet"
+ * )
  */
 class SysUser
 {
@@ -26,6 +30,11 @@ class SysUser
     * @ORM\JoinColumn(name="user_group_id", referencedColumnName="id") 
     */
     private $userGroup;
+
+    /**
+    * @ORM\OneToMany(targetEntity="MedCheckup", mappedBy="sysUser") 
+    */
+    private $medCheckups;
 
     /**
      * @ORM\Column(type="string", length=50)
@@ -48,16 +57,14 @@ class SysUser
     /**
      * @ORM\Column(type="string", unique=true, length=150)
      * @Assert\Email(
-     *     message = "The email '{{ value }}' is not a valid email.",
+     *     message = "Der Wert '{{ value }}' ist keine gültige E-Mail.",
      *     checkMX = true
-     * )
-     * @Assert\Email(
-     *     message = "Diese Email-Adresse wird bereits verwendet."
      * )
      * @Assert\Length(
      *     max = 150,
-     *     maxMessage = "Die Email darf nicht länger als {{ limit }} Zeichen sein."
+     *     maxMessage = "Die E-Mail darf nicht länger als {{ limit }} Zeichen sein."
      * )
+     * @Assert\NotBlank(groups={"registration"}) 
      */
     private $email = '';
 
@@ -97,7 +104,7 @@ class SysUser
      */
     public function setFirstName($firstName)
     {
-        $this->firstName = $firstName;
+        $this->firstName = !isset($firstName) ? '' : $firstName;
 
         return $this;
     }
@@ -121,7 +128,7 @@ class SysUser
      */
     public function setLastName($lastName)
     {
-        $this->lastName = $lastName;
+        $this->lastName = !isset($lastName) ? '' : $lastName;
 
         return $this;
     }
@@ -193,7 +200,7 @@ class SysUser
      */
     public function setPhoneNumber($phoneNumber)
     {
-        $this->phoneNumber = $phoneNumber;
+        $this->phoneNumber = !isset($phoneNumber) ? '' : $phoneNumber;
 
         return $this;
     }
@@ -231,5 +238,46 @@ class SysUser
     public function getUserGroup()
     {
         return $this->userGroup;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->medCheckups = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add medCheckup
+     *
+     * @param \AppBundle\Entity\MedCheckup $medCheckup
+     *
+     * @return SysUser
+     */
+    public function addMedCheckup(\AppBundle\Entity\MedCheckup $medCheckup)
+    {
+        $this->medCheckups[] = $medCheckup;
+
+        return $this;
+    }
+
+    /**
+     * Remove medCheckup
+     *
+     * @param \AppBundle\Entity\MedCheckup $medCheckup
+     */
+    public function removeMedCheckup(\AppBundle\Entity\MedCheckup $medCheckup)
+    {
+        $this->medCheckups->removeElement($medCheckup);
+    }
+
+    /**
+     * Get medCheckups
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMedCheckups()
+    {
+        return $this->medCheckups;
     }
 }

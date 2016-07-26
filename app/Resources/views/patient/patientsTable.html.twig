@@ -1,0 +1,44 @@
+<!-- Patients Table -->
+<table id="patients_table" class="table table_main table-striped table-hover">
+	<thead>
+        <tr>
+        	<th>Id</th>
+        	<th>Name</th>
+        	<th>Geburtsdatum</th>
+        	<th>Geschlecht</th>
+        	<th>E-Mail</th>
+        	<th>Tel. Nummer</th>
+        	<th>Krankenhaus</th>
+        	<th>Caretaker</th>
+        </tr>
+    </thead>
+
+    {% for p in patients %}
+        <tr>
+        	<td>{{ p.id }}</td>
+        	<td>{{ p.firstName ~ " " ~ p.lastName }}</td>
+
+        	{# Check if the date is not '0000-00-00' #}
+        	{% if p.birthDate is defined and p.birthDate | date('d.m.Y') != "30.11.-0001" %}
+        		<td>{{ p.birthDate | date('d.m.Y') }}</td>
+    		{% else %}
+    			<td></td>
+    		{% endif %}
+        	
+        	<td>{{ p.sex }}</td>
+        	
+        	<td>{{ p.email }}</td>
+        	<td>{{ p.phoneNumber }}</td>
+        	{% if p.hospital.name is defined %}
+        		<td>{{ p.hospital.name }}</td>
+    		{% else %}
+    			<td></td>
+    		{% endif %}
+        	{% if p.caretaker.lastName is defined %}
+        		<td>{{ p.caretaker.lastName }}</td>
+    		{% else %}
+				<td></td>    	
+    		{% endif %}
+        </tr>
+    {% endfor %}
+</table>

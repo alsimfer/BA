@@ -32,6 +32,11 @@ class SysUser
     private $userGroup;
 
     /**
+    * @ORM\OneToMany(targetEntity="MedCheckup", mappedBy="sysUser") 
+    */
+    private $medCheckups;
+
+    /**
      * @ORM\Column(type="string", length=50)
      * @Assert\Length(
      *      max = 50,
@@ -233,5 +238,46 @@ class SysUser
     public function getUserGroup()
     {
         return $this->userGroup;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->medCheckups = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add medCheckup
+     *
+     * @param \AppBundle\Entity\MedCheckup $medCheckup
+     *
+     * @return SysUser
+     */
+    public function addMedCheckup(\AppBundle\Entity\MedCheckup $medCheckup)
+    {
+        $this->medCheckups[] = $medCheckup;
+
+        return $this;
+    }
+
+    /**
+     * Remove medCheckup
+     *
+     * @param \AppBundle\Entity\MedCheckup $medCheckup
+     */
+    public function removeMedCheckup(\AppBundle\Entity\MedCheckup $medCheckup)
+    {
+        $this->medCheckups->removeElement($medCheckup);
+    }
+
+    /**
+     * Get medCheckups
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMedCheckups()
+    {
+        return $this->medCheckups;
     }
 }

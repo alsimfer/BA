@@ -26,7 +26,7 @@ class Patient
     private $id;
     
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=50, nullable=true)
      * @Assert\Length(
      *      max = 50,
      *      maxMessage = "Der Vorname darf nicht länger als {{ limit }} Zeichen sein."
@@ -35,7 +35,7 @@ class Patient
     private $firstName = '';
     
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=50, nullable=true)
      * @Assert\Length(
      *      max = 50,
      *      maxMessage = "Der Nachname darf nicht länger als {{ limit }} Zeichen sein."
@@ -44,21 +44,49 @@ class Patient
     private $lastName = '';
 
     /**
-     * @ORM\Column(type="string", unique=true, length=150)
+     * @ORM\Column(type="date", length=50, nullable=true)
+     * @Assert\Date()
+     */
+    private $birthDate;
+
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)     
+     */
+    private $sex = '';
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Hospital", inversedBy="patients") 
+     * @ORM\JoinColumn(name="hospital_id", referencedColumnName="id") 
+     */
+    private $hospital;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Caretaker", inversedBy="patients") 
+     * @ORM\JoinColumn(name="caretaker_id", referencedColumnName="id") 
+     */
+    private $caretaker;
+
+    /**
+     * @ORM\Column(type="string", length=500, nullable=true)     
+     */
+    private $address = '';
+
+
+    /**
+     * @ORM\Column(type="string", unique=true, length=150, nullable=true)
      * @Assert\Email(
-     *     message = "Der Wert '{{ value }}' ist keine gültige E-Mail.",
+     *     message = "Dieser Wert '{{ value }}' ist keine gültige E-Mail.",
      *     checkMX = true
      * )
      * @Assert\Length(
      *     max = 150,
      *     maxMessage = "Die E-Mail darf nicht länger als {{ limit }} Zeichen sein."
-     * )
-     * @Assert\NotBlank(groups={"registration"})    
+     * )    
      */
-    private $email = '';
+    private $email;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=20, nullable=true)
      * @Assert\Length(
      *      min = 4,
      *      max = 20,
@@ -73,9 +101,15 @@ class Patient
     */
     private $medCheckups;
 
+    /**
+    * @ORM\OneToMany(targetEntity="PatientArrangementReference", mappedBy="patient") 
+    */
+    private $patArrRefs;
+
     public function __construct() 
     {
         $this->medCheckups = new ArrayCollection();
+        $this->patArrRefs = new ArrayCollection();
     }
 
 
@@ -98,7 +132,7 @@ class Patient
      */
     public function setFirstName($firstName)
     {
-        $this->firstName = !isset($firstName) ? '' : $firstName;
+        $this->firstName = $firstName;
 
         return $this;
     }
@@ -122,7 +156,7 @@ class Patient
      */
     public function setLastName($lastName)
     {
-        $this->lastName = !isset($lastName) ? '' : $lastName;
+        $this->lastName = $lastName;
 
         return $this;
     }
@@ -170,7 +204,7 @@ class Patient
      */
     public function setPhoneNumber($phoneNumber)
     {
-        $this->phoneNumber = !isset($phoneNumber) ? '' : $phoneNumber;
+        $this->phoneNumber = $phoneNumber;
 
         return $this;
     }
@@ -217,5 +251,193 @@ class Patient
     public function getMedCheckups()
     {
         return $this->medCheckups;
+    }
+
+    /**
+     * Add arrangement
+     *
+     * @param \AppBundle\Entity\PatientArrangementReference $arrangement
+     *
+     * @return Patient
+     */
+    public function addArrangement(\AppBundle\Entity\PatientArrangementReference $arrangement)
+    {
+        $this->arrangements[] = $arrangement;
+
+        return $this;
+    }
+
+    /**
+     * Remove arrangement
+     *
+     * @param \AppBundle\Entity\PatientArrangementReference $arrangement
+     */
+    public function removeArrangement(\AppBundle\Entity\PatientArrangementReference $arrangement)
+    {
+        $this->arrangements->removeElement($arrangement);
+    }
+
+    /**
+     * Get arrangements
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getArrangements()
+    {
+        return $this->arrangements;
+    }
+
+    /**
+     * Set birthDate
+     *
+     * @param \DateTime $birthDate
+     *
+     * @return Patient
+     */
+    public function setBirthDate($birthDate)
+    {
+        $this->birthDate = $birthDate;
+
+        return $this;
+    }
+
+    /**
+     * Get birthDate
+     *
+     * @return \DateTime
+     */
+    public function getBirthDate()
+    {
+        return $this->birthDate;
+    }
+
+    /**
+     * Set sex
+     *
+     * @param string $sex
+     *
+     * @return Patient
+     */
+    public function setSex($sex)
+    {
+        $this->sex = $sex;
+
+        return $this;
+    }
+
+    /**
+     * Get sex
+     *
+     * @return string
+     */
+    public function getSex()
+    {
+        return $this->sex;
+    }
+
+    /**
+     * Set address
+     *
+     * @param string $address
+     *
+     * @return Patient
+     */
+    public function setAddress($address)
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    /**
+     * Get address
+     *
+     * @return string
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+    /**
+     * Set hospital
+     *
+     * @param \AppBundle\Entity\Hospital $hospital
+     *
+     * @return Patient
+     */
+    public function setHospital(\AppBundle\Entity\Hospital $hospital = null)
+    {
+        $this->hospital = $hospital;
+
+        return $this;
+    }
+
+    /**
+     * Get hospital
+     *
+     * @return \AppBundle\Entity\Hospital
+     */
+    public function getHospital()
+    {
+        return $this->hospital;
+    }
+
+    /**
+     * Set caretaker
+     *
+     * @param \AppBundle\Entity\Caretaker $caretaker
+     *
+     * @return Patient
+     */
+    public function setCaretaker(\AppBundle\Entity\Caretaker $caretaker = null)
+    {
+        $this->caretaker = $caretaker;
+
+        return $this;
+    }
+
+    /**
+     * Get caretaker
+     *
+     * @return \AppBundle\Entity\Caretaker
+     */
+    public function getCaretaker()
+    {
+        return $this->caretaker;
+    }
+
+    /**
+     * Add patArrRef
+     *
+     * @param \AppBundle\Entity\PatientArrangementReference $patArrRef
+     *
+     * @return Patient
+     */
+    public function addPatArrRef(\AppBundle\Entity\PatientArrangementReference $patArrRef)
+    {
+        $this->patArrRefs[] = $patArrRef;
+
+        return $this;
+    }
+
+    /**
+     * Remove patArrRef
+     *
+     * @param \AppBundle\Entity\PatientArrangementReference $patArrRef
+     */
+    public function removePatArrRef(\AppBundle\Entity\PatientArrangementReference $patArrRef)
+    {
+        $this->patArrRefs->removeElement($patArrRef);
+    }
+
+    /**
+     * Get patArrRefs
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPatArrRefs()
+    {
+        return $this->patArrRefs;
     }
 }

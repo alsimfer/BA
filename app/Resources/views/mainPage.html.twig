@@ -15,17 +15,17 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand">AOK DB</a>
             </div>
             <div id="navbar" class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="/patients">Patienten</a></li>
-                    <li><a href="/arrangements">Kurse</a></li>
-                    <li><a href="/progress">Verlaufsweg</a></li>
-                    <li><a href="/med-checkups">Zwischenuntersuchungen</a></li>
-                    <li><a href="/log">Änderungsprotokoll</a></li>
+                    <li id="patients_li"><a href="{{ path('patientsPage') }}">Patienten</a></li>
+                    <li id="med_checkups_li"><a href="{{ path('medCheckupsPage') }}">Untersuchungen</a></li>
+                    <li id="arrangements_li"><a href="{{ path('arrangementsPage') }}">Kurse</a></li>
+                    <li><a href="">Kursverlauf</a></li>
+                    
                     {% if user.userGroup.name is defined and user.userGroup.name == ("root" or "admin") %}
-                        <li><a href="/users">Benutzer</a></li>
+                        <li><a href="">Änderungsprotokoll</a></li>
+                        <li><a href="{{ path('usersPage') }}">Benutzer</a></li>
                     {% endif %}
                 </ul>
                 <ul class="nav navbar-nav navbar-right">

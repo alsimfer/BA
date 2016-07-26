@@ -27,8 +27,16 @@ class MedCheckup
     /**
     * @ORM\ManyToOne(targetEntity="Patient", inversedBy="medCheckups") 
     * @ORM\JoinColumn(name="patient_id", referencedColumnName="id") 
+    * @Assert\NotBlank()
     */
     private $patient;
+
+    /**
+    * @ORM\ManyToOne(targetEntity="SysUser", inversedBy="medCheckups") 
+    * @ORM\JoinColumn(name="sys_user_id", referencedColumnName="id") 
+    * @Assert\NotBlank()
+    */
+    private $sysUser;
 
     /**
      * @ORM\Column(type="string", length=50)
@@ -36,19 +44,42 @@ class MedCheckup
      *      max = 50,
      *      maxMessage = "Der Name darf nicht länger als {{ limit }} Zeichen sein."
      * )
+     * @Assert\NotBlank()
      */
-    private $name = '';
+    private $type = '';
 
     /**
      * @ORM\Column(type="datetime")
      * @Assert\DateTime()
+     * @Assert\NotBlank()
      */
-    private $dateTime;
+    private $dateAndTime;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private $results;
+    private $height = '';
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $weight = '';    
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $waist = '';   
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $hips = '';   
+
+    /**
+     * @ORM\Column(type="string", length=500, nullable=true)
+     */
+    private $source = '';
+
 
     /**
      * Get id
@@ -61,75 +92,124 @@ class MedCheckup
     }
 
     /**
-     * Set name
+     * Set type
      *
-     * @param string $name
+     * @param string $type
      *
      * @return MedCheckup
      */
-    public function setName($name)
+    public function setType($type)
     {
-        $this->name = $name;
+        $this->type = $type;
 
         return $this;
     }
 
     /**
-     * Get name
+     * Get type
      *
      * @return string
      */
-    public function getName()
+    public function getType()
     {
-        return $this->name;
+        return $this->type;
     }
+    
 
     /**
-     * Set dateTime
+     * Set height
      *
-     * @param \DateTime $dateTime
+     * @param integer $height
      *
      * @return MedCheckup
      */
-    public function setDateTime($dateTime)
+    public function setHeight($height)
     {
-        $this->dateTime = $dateTime;
+        $this->height = $height;
 
         return $this;
     }
 
     /**
-     * Get dateTime
+     * Get height
      *
-     * @return \DateTime
+     * @return integer
      */
-    public function getDateTime()
+    public function getHeight()
     {
-        return $this->dateTime;
+        return $this->height;
     }
 
     /**
-     * Set results
+     * Set weight
      *
-     * @param string $results
+     * @param float $weight
      *
      * @return MedCheckup
      */
-    public function setResults($results)
+    public function setWeight($weight)
     {
-        $this->results = $results;
+        $this->weight = $weight;
 
         return $this;
     }
 
     /**
-     * Get results
+     * Get weight
      *
-     * @return string
+     * @return float
      */
-    public function getResults()
+    public function getWeight()
     {
-        return $this->results;
+        return $this->weight;
+    }
+
+    /**
+     * Set waist
+     *
+     * @param integer $waist
+     *
+     * @return MedCheckup
+     */
+    public function setWaist($waist)
+    {
+        $this->waist = $waist;
+
+        return $this;
+    }
+
+    /**
+     * Get waist
+     *
+     * @return integer
+     */
+    public function getWaist()
+    {
+        return $this->waist;
+    }
+
+    /**
+     * Set hips
+     *
+     * @param integer $hips
+     *
+     * @return MedCheckup
+     */
+    public function setHips($hips)
+    {
+        $this->hips = $hips;
+
+        return $this;
+    }
+
+    /**
+     * Get hips
+     *
+     * @return integer
+     */
+    public function getHips()
+    {
+        return $this->hips;
     }
 
     /**
@@ -154,5 +234,77 @@ class MedCheckup
     public function getPatient()
     {
         return $this->patient;
+    }
+
+    /**
+     * Set sysUser
+     *
+     * @param \AppBundle\Entity\SysUser $sysUser
+     *
+     * @return MedCheckup
+     */
+    public function setSysUser(\AppBundle\Entity\SysUser $sysUser = null)
+    {
+        $this->sysUser = $sysUser;
+
+        return $this;
+    }
+
+    /**
+     * Get sysUser
+     *
+     * @return \AppBundle\Entity\SysUser
+     */
+    public function getSysUser()
+    {
+        return $this->sysUser;
+    }
+
+    /**
+     * Set source
+     *
+     * @param string $source
+     *
+     * @return MedCheckup
+     */
+    public function setSource($source)
+    {
+        $this->source = $source;
+
+        return $this;
+    }
+
+    /**
+     * Get source
+     *
+     * @return string
+     */
+    public function getSource()
+    {
+        return $this->source;
+    }
+
+    /**
+     * Set dateAndTime
+     *
+     * @param \DateTime $dateAndTime
+     *
+     * @return MedCheckup
+     */
+    public function setDateAndTime($dateAndTime)
+    {
+        $this->dateAndTime = $dateAndTime;
+
+        return $this;
+    }
+
+    /**
+     * Get dateAndTime
+     *
+     * @return \DateTime
+     */
+    public function getDateAndTime()
+    {
+        return $this->dateAndTime;
     }
 }

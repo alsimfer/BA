@@ -49,9 +49,26 @@ class Arrangement
      *     type="integer",
      *     message="Der Wert {{ value }} ist keine gültige {{ type }}."
      * )
+     * @Assert\NotBlank(
+     *     message = "Muss mehr als 0 sein."
+     * )
+     * @Assert\GreaterThanOrEqual(
+     *     value = 1,
+     *     message = "Muss mehr als 0 sein."
+     * )
      */
-    private $maxParticipants = 5;
+    private $maxParticipants;
+
+    /**
+    * @ORM\OneToMany(targetEntity="PatientArrangementReference", mappedBy="arrangement") 
+    */
+    private $patArrRefs;
     
+    public function __construct() 
+    {
+        $this->patients = new ArrayCollection();
+    }
+
 
     /**
      * Get id
@@ -72,7 +89,7 @@ class Arrangement
      */
     public function setName($name)
     {
-        $this->name = $name;
+        $this->name = !isset($name) ? '' : $name;
 
         return $this;
     }
@@ -96,7 +113,7 @@ class Arrangement
      */
     public function setDescription($description)
     {
-        $this->description = $description;
+        $this->description = !isset($description) ? '' : $description;
 
         return $this;
     }
@@ -157,5 +174,39 @@ class Arrangement
     public function getMaxParticipants()
     {
         return $this->maxParticipants;
+    }
+
+    /**
+     * Add patient
+     *
+     * @param \AppBundle\Entity\PatientArrangementReference $patient
+     *
+     * @return Arrangement
+     */
+    public function addPatient(\AppBundle\Entity\PatientArrangementReference $patient)
+    {
+        $this->patients[] = $patient;
+
+        return $this;
+    }
+
+    /**
+     * Remove patient
+     *
+     * @param \AppBundle\Entity\PatientArrangementReference $patient
+     */
+    public function removePatient(\AppBundle\Entity\PatientArrangementReference $patient)
+    {
+        $this->patients->removeElement($patient);
+    }
+
+    /**
+     * Get patients
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPatients()
+    {
+        return $this->patients;
     }
 }

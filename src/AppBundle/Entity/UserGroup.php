@@ -32,7 +32,7 @@ class UserGroup
      * @ORM\Column(type="string", length=500)
      * @Assert\Length(
      *      max = 500,
-     *      maxMessage = "Der Nachname darf nicht länger als {{ limit }} Zeichen sein."
+     *      maxMessage = "Die Beschreibung darf nicht länger als {{ limit }} Zeichen sein."
      * )
      */
     private $description = '';

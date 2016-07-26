@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -19,17 +20,31 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use AppBundle\Entity\SysUser;
 use AppBundle\Entity\Patient;
 use AppBundle\Entity\Arrangement;
+use AppBundle\Entity\MedCheckup;
+use AppBundle\Entity\PatientArrangementReference;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 class DefaultController extends Controller
 {
     /**
-     * @Route("/", name="homePage")
+     * @Route("/", name="indexPage")
      */
     public function indexAction(Request $request)
     {
-        return $this->redirectToRoute('patientsPage');        
+        $sysUser = $this->checkLoggedUser($request);
+        
+        if (!$sysUser) {
+            return $this->redirectToRoute('loginPage');
+        }
+
+        return $this->render('default/indexPage.html.twig', 
+            array(
+                'title' => 'AOK | Index',
+                'user' => $sysUser,
+                'pageHeader' => 'DB Schema'
+            )
+        );       
     }
 
 
@@ -46,23 +61,19 @@ class DefaultController extends Controller
 
         $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findAll();
 
-        return $this->render('default/patientsPage.html.twig', 
+        return $this->render('patient/patientsPage.html.twig', 
             array(
                 'title' => 'AOK | Patienten',
                 'user' => $sysUser,
                 'patients' => $patients,
-                'url' => 'patients',
-                'buttonLabel' => 'Patient',
-                'pageHeader' => 'Übersicht aller Patienten'
             )
         );
     }
 
-
     /**
-     * @Route("/patients/create", name="createPatientPage")
+     * @Route("/patients/create", name="patientCreatePage")
      */
-    public function createPatientAction(Request $request)
+    public function patientCreateAction(Request $request)
     {
         $sysUser = $this->checkLoggedUser($request);
         
@@ -71,12 +82,49 @@ class DefaultController extends Controller
         }
 
         $patient = new Patient();
+        $hospitals = $this->getDoctrine()->getRepository('AppBundle:Hospital')->findAll();
+        $caretakers = $this->getDoctrine()->getRepository('AppBundle:Caretaker')->findAll();
 
         $form = $this->createFormBuilder($patient, array('validation_groups' => array('registration'),))
-            ->add('firstName', TextType::class, array('label' => 'Vorname', 'attr' => array('class' => 'form-control','style' => 'margin-bottom: 15px')))
-            ->add('lastName', TextType::class, array('label' => 'Nachname', 'attr' => array('class' => 'form-control','style' => 'margin-bottom: 15px')))
-            ->add('email', TextType::class, array('label' => 'E-Mail', 'attr' => array('class' => 'form-control','style' => 'margin-bottom: 15px')))
-            ->add('phoneNumber', TextType::class, array('label' => 'Tel. Nummer', 'attr' => array('class' => 'form-control','style' => 'margin-bottom: 15px')))
+            ->add('firstName', TextType::class, array('label' => 'Vorname', 'attr' => array('class' => 'form-control')))
+            ->add('lastName', TextType::class, array('label' => 'Nachname', 'attr' => array('class' => 'form-control')))
+            ->add('birthDate', DateType::class, [
+                'widget' => 'single_text', 
+                'html5' => false,
+                'format' => 'dd.MM.yyyy',
+                'attr' => [
+                    'class' => 'form-control'
+                ],
+                'label' => 'Geburtstag',
+
+            ])
+            ->add('sex', ChoiceType::class, array('label' => 'Geschlecht', 'attr' => array('class' => 'form-control'),
+                'choices'  => array(
+                    'männlich' => 'männlich',
+                    'weiblich' => 'weiblich',
+                ),
+                'placeholder' => 'Wählen Sie ein Geschlecht aus',
+            ))
+            ->add('email', TextType::class, array('label' => 'E-Mail', 
+                'attr' => array('class' => 'form-control'),
+                'required' => false
+            ))
+            ->add('phoneNumber', TextType::class, array('label' => 'Tel. Nummer', 'attr' => array('class' => 'form-control')))
+            ->add('address', TextType::class, array('label' => 'Adresse', 'attr' => array('class' => 'form-control')))
+            ->add('hospital', ChoiceType::class, array('label' => 'Krankenhaus', 'attr' => array('class' => 'form-control'),
+                'choices' => $hospitals,
+                'choice_label' => function($hospital, $key, $index) {
+                    return $hospital->getName();
+                },                
+                'placeholder' => 'Wählen Sie ein Krankenhaus aus',
+            ))
+            ->add('caretaker', ChoiceType::class, array('label' => 'Betreuer', 'attr' => array('class' => 'form-control'),
+                'choices' => $caretakers,
+                'choice_label' => function($caretaker, $key, $index) {
+                    return $caretaker->getFirstName().' '.$caretaker->getLastName();
+                },                
+                'placeholder' => 'Wählen Sie ein Betreuer aus',
+            ))
             ->add('save', SubmitType::class, array('label' => 'Ok', 'attr' => array('class' => 'btn btn-primary'))) 
             ->getForm();
         
@@ -85,8 +133,13 @@ class DefaultController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $patient->setFirstName($form['firstName']->getData());
             $patient->setLastName($form['lastName']->getData());
+            $patient->setBirthDate($form['birthDate']->getData());
+            $patient->setSex($form['sex']->getData());        
             $patient->setEmail($form['email']->getData());
             $patient->setPhoneNumber($form['phoneNumber']->getData());
+            $patient->setAddress($form['address']->getData());
+            $patient->setHospital($form['hospital']->getData());
+            $patient->setCaretaker($form['caretaker']->getData());
             
             $em = $this->getDoctrine()->getManager();
             $em->persist($patient);
@@ -97,16 +150,38 @@ class DefaultController extends Controller
             return $this->redirectToRoute('patientsPage');
         }
         
-        return $this->render('default/editObjectPage.html.twig', array(
+        return $this->render('patient/patientCreatePage.html.twig', array(
             'title' => 'AOK | Patienten',
             'form' => $form->createView(),
             'user' => $sysUser,
-            'pageHeader' => 'Patient einfügen',
             'validation_groups' => array('registration')
         ));
         
     }
     
+
+    /**
+     * @Route("/patients/info/{id}", name="patientInfoPage")
+     */
+    public function patientInfoAction(Request $request, $id)
+    {
+        $sysUser = $this->checkLoggedUser($request);
+        
+        if (!$sysUser) {
+            return $this->redirectToRoute('loginPage');
+        }
+
+        $patient = $this->getDoctrine()->getRepository('AppBundle:Patient')->findOneById($id);
+
+        return $this->render('patient/patientInfoPage.html.twig', 
+            array(
+                'title' => 'AOK | Patienten',
+                'user' => $sysUser,
+                'patient' => $patient,
+            )
+        );
+    }
+
 
     /**
      * @Route("/patients/edit/{id}", name="patientEditPage")
@@ -120,23 +195,64 @@ class DefaultController extends Controller
         }
 
         $patient = $this->getDoctrine()->getRepository('AppBundle:Patient')->findOneById($id);
+        $hospitals = $this->getDoctrine()->getRepository('AppBundle:Hospital')->findAll();
+        $caretakers = $this->getDoctrine()->getRepository('AppBundle:Caretaker')->findAll();
         
-        $form = $this->createFormBuilder($patient)
-            ->add('firstName', TextType::class, array('label' => 'Vorname', 'attr' => array('class' => 'form-control','style' => 'margin-bottom: 15px')))
-            ->add('lastName', TextType::class, array('label' => 'Nachname', 'attr' => array('class' => 'form-control','style' => 'margin-bottom: 15px')))
-            ->add('email', TextType::class, array('label' => 'E-Mail', 'attr' => array('class' => 'form-control','style' => 'margin-bottom: 15px')))
-            ->add('phoneNumber', TextType::class, array('label' => 'Tel. Nummer', 'attr' => array('class' => 'form-control','style' => 'margin-bottom: 15px')))
+        $form = $this->createFormBuilder($patient, array('validation_groups' => array('registration'),))
+            ->add('firstName', TextType::class, array('label' => 'Vorname', 'attr' => array('class' => 'form-control')))
+            ->add('lastName', TextType::class, array('label' => 'Nachname', 'attr' => array('class' => 'form-control')))
+            ->add('birthDate', DateType::class, [
+                'label' => 'Geburtstag',
+                'widget' => 'single_text', 
+                'html5' => false,
+                'format' => 'dd.MM.yyyy',
+                'attr' => [
+                    'class' => 'form-control'
+                ]
+
+            ])
+            ->add('sex', ChoiceType::class, array('label' => 'Geschlecht', 'attr' => array('class' => 'form-control'),
+                'choices'  => array(
+                    'männlich' => 'männlich',
+                    'weiblich' => 'weiblich',
+                ),
+            ))
+            ->add('email', TextType::class, array('label' => 'E-Mail', 
+                'attr' => array('class' => 'form-control'),
+                'required' => false
+            ))
+            ->add('phoneNumber', TextType::class, array('label' => 'Tel. Nummer', 'attr' => array('class' => 'form-control')))
+            ->add('address', TextType::class, array('label' => 'Adresse', 'attr' => array('class' => 'form-control')))
+            ->add('hospital', ChoiceType::class, array('label' => 'Krankenhaus', 'attr' => array('class' => 'form-control'),
+                'choices' => $hospitals,
+                'choice_label' => function($hospital, $key, $index) {
+                    return $hospital->getName();
+                },                
+                'placeholder' => 'Wählen Sie ein Krankenhaus aus',
+            ))
+            ->add('caretaker', ChoiceType::class, array('label' => 'Betreuer', 'attr' => array('class' => 'form-control'),
+                'choices' => $caretakers,
+                'choice_label' => function($caretaker, $key, $index) {
+                    return $caretaker->getFirstName().' '.$caretaker->getLastName();
+                },                
+                'placeholder' => 'Wählen Sie ein Betreuer aus',
+            ))
             ->add('save', SubmitType::class, array('label' => 'Ok', 'attr' => array('class' => 'btn btn-primary'))) 
             ->getForm();
         
-        
         $form->handleRequest($request);
+
         
         if ($form->isSubmitted() && $form->isValid()) {
             $patient->setFirstName($form['firstName']->getData());
             $patient->setLastName($form['lastName']->getData());
+            $patient->setBirthDate($form['birthDate']->getData());
+            $patient->setSex($form['sex']->getData());        
             $patient->setEmail($form['email']->getData());
             $patient->setPhoneNumber($form['phoneNumber']->getData());
+            $patient->setAddress($form['address']->getData());
+            $patient->setHospital($form['hospital']->getData());
+            $patient->setCaretaker($form['caretaker']->getData());
             
             $em = $this->getDoctrine()->getManager();
             $em->persist($patient);
@@ -147,13 +263,13 @@ class DefaultController extends Controller
             return $this->redirectToRoute('patientsPage');
         }
         
-        return $this->render('default/editObjectPage.html.twig', array(
+        return $this->render('patient/patientEditPage.html.twig', array(
             'title' => 'AOK | Patienten',
             'form' => $form->createView(),
             'user' => $sysUser,
-            'pageHeader' => 'Patient bearbeiten'
-
+            'validation_groups' => array('registration')
         ));
+        
     }
 
 
@@ -182,6 +298,231 @@ class DefaultController extends Controller
 
 
     /**
+     * @Route("/med-checkups", name="medCheckupsPage")
+     */
+    public function medCheckupsAction(Request $request, array $options=null)
+    {
+        $sysUser = $this->checkLoggedUser($request);
+        
+        if (!$sysUser) {
+            return $this->redirectToRoute('loginPage');
+        }
+
+        $medCheckups = $this->getDoctrine()->getRepository('AppBundle:medCheckup')->findAll();
+
+        return $this->render('medCheckup/medCheckupsPage.html.twig', 
+            array(
+                'title' => 'AOK | Untersuchungen',
+                'user' => $sysUser,
+                'medCheckups' => $medCheckups,
+            )
+        );
+    }
+
+
+    /**
+     * @Route("/med-checkup/create", name="medCheckupCreatePage")
+     */
+    public function medCheckupCreateAction(Request $request)
+    {
+        $sysUser = $this->checkLoggedUser($request);
+        
+        if (!$sysUser) {
+            return $this->redirectToRoute('loginPage');
+        }
+
+        $medCheckup = new MedCheckup();
+        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findAll();
+        $sysUsers = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findBy(array('userGroup' => 4));
+        
+        $form = $this->createFormBuilder($medCheckup)
+            ->add('type', ChoiceType::class, array('label' => 'Typ', 'attr' => array('class' => 'form-control'),
+                'choices'  => array(
+                    'Basischeck' => 'Basischeck',
+                    'Zwischenuntersuchung' => 'Zwischenuntersuchung',
+                    'OP-Untersuchung' => 'OP-Untersuchung',
+                ),
+                'placeholder' => 'Wählen Sie den Untersuchungstyp aus',
+            ))
+            ->add('patient', ChoiceType::class, array('label' => 'Patient', 'attr' => array('class' => 'form-control'),
+                'choices' => $patients,
+                'choice_label' => function($patient, $key, $index) {
+                    return $patient->getFirstName().' '.$patient->getLastName();
+                },                
+                'placeholder' => 'Wählen Sie einen Patient aus',
+            ))
+            ->add('sysUser', ChoiceType::class, array('label' => 'Untersucher', 'attr' => array('class' => 'form-control'),
+                'choices' => $sysUsers,
+                'choice_label' => function($sysUser, $key, $index) {
+                    return $sysUser->getFirstName().' '.$sysUser->getLastName();
+                },                
+                'placeholder' => 'Wählen Sie einen Untersucher aus',
+            ))
+            ->add('dateAndTime', DateTimeType::class, [
+                'label' => 'Datum',
+                'widget' => 'single_text', 
+                'html5' => false,
+                'format' => 'dd.MM.yyyy HH:mm',
+                'attr' => [
+                    'class' => 'form-control'
+                ]
+            ])
+            
+
+            ->add('save', SubmitType::class, array('label' => 'Ok', 'attr' => array('class' => 'btn btn-primary'))) 
+            ->getForm();
+        
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            $medCheckup->setType($form['type']->getData());
+            $medCheckup->setPatient($form['patient']->getData());
+            $medCheckup->setSysUser($form['sysUser']->getData());
+            $medCheckup->setDateAndTime($form['dateAndTime']->getData());
+            
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($medCheckup);
+            $em->flush();
+
+            $this->addFlash('notice', 'Eine Untersuchung erfolgreich hinzugefügt');
+            
+            return $this->redirectToRoute('medCheckupsPage');
+        }
+        
+        return $this->render('medCheckup/medCheckupCreatePage.html.twig', array(
+            'title' => 'AOK | Untersuchung',
+            'form' => $form->createView(),
+            'user' => $sysUser
+        ));
+        
+    }
+
+    /**
+     * @Route("/med-checkups/info/{id}", name="medCheckupInfoPage")
+     */
+    public function medCheckupInfoAction(Request $request, $id)
+    {
+        $sysUser = $this->checkLoggedUser($request);
+        
+        if (!$sysUser) {
+            return $this->redirectToRoute('loginPage');
+        }
+
+        $medCheckup = $this->getDoctrine()->getRepository('AppBundle:medCheckup')->findOneById($id);
+
+        return $this->render('medCheckup/medCheckupInfoPage.html.twig', 
+            array(
+                'title' => 'AOK | Patienten',
+                'user' => $sysUser,
+                'medCheckup' => $medCheckup,
+            )
+        );
+    }
+
+
+    /**
+     * @Route("/med-checkups/edit/{id}", name="medCheckupEditPage")
+     */
+    public function medCheckupEditAction(Request $request, $id)
+    {
+        $sysUser = $this->checkLoggedUser($request);
+        
+        if (!$sysUser) {
+            return $this->redirectToRoute('loginPage');
+        }
+
+        $medCheckup = $this->getDoctrine()->getRepository('AppBundle:MedCheckup')->findOneById($id);        
+        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findAll();
+        $sysUsers = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findBy(array('userGroup' => 4));
+        
+        $form = $this->createFormBuilder($medCheckup)
+            ->add('type', ChoiceType::class, array('label' => 'Typ', 'attr' => array('class' => 'form-control'),
+                'choices'  => array(
+                    'Basischeck' => 'Basischeck',
+                    'Zwischenuntersuchung' => 'Zwischenuntersuchung',
+                    'OP-Untersuchung' => 'OP-Untersuchung',
+                ),
+                'placeholder' => 'Wählen Sie den Untersuchungstyp aus',
+            ))
+            ->add('patient', ChoiceType::class, array('label' => 'Patient', 'attr' => array('class' => 'form-control'),
+                'choices' => $patients,
+                'choice_label' => function($patient, $key, $index) {
+                    return $patient->getFirstName().' '.$patient->getLastName();
+                },                
+                'placeholder' => 'Wählen Sie einen Patient aus',
+            ))
+            ->add('sysUser', ChoiceType::class, array('label' => 'Untersucher', 'attr' => array('class' => 'form-control'),
+                'choices' => $sysUsers,
+                'choice_label' => function($sysUser, $key, $index) {
+                    return $sysUser->getFirstName().' '.$sysUser->getLastName();
+                },                
+                'placeholder' => 'Wählen Sie einen Untersucher aus',
+            ))
+            ->add('dateAndTime', DateTimeType::class, [
+                'label' => 'Datum',
+                'widget' => 'single_text', 
+                'html5' => false,
+                'format' => 'dd.MM.yyyy HH:mm',
+                'attr' => [
+                    'class' => 'form-control'
+                ]
+            ])
+            
+
+            ->add('save', SubmitType::class, array('label' => 'Ok', 'attr' => array('class' => 'btn btn-primary'))) 
+            ->getForm();
+        
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            $medCheckup->setType($form['type']->getData());
+            $medCheckup->setPatient($form['patient']->getData());
+            $medCheckup->setSysUser($form['sysUser']->getData());
+            $medCheckup->setDateAndTime($form['dateAndTime']->getData());
+            
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($medCheckup);
+            $em->flush();
+
+            $this->addFlash('notice', 'Eine Untersuchung erfolgreich gespeichert');
+            
+            return $this->redirectToRoute('medCheckupsPage');
+        }
+        
+        return $this->render('medCheckup/medCheckupEditPage.html.twig', array(
+            'title' => 'AOK | Untersuchung',
+            'form' => $form->createView(),
+            'user' => $sysUser
+        ));
+        
+    }
+    
+
+    /**
+     * @Route("/med-checkups/delete/{id}", name="medCheckupDeletePage")
+     */
+    public function medCheckupDeleteAction(Request $request, $id)
+    {
+        $sysUser = $this->checkLoggedUser($request);
+        
+        if (!$sysUser) {
+            return $this->redirectToRoute('loginPage');
+        }
+
+        $medCheckup = $this->getDoctrine()->getRepository('AppBundle:MedCheckup')->findOneById($id);
+        
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($medCheckup);
+        $em->flush();
+
+        $this->addFlash('notice', 'Untersuchung erfolgreich gelöscht');
+        
+        return $this->redirectToRoute('medCheckupsPage');
+        
+    }
+
+
+    /**
      * @Route("/arrangements", name="arrangementsPage")
      */
     public function arrangementsAction(Request $request)
@@ -194,7 +535,7 @@ class DefaultController extends Controller
 
         $arrangements = $this->getDoctrine()->getRepository('AppBundle:Arrangement')->findAll();
 
-        return $this->render('default/arrangementsPage.html.twig', 
+        return $this->render('arrangement/arrangementsPage.html.twig', 
             array(
                 'title' => 'AOK | Kurse',
                 'user' => $sysUser,
@@ -270,7 +611,7 @@ class DefaultController extends Controller
         
         $form = $this->createFormBuilder($arrangement)
             ->add('name', TextType::class, array('label' => 'Name', 'attr' => array('class' => 'form-control','style' => 'margin-bottom: 15px')))
-            ->add('description', TextType::class, array('label' => 'Beschreibung', 'attr' => array('class' => 'form-control','style' => 'margin-bottom: 15px')))
+            ->add('description', TextareaType::class, array('label' => 'Beschreibung', 'attr' => array('class' => 'form-control','style' => 'margin-bottom: 15px')))
             ->add('maxParticipants', IntegerType::class, array('label' => 'Max. Teilnehmer', 'attr' => array('class' => 'form-control','style' => 'margin-bottom: 15px')))
             ->add('dateTime', DatetimeType::class, array('label' => 'Datum', 'attr' => array('style' => 'margin-bottom: 15px')))        
             ->add('save', SubmitType::class, array('label' => 'Ok', 'attr' => array('class' => 'btn btn-primary'))) 
@@ -325,6 +666,199 @@ class DefaultController extends Controller
         
     }
 
+
+    /**
+     * @Route("/patient-arrangement", name="patientArrangementPage")
+     */
+    public function patientArrangementAction(Request $request)
+    {
+        $sysUser = $this->checkLoggedUser($request);
+        
+        if (!$sysUser) {
+            return $this->redirectToRoute('loginPage');
+        }
+
+        $patArrRef = $this->getDoctrine()->getRepository('AppBundle:PatientArrangementReference')->findAll();
+    
+        return $this->render('default/progressPage.html.twig', 
+            array(
+                'title' => 'AOK | Kursverlauf',
+                'user' => $sysUser,
+                'patArrRef' => $patArrRef,
+                'url' => 'patient-arrangement',
+                'buttonLabel' => 'Kursverlauf',
+                'pageHeader' => 'Übersicht aller Kursverläufe'
+            )
+        );
+    }
+
+
+    /**
+     * @Route("/patient-arrangement/create", name="patientArrangementCreatePage")
+     */
+    public function patientArrangementCreateAction(Request $request)
+    {
+        $sysUser = $this->checkLoggedUser($request);
+        
+        if (!$sysUser) {
+            return $this->redirectToRoute('loginPage');
+        }
+
+        $patArrRef = new PatientArrangementReference();
+        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findAll();
+        $arrangements = $this->getDoctrine()->getRepository('AppBundle:Arrangement')->findAll();
+        
+        $form = $this->createFormBuilder($progress)
+            ->add('patient', ChoiceType::class, array('label' => 'Patient', 'attr' => array('class' => 'form-control','style' => 'margin-bottom: 15px;'),
+                'choices' => $patients,
+                'choice_label' => function($patient, $key, $index) {
+                    return $patient->getFirstName().' '.$patient->getLastName();
+                },                
+            ))
+            ->add('arrangement', ChoiceType::class, array('label' => 'Kurs', 'attr' => array('class' => 'form-control','style' => 'margin-bottom: 15px; margin-top: 15px'),
+                'choices' => $arrangements,
+                'choice_label' => function($arrangement, $key, $index) {
+                    return $arrangement->getName().' am '.$arrangement->getDateTime()->format('d.m.Y H:i');;
+                },                
+            ))
+            ->add('registered', ChoiceType::class, array('label' => 'Angemeldet', 'attr' => array('class' => 'form-control','style' => 'margin-bottom: 15px, margin-top: 15px'),
+                'choices'  => array(
+                    'Ja' => 1,
+                    'Nein' => 0,
+                ),
+            ))
+            ->add('attended', ChoiceType::class, array('label' => 'Besucht', 'attr' => array('class' => 'form-control','style' => 'margin-bottom: 15px'),
+                'choices'  => array(
+                    'Ja' => 1,
+                    'Nein' => 0,
+                ),
+            ))
+            ->add('comments', TextareaType::class, array('label' => 'Commentare', 'attr' => array('class' => 'form-control','style' => 'margin-bottom: 15px')))
+            ->add('save', SubmitType::class, array('label' => 'Ok', 'attr' => array('class' => 'btn btn-primary'))) 
+            ->getForm();
+        
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            $patArrRef->setPatient($form['patient']->getData());
+            $patArrRef->setArrangement($form['arrangement']->getData());
+            $patArrRef->setRegistered($form['registered']->getData());
+            $patArrRef->setAttended($form['attended']->getData());
+            $patArrRef->setComments($form['comments']->getData());
+            
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($progress);
+            $em->flush();
+
+            $this->addFlash('notice', 'Ein neuer Verlaufsweg erfolgreich gespeichert');
+
+            return $this->redirectToRoute('progressPage');
+        }
+        
+        return $this->render('default/editObjectPage.html.twig', array(
+            'title' => 'AOK | Kursverlauf',
+            'user' => $sysUser,
+            'form' => $form->createView(),
+            'pageHeader' => 'Kursverlauf erstellen'
+        ));
+    }
+
+
+    /**
+     * @Route("/patient-arrangement/edit/{id}", name="patientArrangementEditPage")
+     */
+    public function patientArrangementEditAction(Request $request, $id)
+    {
+        $sysUser = $this->checkLoggedUser($request);
+        
+        if (!$sysUser) {
+            return $this->redirectToRoute('loginPage');
+        }
+
+        $patArrRef = $this->getDoctrine()->getRepository('AppBundle:PatientArrangementReference')->findOneById($id);
+        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findAll();
+        $arrangements = $this->getDoctrine()->getRepository('AppBundle:Arrangement')->findAll();
+        
+        $form = $this->createFormBuilder($progress)
+            ->add('patient', ChoiceType::class, array('label' => 'Patient', 'attr' => array('class' => 'form-control','style' => 'margin-bottom: 15px;'),
+                'choices' => $patients,
+                'choice_label' => function($patient, $key, $index) {
+                    return $patient->getFirstName().' '.$patient->getLastName();
+                },                
+            ))
+            ->add('arrangement', ChoiceType::class, array('label' => 'Kurs', 'attr' => array('class' => 'form-control','style' => 'margin-bottom: 15px; margin-top: 15px'),
+                'choices' => $arrangements,
+                'choice_label' => function($arrangement, $key, $index) {
+                    return $arrangement->getName().' am '.$arrangement->getDateTime()->format('d.m.Y H:i');;
+                },                
+            ))
+            ->add('registered', ChoiceType::class, array('label' => 'Angemeldet', 'attr' => array('class' => 'form-control','style' => 'margin-bottom: 15px, margin-top: 15px'),
+                'choices'  => array(
+                    'Ja' => 1,
+                    'Nein' => 0,
+                ),
+            ))
+            ->add('attended', ChoiceType::class, array('label' => 'Besucht', 'attr' => array('class' => 'form-control select2','style' => 'margin-bottom: 15px'),
+                'choices'  => array(
+                    'Ja' => 1,
+                    'Nein' => 0,
+                ),
+            ))
+            ->add('comments', TextareaType::class, array('label' => 'Commentare', 'attr' => array('class' => 'form-control','style' => 'margin-bottom: 15px')))
+            ->add('save', SubmitType::class, array('label' => 'Ok', 'attr' => array('class' => 'btn btn-primary'))) 
+            ->getForm();
+        
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            $patArrRef->setPatient($form['patient']->getData());
+            $patArrRef->setArrangement($form['arrangement']->getData());
+            $patArrRef->setRegistered($form['registered']->getData());
+            $patArrRef->setAttended($form['attended']->getData());
+            $patArrRef->setComments($form['comments']->getData());
+            
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($patArrRef);
+            $em->flush();
+
+            $this->addFlash('notice', 'Verlaufsweg erfolgreich gespeichert');
+
+            return $this->redirectToRoute('patientArrangementPage');
+        }
+        
+        return $this->render('default/editObjectPage.html.twig', array(
+            'title' => 'AOK | Kursverlauf',
+            'user' => $sysUser,
+            'form' => $form->createView(),
+            'pageHeader' => 'Kursverlauf bearbeiten'
+        ));
+    }
+
+   /**
+     * @Route("/patient-arrangement/delete/{id}", name="patientArrangementDeletePage")
+     */
+    public function patientArrangementDeleteAction(Request $request, $id)
+    {
+        $sysUser = $this->checkLoggedUser($request);
+        
+        if (!$sysUser) {
+            return $this->redirectToRoute('loginPage');
+        } else if ($sysUser->getUserGroup()->getName() !== "Admin") {
+            $this->addFlash('error', 'Sie dürfen nicht einen Kursverlauf löschen!');
+            return $this->redirectToRoute('patientArrangementPage');
+        }
+
+        $patArrRef = $this->getDoctrine()->getRepository('AppBundle:PatientArrangementReference')->findOneById($id);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($patArrRef);
+        $em->flush();
+
+        $this->addFlash('notice', 'Kursverlauf erfolgreich gelöscht');
+        
+        return $this->redirectToRoute('patientArrangementPage');        
+
+    }
 
 
     /**
@@ -382,7 +916,7 @@ class DefaultController extends Controller
                     return $userGroup->getDescription();
                 },                
             ))
-            ->add('save', SubmitType::class, array('label' => 'Ok', 'attr' => array('class' => 'btn btn-primary'))) 
+            ->add('save', SubmitType::class, array('label' => 'Ok', 'attr' => array('class' => 'btn btn-primary', 'style' => 'margin-top: 15px'))) 
             ->getForm();
 
         $form->handleRequest($request);

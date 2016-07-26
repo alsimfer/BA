@@ -1,0 +1,26 @@
+{% extends 'default/objectListPage.html.twig' %}
+
+{% block table %}
+
+	<table id="users_table" class="table table_main table-striped table-bordered">
+		<thead>
+            <tr>
+            	<th>Id</th>
+                <th>Name</th>
+                <th>E-Mail</th>
+                <th>Tel. Nummer</th>
+                <th>Gruppe</th>
+            </tr>
+        </thead>
+
+	    {% for u in users %}
+	        <tr>
+	        	<td>{{ u.id }}</td>
+	            <td>{{ u.firstName ~ " " ~ u.lastName }}</td>
+	            <td>{{ u.email }}</td>
+	            <td>{{ u.phoneNumber }}</td>
+	            <td>{{ u.userGroup }}</td>
+	        </tr>
+	    {% endfor %}
+    </table>
+{% endblock %}

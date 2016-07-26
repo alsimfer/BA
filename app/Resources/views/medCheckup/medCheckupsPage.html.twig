@@ -1,0 +1,35 @@
+{% extends 'mainPage.html.twig' %}
+
+{% block main %}
+	
+    <div class="row">
+		<div id="control_panel" class="col-md-2">
+
+			<ul class="nav nav-pills nav-stacked">
+			    <li>
+			    	<a href="/med-checkup/create"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Untersuchung einfügen</a>
+			    </li>
+			    <li id="info_li" class="disabled">
+			    	<a id="info_link"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Untersuchung info</a>
+			    </li>	
+			    <li id="edit_li" class="disabled">
+			    	<a id="edit_link"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Untersuchung bearbeiten</a>
+			    </li>
+			    <li id="modal_toggle_li" class="disabled">
+			    	<a id="modal_toggle_link" data-toggle="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Untersuchung entfernen</a>
+			    </li>			   
+			</ul>
+
+		</div>
+
+		<div id="content" class="col-md-10">
+			<h2 class="page-header">Übersicht aller Untersuchungen</h2>
+				
+			{% include 'medCheckup/medCheckupsTable.html.twig' %}
+			
+			{% include 'default/confirmDialog.html.twig' %}
+				
+	    </div>
+	</div>
+
+{% endblock %}

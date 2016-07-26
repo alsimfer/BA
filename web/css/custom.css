@@ -5,21 +5,22 @@ body {
   padding-top: 70px;
 }
 
-#control_panel {
-/*    float: left;
+img.center {
     display: block;
-
-    min-height: 200px; 
-    background-color: #bbb;*/
+    margin: 0 auto;
 }
 
 .table-striped tbody tr.selected { 
-    background-color: #ea9c45; 
+    background-color: #2a68a6; 
     color: white;
 }
 
 a.selected {
     background-color: #99ccff;    
+}
+
+dd {
+    margin-left: 15px;
 }
 
 #extra_button {

@@ -1,0 +1,30 @@
+<!-- MedCheckups Table -->
+<table id="med_checkups_table" class="table table_main table-striped table-bordered" style="width:100%">
+	<thead>
+        <tr>
+            <th>Id</th>
+            <th>Typ</th>
+            <th>Patient</th>
+            <th>Untersucher</th>
+            <th>Date</th>
+            
+        </tr>
+    </thead>
+
+    {% for mc in medCheckups %}
+        <tr>
+            <td>{{ mc.id }}</td>
+            <td>{{ mc.type }}</td>
+            <td>{{ mc.patient.firstName ~ " " ~ mc.patient.lastName }}</td>
+            <td>{{ mc.sysUser.firstName ~ " " ~ mc.sysUser.lastName }}</td>
+
+            {# Check if the date is not '0000-00-00' #}
+            {% if mc.dateAndTime is defined and mc.dateAndTime | date('d.m.Y') != "30.11.-0001" %}
+                <td>{{ mc.dateAndTime | date('d.m.Y H:i') }}</td>
+            {% else %}
+                <td></td>
+            {% endif %}
+            
+        </tr>
+    {% endfor %}
+</table>

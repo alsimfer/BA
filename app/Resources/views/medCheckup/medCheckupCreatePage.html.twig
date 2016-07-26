@@ -1,0 +1,42 @@
+{% extends 'mainPage.html.twig' %}
+
+{% block main %}
+    
+    <div class="col-md-8 col-md-offset-2">
+        <h2 class="page-header">Untersuchung einfügen</h2>        
+        
+        {{ form_start(form) }}
+		{{ form_errors(form) }}
+			
+			<div class="form-group">
+				{{ form_label(form.type) }}
+				{{ form_errors(form.type) }}
+				{{ form_widget(form.type) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(form.patient) }}
+				{{ form_errors(form.patient) }}
+				{{ form_widget(form.patient) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(form.sysUser) }}
+				{{ form_errors(form.sysUser) }}
+				{{ form_widget(form.sysUser) }}
+			</div>
+			<div id="dateTimePickerContainer" class="form-group">
+				{{ form_label(form.dateAndTime) }}
+				{{ form_errors(form.dateAndTime) }}
+
+                <div class="input-group time">
+        			{{ form_widget(form.dateAndTime) }}
+        			<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+				</div>
+            
+			</div>
+			
+
+			
+		{{ form_end(form) }}
+	</div>
+
+{% endblock %}

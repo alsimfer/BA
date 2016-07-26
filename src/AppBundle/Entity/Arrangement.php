@@ -58,7 +58,17 @@ class Arrangement
      * )
      */
     private $maxParticipants;
+
+    /**
+    * @ORM\OneToMany(targetEntity="PatientArrangementReference", mappedBy="arrangement") 
+    */
+    private $patArrRefs;
     
+    public function __construct() 
+    {
+        $this->patients = new ArrayCollection();
+    }
+
 
     /**
      * Get id
@@ -164,5 +174,73 @@ class Arrangement
     public function getMaxParticipants()
     {
         return $this->maxParticipants;
+    }
+
+    /**
+     * Add patient
+     *
+     * @param \AppBundle\Entity\PatientArrangementReference $patient
+     *
+     * @return Arrangement
+     */
+    public function addPatient(\AppBundle\Entity\PatientArrangementReference $patient)
+    {
+        $this->patients[] = $patient;
+
+        return $this;
+    }
+
+    /**
+     * Remove patient
+     *
+     * @param \AppBundle\Entity\PatientArrangementReference $patient
+     */
+    public function removePatient(\AppBundle\Entity\PatientArrangementReference $patient)
+    {
+        $this->patients->removeElement($patient);
+    }
+
+    /**
+     * Get patients
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPatients()
+    {
+        return $this->patients;
+    }
+
+    /**
+     * Add patArrRef
+     *
+     * @param \AppBundle\Entity\PatientArrangementReference $patArrRef
+     *
+     * @return Arrangement
+     */
+    public function addPatArrRef(\AppBundle\Entity\PatientArrangementReference $patArrRef)
+    {
+        $this->patArrRefs[] = $patArrRef;
+
+        return $this;
+    }
+
+    /**
+     * Remove patArrRef
+     *
+     * @param \AppBundle\Entity\PatientArrangementReference $patArrRef
+     */
+    public function removePatArrRef(\AppBundle\Entity\PatientArrangementReference $patArrRef)
+    {
+        $this->patArrRefs->removeElement($patArrRef);
+    }
+
+    /**
+     * Get patArrRefs
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPatArrRefs()
+    {
+        return $this->patArrRefs;
     }
 }

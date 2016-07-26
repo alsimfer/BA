@@ -9,9 +9,12 @@
         <title>{% block title %}AOK{% endblock %}</title>
         
         {% block stylesheets %}
-            <link href="/css/bootstrap.min.css" rel="stylesheet">
-            <link href="/css/dataTables.bootstrap.min.css" rel="stylesheet">
-            <link href="/css/custom.css" rel="stylesheet">
+            <link href="/css/bootstrap.min.css" rel="stylesheet" />
+            <link href="/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+            <link href="/css/select2.css" rel="stylesheet" />
+            <link href="/css/select2-bootstrap.css" rel="stylesheet" />
+            <link href="/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+            <link href="/css/custom.css" rel="stylesheet" />
         {% endblock %}    
        
     </head>
@@ -19,10 +22,16 @@
         {% block body %}{% endblock %}
         
         {% block javascripts %}
-            <script src="/js/jquery-2.2.0.js"></script>
+            <script src="/js/jquery-2.2.0.js"></script>            
+            <script src="/js/moment.js"></script>            
+            <script src="/js/moment_locale.js"></script>            
             <script src="/js/jquery.dataTables.min.js"></script>
             <script src="/js/dataTables.bootstrap.min.js"></script>
+            <script src="/js/select2.min.js"></script>
             <script src="/js/bootstrap.min.js"></script>
+            <script src="/js/bootstrap-datetimepicker.min.js"></script>
+            
+
             <script src="/js/custom.js"></script>
         {% endblock %}
             
