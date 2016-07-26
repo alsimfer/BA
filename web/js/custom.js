@@ -104,7 +104,7 @@ function adjustActiveListItem() {
     var currentUrl = $(location).attr('href');
     var arr = currentUrl.split('/');  
 
-    $("li.active").removeClass("active");
+    $(".nav navbar-nav > li.active").removeClass("active");
 
     if (jQuery.inArray("patients", arr) !== -1) {
         $("#patients_li").addClass("active");

@@ -1,0 +1,31 @@
+<dl class="container-fluid">
+
+	<dt>Name</dt>
+	{% if arrangement.name is defined and arrangement.name|length > 0 %}
+    	<dd class="bg-success">- {{ arrangement.name }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Datum und Uhrzeit</dt>
+	{% if arrangement.dateTime is defined %}
+    	<dd class="bg-success">- {{ arrangement.dateTime | date('d.m.Y H:i') }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Bescheibung</dt>
+	{% if arrangement.description is defined and arrangement.description|length > 0 %}
+    	<dd class="bg-success">- {{ arrangement.description }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+	
+	<dt>Max. Teilnehmer</dt>
+	{% if arrangement.maxParticipants is defined and arrangement.maxParticipants > 0 %}
+    	<dd class="bg-success">- {{ arrangement.maxParticipants }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+</dl>		

@@ -1,27 +1,35 @@
-{% extends 'default/objectListPage.html.twig' %}
+{% extends 'mainPage.html.twig' %}
 
-{% block table %}
+{% block main %}
+	
+    <div class="row">
+		<div id="control_panel" class="col-md-2">
 
-	<table id="arrangements_table" class="table table_main table-striped table-bordered">
-		<thead>
-            <tr>
-            	<th>Id</th>
-                <th>Name</th>
-                <th>Beschreibung</th>
-                <th>Datum</th>
-                <th>Max. Teilnehmer</th>
-            </tr>
-        </thead>
+			<ul class="nav nav-pills nav-stacked">
+			    <li>
+			    	<a href="/arrangements/create"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Kurs einfügen</a>
+			    </li>
+			    <li id="info_li" class="disabled">
+			    	<a id="info_link"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Kurs info</a>
+			    </li>	
+			    <li id="edit_li" class="disabled">
+			    	<a id="edit_link"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Kurs bearbeiten</a>
+			    </li>
+			    <li id="modal_toggle_li" class="disabled">
+			    	<a id="modal_toggle_link" data-toggle="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Kurs entfernen</a>
+			    </li>			   
+			</ul>
 
-	    {% for a in arrangements %}
-	        <tr>
-	        	<td>{{ a.id }}</td>
-	            <td>{{ a.name }}</td>
-	            <td>{{ a.description }}</td>
-	            <td>{{ a.dateTime | date('d.m.Y') ~ ", um " ~ a.dateTime | date('H:i') }}</td>
-	            <td>{{ a.maxParticipants }}</td>
-	        </tr>
-	    {% endfor %}
-    </table>
-	    
+		</div>
+
+		<div id="content" class="col-md-10">
+			<h2 class="page-header">Übersicht aller Patienten</h2>
+			
+			{% include 'arrangement/arrangementsTable.html.twig' %}			
+
+			{% include 'default/confirmDialog.html.twig' %}
+				
+	    </div>
+	</div>
+
 {% endblock %}

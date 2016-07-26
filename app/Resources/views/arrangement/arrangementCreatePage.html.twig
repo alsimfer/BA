@@ -1,0 +1,45 @@
+{% extends 'mainPage.html.twig' %}
+
+{% block main %}
+    
+    <div class="col-md-8 col-md-offset-2">
+        <h2 class="page-header">Kurs einfügen</h2>        
+        
+        {{ form_start(form) }}
+		{{ form_errors(form) }}
+			
+			<div class="form-group">
+				{{ form_label(form.name) }}
+				{{ form_errors(form.name) }}
+				{{ form_widget(form.name) }}
+			</div>
+
+			<div id="dateTimePickerContainer" class="form-group">
+				{{ form_label(form.dateTime) }}
+				{{ form_errors(form.dateTime) }}
+
+                <div class="input-group time">
+        			{{ form_widget(form.dateTime) }}
+        			<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+				</div>
+            
+			</div>
+
+			<div class="form-group">
+				{{ form_label(form.description) }}
+				{{ form_errors(form.description) }}
+				{{ form_widget(form.description) }}
+			</div>
+
+			<div class="form-group">
+				{{ form_label(form.maxParticipants) }}
+				{{ form_errors(form.maxParticipants) }}
+				{{ form_widget(form.maxParticipants) }}
+			</div>
+
+
+			
+		{{ form_end(form) }}
+	</div>
+
+{% endblock %}

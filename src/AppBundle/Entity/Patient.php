@@ -254,40 +254,6 @@ class Patient
     }
 
     /**
-     * Add arrangement
-     *
-     * @param \AppBundle\Entity\PatientArrangementReference $arrangement
-     *
-     * @return Patient
-     */
-    public function addArrangement(\AppBundle\Entity\PatientArrangementReference $arrangement)
-    {
-        $this->arrangements[] = $arrangement;
-
-        return $this;
-    }
-
-    /**
-     * Remove arrangement
-     *
-     * @param \AppBundle\Entity\PatientArrangementReference $arrangement
-     */
-    public function removeArrangement(\AppBundle\Entity\PatientArrangementReference $arrangement)
-    {
-        $this->arrangements->removeElement($arrangement);
-    }
-
-    /**
-     * Get arrangements
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getArrangements()
-    {
-        return $this->arrangements;
-    }
-
-    /**
      * Set birthDate
      *
      * @param \DateTime $birthDate

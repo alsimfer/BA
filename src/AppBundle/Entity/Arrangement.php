@@ -64,11 +64,6 @@ class Arrangement
     */
     private $patArrRefs;
     
-    public function __construct() 
-    {
-        $this->patients = new ArrayCollection();
-    }
-
 
     /**
      * Get id
@@ -176,38 +171,13 @@ class Arrangement
         return $this->maxParticipants;
     }
 
-    /**
-     * Add patient
-     *
-     * @param \AppBundle\Entity\PatientArrangementReference $patient
-     *
-     * @return Arrangement
-     */
-    public function addPatient(\AppBundle\Entity\PatientArrangementReference $patient)
-    {
-        $this->patients[] = $patient;
-
-        return $this;
-    }
 
     /**
-     * Remove patient
-     *
-     * @param \AppBundle\Entity\PatientArrangementReference $patient
+     * Constructor
      */
-    public function removePatient(\AppBundle\Entity\PatientArrangementReference $patient)
+    public function __construct()
     {
-        $this->patients->removeElement($patient);
-    }
-
-    /**
-     * Get patients
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPatients()
-    {
-        return $this->patients;
+        $this->patArrRefs = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**

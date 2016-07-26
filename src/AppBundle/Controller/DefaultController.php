@@ -565,7 +565,15 @@ class DefaultController extends Controller
             ->add('name', TextType::class, array('label' => 'Name', 'attr' => array('class' => 'form-control','style' => 'margin-bottom: 15px')))
             ->add('description', TextareaType::class, array('label' => 'Beschreibung', 'attr' => array('class' => 'form-control','style' => 'margin-bottom: 15px')))
             ->add('maxParticipants', IntegerType::class, array('label' => 'Max. Teilnehmer', 'attr' => array('class' => 'form-control','style' => 'margin-bottom: 15px')))
-            ->add('dateTime', DateTimeType::class, array('label' => 'Datum', 'attr' => array('style' => 'margin-bottom: 15px')))
+            ->add('dateTime', DateTimeType::class, [
+                'label' => 'Datum und Uhrzeit',
+                'widget' => 'single_text', 
+                'html5' => false,
+                'format' => 'dd.MM.yyyy HH:mm',
+                'attr' => [
+                    'class' => 'form-control'
+                ]
+            ])
             ->add('save', SubmitType::class, array('label' => 'Ok', 'attr' => array('class' => 'btn btn-primary'))) 
             ->getForm();
         
@@ -586,7 +594,7 @@ class DefaultController extends Controller
             return $this->redirectToRoute('arrangementsPage');
         }
         
-        return $this->render('default/editObjectPage.html.twig', array(
+        return $this->render('arrangement/arrangementCreatePage.html.twig', array(
             'title' => 'AOK | Kurse',
             'form' => $form->createView(),
             'user' => $sysUser,
@@ -613,7 +621,15 @@ class DefaultController extends Controller
             ->add('name', TextType::class, array('label' => 'Name', 'attr' => array('class' => 'form-control','style' => 'margin-bottom: 15px')))
             ->add('description', TextareaType::class, array('label' => 'Beschreibung', 'attr' => array('class' => 'form-control','style' => 'margin-bottom: 15px')))
             ->add('maxParticipants', IntegerType::class, array('label' => 'Max. Teilnehmer', 'attr' => array('class' => 'form-control','style' => 'margin-bottom: 15px')))
-            ->add('dateTime', DatetimeType::class, array('label' => 'Datum', 'attr' => array('style' => 'margin-bottom: 15px')))        
+            ->add('dateTime', DateTimeType::class, [
+                'label' => 'Datum und Uhrzeit',
+                'widget' => 'single_text', 
+                'html5' => false,
+                'format' => 'dd.MM.yyyy HH:mm',
+                'attr' => [
+                    'class' => 'form-control'
+                ]
+            ])
             ->add('save', SubmitType::class, array('label' => 'Ok', 'attr' => array('class' => 'btn btn-primary'))) 
             ->getForm();
         
@@ -622,8 +638,8 @@ class DefaultController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $arrangement->setName($form['name']->getData());
             $arrangement->setDescription($form['description']->getData());
-            $arrangement->setMaxParticipants($form['maxParticipants']->getData());
             $arrangement->setDateTime($form['dateTime']->getData());
+            $arrangement->setMaxParticipants($form['maxParticipants']->getData());
             
             $em = $this->getDoctrine()->getManager();
             $em->persist($arrangement);
@@ -634,12 +650,40 @@ class DefaultController extends Controller
             return $this->redirectToRoute('arrangementsPage');
         }
         
-        return $this->render('default/editObjectPage.html.twig', array(
-            'title' => 'AOK | Arrangements',
+        return $this->render('arrangement/arrangementEditPage.html.twig', array(
+            'title' => 'AOK | Kurse',
             'user' => $sysUser,
             'form' => $form->createView(),
             'pageHeader' => 'Kurs bearbeiten'
         ));
+    }
+
+    /**
+     * @Route("/arrangements/info/{id}", name="arrangementInfoPage")
+     */
+    public function arrangementInfoAction(Request $request, $id)
+    {
+        $sysUser = $this->checkLoggedUser($request);
+        
+        if (!$sysUser) {
+            return $this->redirectToRoute('loginPage');
+        }
+
+        $arrangement = $this->getDoctrine()->getRepository('AppBundle:Arrangement')->findOneById($id);
+        $patArrRefs = $this->getDoctrine()->getRepository('AppBundle:PatientArrangementReference')->findByArrangement($id);
+        $patients = array();
+        foreach ($patArrRefs as $key => $value) {
+            array_push($patients, $value->getPatient());
+        }
+
+        return $this->render('arrangement/arrangementInfoPage.html.twig', 
+            array(
+                'title' => 'AOK | Kurse',
+                'user' => $sysUser,
+                'arrangement' => $arrangement,
+                'patients' => $patients,
+            )
+        );
     }
 
 

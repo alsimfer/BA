@@ -406,4 +406,38 @@ class Patient
     {
         return $this->caretaker;
     }
+
+    /**
+     * Add patArrRef
+     *
+     * @param \AppBundle\Entity\PatientArrangementReference $patArrRef
+     *
+     * @return Patient
+     */
+    public function addPatArrRef(\AppBundle\Entity\PatientArrangementReference $patArrRef)
+    {
+        $this->patArrRefs[] = $patArrRef;
+
+        return $this;
+    }
+
+    /**
+     * Remove patArrRef
+     *
+     * @param \AppBundle\Entity\PatientArrangementReference $patArrRef
+     */
+    public function removePatArrRef(\AppBundle\Entity\PatientArrangementReference $patArrRef)
+    {
+        $this->patArrRefs->removeElement($patArrRef);
+    }
+
+    /**
+     * Get patArrRefs
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPatArrRefs()
+    {
+        return $this->patArrRefs;
+    }
 }
