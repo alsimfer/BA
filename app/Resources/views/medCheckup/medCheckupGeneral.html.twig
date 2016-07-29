@@ -22,42 +22,42 @@
     {% endif %}
 
 	<dt>Datum und Uhrzeit</dt>
-	{% if medCheckup.dateAndTime is defined %}
+	{% if medCheckup.dateAndTime is not empty %}
     	<dd class="bg-success">- {{ medCheckup.dateAndTime | date('d.m.Y H:i') }}</dd>
 	{% else %}
 		<dd class="bg-warning">- Nicht eingegeben</dd>
     {% endif %}
 
 	<dt>Höhe</dt>
-	{% if medCheckup.height is defined and medCheckup.height > 0 %}
+	{% if medCheckup.height is not empty and medCheckup.height > 0 %}
     	<dd class="bg-success">- {{ medCheckup.height }}</dd>
 	{% else %}
 		<dd class="bg-warning">- Nicht eingegeben</dd>
     {% endif %}
 	
 	<dt>Gewicht</dt>
-	{% if medCheckup.weight is defined and medCheckup.weight > 0 %}
+	{% if medCheckup.weight is not empty and medCheckup.weight > 0 %}
     	<dd class="bg-success">- {{ medCheckup.weight }}</dd>
 	{% else %}
 		<dd class="bg-warning">- Nicht eingegeben</dd>
     {% endif %}
 
     <dt>Taille</dt>
-	{% if medCheckup.waist is defined and medCheckup.waist > 0 %}
+	{% if medCheckup.waist is not empty and medCheckup.waist > 0 %}
     	<dd class="bg-success">- {{ medCheckup.waist }}</dd>
 	{% else %}
 		<dd class="bg-warning">- Nicht eingegeben</dd>
     {% endif %}
 
     <dt>Hüfte</dt>
-	{% if medCheckup.hips is defined and medCheckup.hips > 0 %}
+	{% if medCheckup.hips is not empty and medCheckup.hips > 0 %}
     	<dd class="bg-success">- {{ medCheckup.hips }}</dd>
 	{% else %}
 		<dd class="bg-warning">- Nicht eingegeben</dd>
     {% endif %}
 	
 	<dt>Herkunft</dt>
-	{% if medCheckup.source is defined and medCheckup.source|length > 0 %}
+	{% if medCheckup.source is not empty and medCheckup.source|length > 0 %}
     	<dd class="bg-success">- {{ medCheckup.source }}</dd>
 	{% else %}
 		<dd class="bg-warning">- Nicht eingegeben</dd>

@@ -1,0 +1,114 @@
+<dl class="container-fluid">
+
+	<dt>Krankenversicherungsart</dt>
+	{% if patient.krankenversicherungsart is not empty and patient.krankenversicherungsart|length > 0 %}
+    	<dd class="bg-success">- {{ patient.krankenversicherungsart }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Krankenkassennummer-IK</dt>
+	{% if patient.krankenkassennummer is not empty and patient.krankenkassennummer|length > 0 %}
+    	<dd class="bg-success">- {{ patient.krankenkassennummer }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Krankenkasse</dt>
+	{% if patient.krankenkasse is not empty and patient.krankenkasse|length > 0 %}
+    	<dd class="bg-success">- {{ patient.krankenkasse }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Kassenname zur Bedruckung</dt>
+	{% if patient.kassennameZurBedruckung is not empty and patient.kassennameZurBedruckung|length > 0 %}
+    	<dd class="bg-success">- {{ patient.kassennameZurBedruckung }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+    <dt>Versichertennummer</dt>
+	{% if patient.versichertennummer is not empty and patient.versichertennummer|length > 0 %}
+    	<dd class="bg-success">- {{ patient.versichertennummer }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+    <dt>eGK-Versicherten-Nr</dt>
+	{% if patient.egkVersichertenNr is not empty and patient.egkVersichertenNr|length > 0 %}
+    	<dd class="bg-success">- {{ patient.egkVersichertenNr }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+    <dt>Kostenträgerabrechnungsbereich</dt>
+	{% if patient.kostentraegerabrechnungsbereich is not empty and patient.kostentraegerabrechnungsbereich|length > 0 %}
+    	<dd class="bg-success">- {{ patient.kostentraegerabrechnungsbereich }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+    <dt>KV-Bereich</dt>
+	{% if patient.kvBereich is not empty and patient.kvBereich|length > 0 %}
+    	<dd class="bg-success">- {{ patient.kvBereich }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Abrechnungs-VKNR</dt>
+	{% if patient.abrechnungsvknr is not empty and patient.abrechnungsvknr|length > 0 %}
+    	<dd class="bg-success">- {{ patient.abrechnungsvknr }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+    <dt>Sonstige Kostenträger-Zusatzangabe</dt>
+	{% if patient.sonstige is not empty and patient.sonstige|length > 0 %}
+    	<dd class="bg-success">- {{ patient.sonstige }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+    <dt>Versichertenart-MFR</dt>
+	{% if patient.versichertenartmfr is not empty and patient.versichertenartmfr|length > 0 %}
+    	<dd class="bg-success">- {{ patient.versichertenartmfr }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+    <dt>Versichertenstatus-KVK</dt>
+	{% if patient.versichertenstatuskvk is not empty and patient.versichertenstatuskvk|length > 0 %}
+    	<dd class="bg-success">- {{ patient.versichertenstatuskvk }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+    <dt>Statusergänzung</dt>
+	{% if patient.statusergaenzung is not empty and patient.statusergaenzung|length > 0 %}
+    	<dd class="bg-success">- {{ patient.statusergaenzung }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>KV gültig bis (Monat/Jahr)</dt>
+	{% if patient.validTill is not empty %}
+    	<dd class="bg-success">- {{ patient.validTill|date('d.m.Y') }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Abrechnungsform</dt>
+	{% if patient.abrechnungsform is not empty and patient.abrechnungsform|length > 0 %}
+    	<dd class="bg-success">- {{ patient.abrechnungsform }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+    <dt>Bezahlung der Nachsorge</dt>
+	{% if patient.nachsorge is not empty and patient.nachsorge|length > 0 %}
+    	<dd class="bg-success">- {{ patient.nachsorge }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+</dl>		

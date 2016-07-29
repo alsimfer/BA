@@ -1,32 +1,35 @@
-{% extends 'default/objectListPage.html.twig' %}
+{% extends 'mainPage.html.twig' %}
 
-{% block table %}
+{% block main %}
 	
-	<table id="progress_table" class="table table_main table-striped table-bordered">
-		<thead>
-	        <tr>
-	        	<th>Id</th>
-	        	<th>Patient Name</th>
-	        	<th>Kurs Name</th>
-	        	<th>Datum</th>
-	        	<th>Angemeldet</th>
-	        	<th>Besucht</th>
-	        	<th>Comments</th>
-	        	
-	        </tr>
-	    </thead>
+    <div class="row">
+		<div id="control_panel" class="col-md-2">
 
-	    {% for p in patArrRef %}
-	        <tr>
-	        	<td>{{ p.id }}</td>
-	        	<td>{{ p.patient.firstName ~ " " ~ p.patient.lastName }}</td>
-	        	<td>{{ p.arrangement.name }}</td>
-	        	<td>{{ p.arrangement.dateTime | date('d.m.Y') ~ ", um " ~ p.arrangement.dateTime | date('H:i') }}</td>
-	            <td>{{ p.registered }}</td>
-	            <td>{{ p.attended }}</td>
-	            <td>{{ p.comments }}</td>
-	        </tr>
-	    {% endfor %}
-    </table>
+			<ul class="nav nav-pills nav-stacked">
+			    <li>
+			    	<a href="{{ path('patientArrangementCreatePage') }}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Kursverlauf einfügen</a>
+			    </li>
+			    <li id="info_li" class="disabled">
+			    	<a id="info_link"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Kursverlauf info</a>
+			    </li>	
+			    <li id="edit_li" class="disabled">
+			    	<a id="edit_link"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Kursverlauf bearbeiten</a>
+			    </li>
+			    <li id="modal_toggle_li" class="disabled">
+			    	<a id="modal_toggle_link" data-toggle="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Kursverlauf entfernen</a>
+			    </li>			   
+			</ul>
+
+		</div>
+
+		<div id="content" class="col-md-10">
+			<h2 class="page-header">Übersicht aller Kursverläufe</h2>
+			
+			{% include 'patientArrangement/patientArrangementTable.html.twig' %}			
+
+			{% include 'default/confirmDialog.html.twig' %}
+				
+	    </div>
+	</div>
 
 {% endblock %}

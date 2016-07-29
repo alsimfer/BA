@@ -1,67 +1,66 @@
 <dl class="container-fluid">
 
 	<dt>Vorname</dt>
-	{% if patient.firstName is defined and patient.firstName|length > 0 %}
+	{% if patient.firstName is not empty and patient.firstName|length > 0 %}
     	<dd class="bg-success">- {{ patient.firstName }}</dd>
 	{% else %}
 		<dd class="bg-warning">- Nicht eingegeben</dd>
     {% endif %}
 
 	<dt>Nachname</dt>
-	{% if patient.lastName is defined and patient.lastName|length > 0 %}
+	{% if patient.lastName is not empty and patient.lastName|length > 0 %}
     	<dd class="bg-success">- {{ patient.lastName }}</dd>
 	{% else %}
 		<dd class="bg-warning">- Nicht eingegeben</dd>
     {% endif %}
 
 	<dt>Geburtstag</dt>
-	{% if patient.birthDate is defined %}
+	{% if patient.birthDate is not empty %}
     	<dd class="bg-success">- {{ patient.birthDate | date('d.m.Y') }}</dd>
 	{% else %}
 		<dd class="bg-warning">- Nicht eingegeben</dd>
     {% endif %}
 
 	<dt>Geschlecht</dt>
-	{% if patient.sex is defined and patient.sex|length > 0 %}
+	{% if patient.sex is not empty and patient.sex|length > 0 %}
     	<dd class="bg-success">- {{ patient.sex }}</dd>
 	{% else %}
 		<dd class="bg-warning">- Nicht eingegeben</dd>
     {% endif %}
 
 	<dt>E-Mail</dt>
-	{% if patient.email is defined and patient.email|length > 0 %}
+	{% if patient.email is not empty and patient.email|length > 0 %}
     	<dd class="bg-success">- {{ patient.email }}</dd>
 	{% else %}
 		<dd class="bg-warning">- Nicht eingegeben</dd>
     {% endif %}
 	
 	<dt>Tel. Nummer</dt>
-	{% if patient.phoneNumber is defined and patient.phoneNumber|length > 0 %}
+	{% if patient.phoneNumber is not empty and patient.phoneNumber|length > 0 %}
     	<dd class="bg-success">- {{ patient.phoneNumber }}</dd>
 	{% else %}
 		<dd class="bg-warning">- Nicht eingegeben</dd>
     {% endif %}
 	
 	<dt>Adresse</dt>
-	{% if patient.address is defined and patient.address|length > 0 %}
+	{% if patient.address is not empty and patient.address|length > 0 %}
     	<dd class="bg-success">- {{ patient.address }}</dd>
 	{% else %}
 		<dd class="bg-warning">- Nicht eingegeben</dd>
     {% endif %}
 	
 	<dt>Krankenhaus</dt>
-	{% if patient.hospital.name is defined %}
+	{% if patient.hospital is not empty and patient.hospital.name is not empty %}
     	<dd class="bg-success">- {{ patient.hospital.name }}</dd>
 	{% else %}
 		<dd class="bg-warning">- Nicht eingegeben</dd>
     {% endif %}
 
 	<dt>Betreuer</dt>
-	{% if patient.caretaker.lastName is defined %}
+	{% if patient.caretaker is not empty and patient.caretaker.lastName is not empty %}
     	<dd class="bg-success">- {{ patient.caretaker.firstName ~ " " ~ patient.caretaker.lastName }}</dd>
 	{% else %}
 		<dd class="bg-warning">- Nicht eingegeben</dd>
     {% endif %}
 
-</dl>						       
-</div>
+</dl>		

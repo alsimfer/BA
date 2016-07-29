@@ -1,0 +1,31 @@
+<dl class="container-fluid">
+
+	<dt>Patient Nachname</dt>
+	{% if patArrRef.patient.lastName is not empty and patArrRef.patient.lastName|length > 0 %}
+    	<dd class="bg-success">- {{ patArrRef.patient.lastName }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Kurs</dt>
+	{% if patArrRef.arrangement.name is not empty and patArrRef.arrangement.name|length > 0 %}
+    	<dd class="bg-success">- {{ patArrRef.arrangement.name }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Besucht</dt>
+	{% if patArrRef.attended is not empty and patArrRef.attended > 0 %}
+    	<dd class="bg-success">- {{ patArrRef.attended }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Commentare</dt>
+	{% if patArrRef.comments is not empty and patArrRef.comments|length > 0 %}
+    	<dd class="bg-success">- {{ patArrRef.comments }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+</dl>						       

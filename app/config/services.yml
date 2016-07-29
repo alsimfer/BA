@@ -9,6 +9,16 @@ services:
         public: false
         tags:
             - { name: twig.extension }
-#    service_name:
-#        class: AppBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+    util:
+        class: AppBundle\Service\Util
+        arguments: ['@doctrine.orm.entity_manager']
+    # user_id_listener:
+    #     class: AppBundle\EventListener\UserIdListener
+    #     tags:
+    #         - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+    error_redirect_listener:
+        class: AppBundle\EventListener\ErrorRedirectListener
+        arguments:
+           router: "@router"
+        tags:
+           - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }

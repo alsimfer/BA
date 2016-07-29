@@ -1,26 +1,32 @@
-{% extends 'default/objectListPage.html.twig' %}
+{% extends 'mainPage.html.twig' %}
 
-{% block table %}
+{% block main %}
+	
+    <div class="row">
+		<div id="control_panel" class="col-md-2">
 
-	<table id="users_table" class="table table_main table-striped table-bordered">
-		<thead>
-            <tr>
-            	<th>Id</th>
-                <th>Name</th>
-                <th>E-Mail</th>
-                <th>Tel. Nummer</th>
-                <th>Gruppe</th>
-            </tr>
-        </thead>
+			<ul class="nav nav-pills nav-stacked">
+			    <li>
+			    	<a href="/users/create"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Benutzer einfügen</a>
+			    </li>
+			    <li id="edit_li" class="disabled">
+			    	<a id="edit_link"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Benutzer bearbeiten</a>
+			    </li>
+			    <li id="modal_toggle_li" class="disabled">
+			    	<a id="modal_toggle_link" data-toggle="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Benutzer entfernen</a>
+			    </li>			   
+			</ul>
 
-	    {% for u in users %}
-	        <tr>
-	        	<td>{{ u.id }}</td>
-	            <td>{{ u.firstName ~ " " ~ u.lastName }}</td>
-	            <td>{{ u.email }}</td>
-	            <td>{{ u.phoneNumber }}</td>
-	            <td>{{ u.userGroup }}</td>
-	        </tr>
-	    {% endfor %}
-    </table>
+		</div>
+
+		<div id="content" class="col-md-10">
+			<h2 class="page-header">Übersicht aller Benutzer</h2>
+			
+			{% include 'user/usersTable.html.twig' %}			
+
+			{% include 'default/confirmDialog.html.twig' %}
+				
+	    </div>
+	</div>
+
 {% endblock %}

@@ -20,22 +20,22 @@ class Arrangement
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, options={"default" : ""})
      * @Assert\Length(
      *      max = 255,
      *      maxMessage = "Der Name darf nicht länger als {{ limit }} Zeichen sein."
      * )
      */
-    private $name = '';
+    private $name;
     
     /**
-     * @ORM\Column(type="string", length=1023)
+     * @ORM\Column(type="string", length=1023, options={"default" : ""})
      * @Assert\Length(
      *      max = 1023,
      *      maxMessage = "Die Beschreibung darf nicht länger als {{ limit }} Zeichen sein."
      * )
      */
-    private $description = '';
+    private $description;
 
     /**
      * @ORM\Column(type="datetime")
@@ -66,6 +66,30 @@ class Arrangement
     
 
     /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->patArrRefs = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add patArrRef
+     *
+     * @param \AppBundle\Entity\PatientArrangementReference $patArrRef
+     *
+     * @return Arrangement
+     */
+    public function addPatArrRef(\AppBundle\Entity\PatientArrangementReference $patArrRef)
+    {
+        $this->patArrRefs[] = $patArrRef;
+
+        return $this;
+    }
+
+   
+
+    /**
      * Get id
      *
      * @return integer
@@ -84,7 +108,7 @@ class Arrangement
      */
     public function setName($name)
     {
-        $this->name = !isset($name) ? '' : $name;
+        $this->name = is_null($name) ? '' : $name;
 
         return $this;
     }
@@ -108,7 +132,7 @@ class Arrangement
      */
     public function setDescription($description)
     {
-        $this->description = !isset($description) ? '' : $description;
+        $this->description = is_null($description) ? '' : $description;;
 
         return $this;
     }
@@ -171,5 +195,23 @@ class Arrangement
         return $this->maxParticipants;
     }
 
+    /**
+     * Remove patArrRef
+     *
+     * @param \AppBundle\Entity\PatientArrangementReference $patArrRef
+     */
+    public function removePatArrRef(\AppBundle\Entity\PatientArrangementReference $patArrRef)
+    {
+        $this->patArrRefs->removeElement($patArrRef);
+    }
 
+    /**
+     * Get patArrRefs
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPatArrRefs()
+    {
+        return $this->patArrRefs;
+    }
 }

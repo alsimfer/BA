@@ -37,22 +37,22 @@ class SysUser
     private $medCheckups;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
      * @Assert\Length(
      *      max = 50,
      *      maxMessage = "Der Vorname darf nicht länger als {{ limit }} Zeichen sein."
      * )
      */
-    private $firstName = '';
+    private $firstName;
     
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
      * @Assert\Length(
      *      max = 50,
      *      maxMessage = "Der Nachname darf nicht länger als {{ limit }} Zeichen sein."
      * )
      */
-    private $lastName = '';
+    private $lastName;
 
     /**
      * @ORM\Column(type="string", unique=true, length=150)
@@ -66,10 +66,10 @@ class SysUser
      * )
      * @Assert\NotBlank(groups={"registration"}) 
      */
-    private $email = '';
+    private $email;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=20, options={"default" : ""})
      * @Assert\Length(
      *      min = 4,
      *      max = 15,
@@ -77,13 +77,24 @@ class SysUser
      *      maxMessage = "Die Nummer darf nicht länger als {{ limit }} Zeichen sein",
      * )
      */
-    private $phoneNumber = '';
+    private $phoneNumber;
 
     /**
      * @ORM\Column(type="string")
      */
-    private $password = '';
+    private $password;
 
+
+   
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->medCheckups = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+   
 
     /**
      * Get id
@@ -100,11 +111,11 @@ class SysUser
      *
      * @param string $firstName
      *
-     * @return Sys_User
+     * @return SysUser
      */
     public function setFirstName($firstName)
     {
-        $this->firstName = !isset($firstName) ? '' : $firstName;
+        $this->firstName = is_null($firstName) ? '' : $firstName;;
 
         return $this;
     }
@@ -124,11 +135,11 @@ class SysUser
      *
      * @param string $lastName
      *
-     * @return Sys_User
+     * @return SysUser
      */
     public function setLastName($lastName)
     {
-        $this->lastName = !isset($lastName) ? '' : $lastName;
+        $this->lastName = is_null($lastName) ? '' : $lastName;;
 
         return $this;
     }
@@ -148,7 +159,7 @@ class SysUser
      *
      * @param string $email
      *
-     * @return Sys_User
+     * @return SysUser
      */
     public function setEmail($email)
     {
@@ -168,11 +179,35 @@ class SysUser
     }
 
     /**
+     * Set phoneNumber
+     *
+     * @param string $phoneNumber
+     *
+     * @return SysUser
+     */
+    public function setPhoneNumber($phoneNumber)
+    {
+        $this->phoneNumber = is_null($phoneNumber) ? '' : $phoneNumber;;
+
+        return $this;
+    }
+
+    /**
+     * Get phoneNumber
+     *
+     * @return string
+     */
+    public function getPhoneNumber()
+    {
+        return $this->phoneNumber;
+    }
+
+    /**
      * Set password
      *
      * @param string $password
      *
-     * @return Sys_User
+     * @return SysUser
      */
     public function setPassword($password)
     {
@@ -190,31 +225,6 @@ class SysUser
     {
         return $this->password;
     }
-
-    /**
-     * Set phoneNumber
-     *
-     * @param string $phoneNumber
-     *
-     * @return SysUser
-     */
-    public function setPhoneNumber($phoneNumber)
-    {
-        $this->phoneNumber = !isset($phoneNumber) ? '' : $phoneNumber;
-
-        return $this;
-    }
-
-    /**
-     * Get phoneNumber
-     *
-     * @return string
-     */
-    public function getPhoneNumber()
-    {
-        return $this->phoneNumber;
-    }
-
 
     /**
      * Set userGroup
@@ -238,13 +248,6 @@ class SysUser
     public function getUserGroup()
     {
         return $this->userGroup;
-    }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->medCheckups = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**

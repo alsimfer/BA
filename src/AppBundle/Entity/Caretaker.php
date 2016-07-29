@@ -20,22 +20,22 @@ class Caretaker
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
      * @Assert\Length(
      *      max = 50,
      *      maxMessage = "Der Vorname darf nicht länger als {{ limit }} Zeichen sein."
      * )     
      */
-    private $firstName = '';
+    private $firstName;
     
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
      * @Assert\Length(
      *      max = 50,
      *      maxMessage = "Der Nachname darf nicht länger als {{ limit }} Zeichen sein."
      * )
      */
-    private $lastName = '';
+    private $lastName;
 
     /**
      * @ORM\Column(type="string", unique=true, length=150)
@@ -49,10 +49,10 @@ class Caretaker
      * )
      * @Assert\NotBlank(groups={"registration"})    
      */
-    private $email = '';
+    private $email;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=20, options={"default" : ""})
      * @Assert\Length(
      *      min = 4,
      *      max = 20,
@@ -60,7 +60,7 @@ class Caretaker
      *      maxMessage = "Die Nummer darf nicht länger als {{ limit }} Zeichen sein",
      * )
      */
-    private $phoneNumber = '';
+    private $phoneNumber;
 
 	/**
 	* @ORM\OneToMany(targetEntity="Patient", mappedBy="caretaker") 
@@ -72,6 +72,8 @@ class Caretaker
 		$this->patients = new ArrayCollection();
 	}
 
+
+   
 
     /**
      * Get id
@@ -92,7 +94,7 @@ class Caretaker
      */
     public function setFirstName($firstName)
     {
-        $this->firstName = $firstName;
+        $this->firstName = is_null($firstName) ? '' : $firstName;;
 
         return $this;
     }
@@ -116,7 +118,7 @@ class Caretaker
      */
     public function setLastName($lastName)
     {
-        $this->lastName = $lastName;
+        $this->lastName = is_null($lastName) ? '' : $lastName;;
 
         return $this;
     }
@@ -164,7 +166,7 @@ class Caretaker
      */
     public function setPhoneNumber($phoneNumber)
     {
-        $this->phoneNumber = $phoneNumber;
+        $this->phoneNumber = is_null($phoneNumber) ? '' : $phoneNumber;;
 
         return $this;
     }

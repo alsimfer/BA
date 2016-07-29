@@ -1,0 +1,34 @@
+{% extends 'mainPage.html.twig' %}
+
+{% block main %}
+    
+    <div class="col-md-8 col-md-offset-2">
+	    <ul class="nav nav-tabs">
+		    <li class="active"><a data-toggle="tab" href="#menu1">Stammdaten</a></li>
+		    <li><a data-toggle="tab" href="#menu2">Patient</a></li>
+		    <li><a data-toggle="tab" href="#menu3">Kurs</a></li>
+		    
+		</ul>
+
+		<div class="tab-content">
+		    <div id="menu1" class="tab-pane fade in active">
+		    	<p style="margin-top: 15px"></p>
+		    	{{ include('patientArrangement/patientArrangementGeneral.html.twig') }}		    
+    		</div>
+
+		    <div id="menu2" class="tab-pane fade">
+		    	<p style="margin-top: 15px"></p>
+		    	{{ include('patient/patientGeneral.html.twig') }}
+		    </div>
+
+		    <div id="menu3" class="tab-pane fade">
+		    	<p style="margin-top: 15px"></p>
+				{{ include('arrangement/arrangementGeneral.html.twig') }}		
+		    </div>
+		    
+		    
+		</div>
+        
+    </div>
+
+{% endblock %}

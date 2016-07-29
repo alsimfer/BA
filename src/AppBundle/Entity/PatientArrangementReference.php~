@@ -28,12 +28,18 @@ class PatientArrangementReference
     /**
     * @ORM\ManyToOne(targetEntity="Patient", inversedBy="patArrRefs") 
     * @ORM\JoinColumn(name="patient_id", referencedColumnName="id") 
+    * @Assert\NotBlank(
+    *   message="Dieser Wert darf nicht leer sein"  
+    * ) 
     */
     private $patient;
 
     /**
     * @ORM\ManyToOne(targetEntity="Arrangement", inversedBy="patArrRefs")
     * @ORM\JoinColumn(name="arrangement_id", referencedColumnName="id") 
+    * @Assert\NotBlank(
+    *   message="Dieser Wert darf nicht leer sein"  
+    * ) 
     */
     private $arrangement;
 
@@ -43,28 +49,22 @@ class PatientArrangementReference
         $this->arrangement = new ArrayCollection();
     }
 
-    /**
-    * @ORM\Column(type="integer")
-    */
-    private $registered;
-
 
     /**
-    * @ORM\Column(type="integer")
+    * @ORM\Column(type="integer", nullable=true, options={"default" : 0})
     */
     private $attended;
 
 
     /**
-     * @ORM\Column(type="string", length=1023)
+     * @ORM\Column(type="string", length=1023, options={"default" : ""})
      * @Assert\Length(
      *      max = 1023,
      *      maxMessage = "Die Kommentare dürfen nicht länger als {{ limit }} Zeichen sein."
      * )
      */
-    private $comments = '';
+    private $comments;    
     
-
 
     /**
      * Get id
@@ -109,7 +109,7 @@ class PatientArrangementReference
      */
     public function setComments($comments)
     {
-        $this->comments = !isset($comments) ? '' : $comments;
+        $this->comments = is_null($comments) ? '' : $comments;
 
         return $this;
     }
@@ -170,29 +170,5 @@ class PatientArrangementReference
     public function getArrangement()
     {
         return $this->arrangement;
-    }
-
-    /**
-     * Set registered
-     *
-     * @param integer $registered
-     *
-     * @return PatientArrangementReference
-     */
-    public function setRegistered($registered)
-    {
-        $this->registered = $registered;
-
-        return $this;
-    }
-
-    /**
-     * Get registered
-     *
-     * @return integer
-     */
-    public function getRegistered()
-    {
-        return $this->registered;
     }
 }

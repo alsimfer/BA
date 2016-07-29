@@ -11,9 +11,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity
  * @ORM\Table(name="patient") 
  * @UniqueEntity(
- *     fields={"email"},
- *     message="Diese E-Mail wird bereits verwendet",
- *     groups={"registration"}
+ *     fields={"email"}, 
+ *     groups={"registration"},
+ *     message="Diese E-Mail wird bereits verwendet"
  * )
  */
 class Patient
@@ -26,22 +26,22 @@ class Patient
     private $id;
     
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
      * @Assert\Length(
      *      max = 50,
      *      maxMessage = "Der Vorname darf nicht länger als {{ limit }} Zeichen sein."
      * )     
      */
-    private $firstName = '';
+    private $firstName;
     
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
      * @Assert\Length(
      *      max = 50,
      *      maxMessage = "Der Nachname darf nicht länger als {{ limit }} Zeichen sein."
      * )
      */
-    private $lastName = '';
+    private $lastName;
 
     /**
      * @ORM\Column(type="date", length=50, nullable=true)
@@ -50,9 +50,9 @@ class Patient
     private $birthDate;
 
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)     
+     * @ORM\Column(type="string", length=50, options={"default" : ""})     
      */
-    private $sex = '';
+    private $sex;
 
     /**
      * @ORM\ManyToOne(targetEntity="Hospital", inversedBy="patients") 
@@ -67,16 +67,17 @@ class Patient
     private $caretaker;
 
     /**
-     * @ORM\Column(type="string", length=500, nullable=true)     
+     * @ORM\Column(type="string", length=500, options={"default" : ""})     
      */
-    private $address = '';
+    private $address;
 
 
     /**
-     * @ORM\Column(type="string", unique=true, length=150, nullable=true)
+     * @ORM\Column(type="string", length=150, options={"default" : ""})
      * @Assert\Email(
      *     message = "Dieser Wert '{{ value }}' ist keine gültige E-Mail.",
-     *     checkMX = true
+     *     checkMX = true,
+     *     groups={"registration"}
      * )
      * @Assert\Length(
      *     max = 150,
@@ -86,7 +87,7 @@ class Patient
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=20, nullable=true)
+     * @ORM\Column(type="string", length=20, options={"default" : ""})
      * @Assert\Length(
      *      min = 4,
      *      max = 20,
@@ -94,24 +95,189 @@ class Patient
      *      maxMessage = "Die Nummer darf nicht länger als {{ limit }} Zeichen sein",
      * )
      */
-    private $phoneNumber = '';
+    private $phoneNumber;
+
+
+    
+
+
+
+    /**
+     * @ORM\Column(type="string", length=200, options={"default" : ""})
+     */
+    private $krankenversicherungsart;
+
+
+    /**
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 50,
+     *      minMessage = "Die Nummer darf nicht kürzer als {{ limit }} Zeichen sein",
+     *      maxMessage = "Die Nummer darf nicht länger als {{ limit }} Zeichen sein",
+     * )
+     */
+    private $krankenkassennummer;
+
+    /**
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 50,
+     *      minMessage = "Das Feld darf nicht kürzer als {{ limit }} Zeichen sein",
+     *      maxMessage = "Das Feld darf nicht länger als {{ limit }} Zeichen sein",
+     * )
+     */
+    private $krankenkasse;
+
+    /**
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 50,
+     *      minMessage = "Das Feld darf nicht kürzer als {{ limit }} Zeichen sein",
+     *      maxMessage = "Das Feld darf nicht länger als {{ limit }} Zeichen sein",
+     * )
+     */
+    private $kassennameZurBedruckung;
+
+    /**
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 50,
+     *      minMessage = "Die Nummer darf nicht kürzer als {{ limit }} Zeichen sein",
+     *      maxMessage = "Die Nummer darf nicht länger als {{ limit }} Zeichen sein",
+     * )
+     */
+    private $versichertennummer;
+
+    /**
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 50,
+     *      minMessage = "Die Nummer darf nicht kürzer als {{ limit }} Zeichen sein",
+     *      maxMessage = "Die Nummer darf nicht länger als {{ limit }} Zeichen sein",
+     * )
+     */
+    private $egkVersichertenNr;
+
+    /**
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 50,
+     *      minMessage = "Das Feld darf nicht kürzer als {{ limit }} Zeichen sein",
+     *      maxMessage = "Das Feld darf nicht länger als {{ limit }} Zeichen sein",
+     * )
+     */
+    private $kostentraegerabrechnungsbereich;
+
+    /**
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 50,
+     *      minMessage = "Das Feld darf nicht kürzer als {{ limit }} Zeichen sein",
+     *      maxMessage = "Das Feld darf nicht länger als {{ limit }} Zeichen sein",
+     * )
+     */
+    private $kvBereich;
+
+    /**
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 50,
+     *      minMessage = "Das Feld darf nicht kürzer als {{ limit }} Zeichen sein",
+     *      maxMessage = "Das Feld darf nicht länger als {{ limit }} Zeichen sein",
+     * )
+     */
+    private $abrechnungsvknr;
+
+    /**
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 50,
+     *      minMessage = "Das Feld darf nicht kürzer als {{ limit }} Zeichen sein",
+     *      maxMessage = "Das Feld darf nicht länger als {{ limit }} Zeichen sein",
+     * )
+     */
+    private $sonstige;
+
+    /**
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 50,
+     *      minMessage = "Das Feld darf nicht kürzer als {{ limit }} Zeichen sein",
+     *      maxMessage = "Das Feld darf nicht länger als {{ limit }} Zeichen sein",
+     * )
+     */
+    private $versichertenartmfr;
+
+    /**
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 50,
+     *      minMessage = "Das Feld darf nicht kürzer als {{ limit }} Zeichen sein",
+     *      maxMessage = "Das Feld darf nicht länger als {{ limit }} Zeichen sein",
+     * )
+     */
+    private $versichertenstatuskvk;
+
+    /**
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 50,
+     *      minMessage = "Das Feld darf nicht kürzer als {{ limit }} Zeichen sein",
+     *      maxMessage = "Das Feld darf nicht länger als {{ limit }} Zeichen sein",
+     * )
+     */
+    private $statusergaenzung;
+
+
+    /**
+     * @ORM\Column(type="date", length=50, nullable=true)
+     * @Assert\Date()
+     */
+    private $validTill;
+
+    /**
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
+     */
+    private $abrechnungsform;
+
+
+    /**
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
+     */
+    private $nachsorge;
+
 
     /**
     * @ORM\OneToMany(targetEntity="MedCheckup", mappedBy="patient") 
     */
     private $medCheckups;
 
+
     /**
     * @ORM\OneToMany(targetEntity="PatientArrangementReference", mappedBy="patient") 
     */
     private $patArrRefs;
-
-    public function __construct() 
+    
+    /**
+     * Constructor
+     */
+    public function __construct()
     {
-        $this->medCheckups = new ArrayCollection();
-        $this->patArrRefs = new ArrayCollection();
+        $this->medCheckups = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->patArrRefs = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
 
     /**
      * Get id
@@ -132,7 +298,7 @@ class Patient
      */
     public function setFirstName($firstName)
     {
-        $this->firstName = $firstName;
+        $this->firstName = is_null($firstName) ? '' : $firstName;;
 
         return $this;
     }
@@ -156,7 +322,7 @@ class Patient
      */
     public function setLastName($lastName)
     {
-        $this->lastName = $lastName;
+        $this->lastName = is_null($lastName) ? '' : $lastName;;
 
         return $this;
     }
@@ -169,122 +335,6 @@ class Patient
     public function getLastName()
     {
         return $this->lastName;
-    }
-
-    /**
-     * Set email
-     *
-     * @param string $email
-     *
-     * @return Patient
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * Get email
-     *
-     * @return string
-     */
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    /**
-     * Set phoneNumber
-     *
-     * @param string $phoneNumber
-     *
-     * @return Patient
-     */
-    public function setPhoneNumber($phoneNumber)
-    {
-        $this->phoneNumber = $phoneNumber;
-
-        return $this;
-    }
-
-    /**
-     * Get phoneNumber
-     *
-     * @return string
-     */
-    public function getPhoneNumber()
-    {
-        return $this->phoneNumber;
-    }
-
-    /**
-     * Add medCheckup
-     *
-     * @param \AppBundle\Entity\MedCheckup $medCheckup
-     *
-     * @return Patient
-     */
-    public function addMedCheckup(\AppBundle\Entity\MedCheckup $medCheckup)
-    {
-        $this->medCheckups[] = $medCheckup;
-
-        return $this;
-    }
-
-    /**
-     * Remove medCheckup
-     *
-     * @param \AppBundle\Entity\MedCheckup $medCheckup
-     */
-    public function removeMedCheckup(\AppBundle\Entity\MedCheckup $medCheckup)
-    {
-        $this->medCheckups->removeElement($medCheckup);
-    }
-
-    /**
-     * Get medCheckups
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getMedCheckups()
-    {
-        return $this->medCheckups;
-    }
-
-    /**
-     * Add arrangement
-     *
-     * @param \AppBundle\Entity\PatientArrangementReference $arrangement
-     *
-     * @return Patient
-     */
-    public function addArrangement(\AppBundle\Entity\PatientArrangementReference $arrangement)
-    {
-        $this->arrangements[] = $arrangement;
-
-        return $this;
-    }
-
-    /**
-     * Remove arrangement
-     *
-     * @param \AppBundle\Entity\PatientArrangementReference $arrangement
-     */
-    public function removeArrangement(\AppBundle\Entity\PatientArrangementReference $arrangement)
-    {
-        $this->arrangements->removeElement($arrangement);
-    }
-
-    /**
-     * Get arrangements
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getArrangements()
-    {
-        return $this->arrangements;
     }
 
     /**
@@ -320,7 +370,7 @@ class Patient
      */
     public function setSex($sex)
     {
-        $this->sex = $sex;
+        $this->sex = is_null($sex) ? '' : $sex;;
 
         return $this;
     }
@@ -344,7 +394,7 @@ class Patient
      */
     public function setAddress($address)
     {
-        $this->address = $address;
+        $this->address = is_null($address) ? '' : $address;;
 
         return $this;
     }
@@ -357,6 +407,54 @@ class Patient
     public function getAddress()
     {
         return $this->address;
+    }
+
+    /**
+     * Set email
+     *
+     * @param string $email
+     *
+     * @return Patient
+     */
+    public function setEmail($email)
+    {
+        $this->email = is_null($email) ? '' : $email;;
+
+        return $this;
+    }
+
+    /**
+     * Get email
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * Set phoneNumber
+     *
+     * @param string $phoneNumber
+     *
+     * @return Patient
+     */
+    public function setPhoneNumber($phoneNumber)
+    {
+        $this->phoneNumber = is_null($phoneNumber) ? '' : $phoneNumber;;
+
+        return $this;
+    }
+
+    /**
+     * Get phoneNumber
+     *
+     * @return string
+     */
+    public function getPhoneNumber()
+    {
+        return $this->phoneNumber;
     }
 
     /**
@@ -405,6 +503,40 @@ class Patient
     public function getCaretaker()
     {
         return $this->caretaker;
+    }
+
+    /**
+     * Add medCheckup
+     *
+     * @param \AppBundle\Entity\MedCheckup $medCheckup
+     *
+     * @return Patient
+     */
+    public function addMedCheckup(\AppBundle\Entity\MedCheckup $medCheckup)
+    {
+        $this->medCheckups[] = $medCheckup;
+
+        return $this;
+    }
+
+    /**
+     * Remove medCheckup
+     *
+     * @param \AppBundle\Entity\MedCheckup $medCheckup
+     */
+    public function removeMedCheckup(\AppBundle\Entity\MedCheckup $medCheckup)
+    {
+        $this->medCheckups->removeElement($medCheckup);
+    }
+
+    /**
+     * Get medCheckups
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMedCheckups()
+    {
+        return $this->medCheckups;
     }
 
     /**

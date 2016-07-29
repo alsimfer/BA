@@ -11,9 +11,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity
  * @ORM\Table(name="patient") 
  * @UniqueEntity(
- *     fields={"email"},
- *     message="Diese E-Mail wird bereits verwendet",
- *     groups={"registration"}
+ *     fields={"email"}, 
+ *     groups={"registration"},
+ *     message="Diese E-Mail wird bereits verwendet"
  * )
  */
 class Patient
@@ -26,22 +26,22 @@ class Patient
     private $id;
     
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
      * @Assert\Length(
      *      max = 50,
      *      maxMessage = "Der Vorname darf nicht länger als {{ limit }} Zeichen sein."
      * )     
      */
-    private $firstName = '';
+    private $firstName;
     
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
      * @Assert\Length(
      *      max = 50,
      *      maxMessage = "Der Nachname darf nicht länger als {{ limit }} Zeichen sein."
      * )
      */
-    private $lastName = '';
+    private $lastName;
 
     /**
      * @ORM\Column(type="date", length=50, nullable=true)
@@ -50,9 +50,9 @@ class Patient
     private $birthDate;
 
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)     
+     * @ORM\Column(type="string", length=50, options={"default" : ""})     
      */
-    private $sex = '';
+    private $sex;
 
     /**
      * @ORM\ManyToOne(targetEntity="Hospital", inversedBy="patients") 
@@ -67,16 +67,17 @@ class Patient
     private $caretaker;
 
     /**
-     * @ORM\Column(type="string", length=500, nullable=true)     
+     * @ORM\Column(type="string", length=500, options={"default" : ""})     
      */
-    private $address = '';
+    private $address;
 
 
     /**
-     * @ORM\Column(type="string", unique=true, length=150, nullable=true)
+     * @ORM\Column(type="string", length=150, options={"default" : ""})
      * @Assert\Email(
      *     message = "Dieser Wert '{{ value }}' ist keine gültige E-Mail.",
-     *     checkMX = true
+     *     checkMX = true,
+     *     groups={"registration"}
      * )
      * @Assert\Length(
      *     max = 150,
@@ -86,7 +87,7 @@ class Patient
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=20, nullable=true)
+     * @ORM\Column(type="string", length=20, options={"default" : ""})
      * @Assert\Length(
      *      min = 4,
      *      max = 20,
@@ -94,24 +95,189 @@ class Patient
      *      maxMessage = "Die Nummer darf nicht länger als {{ limit }} Zeichen sein",
      * )
      */
-    private $phoneNumber = '';
+    private $phoneNumber;
+
+
+    
+
+
+
+    /**
+     * @ORM\Column(type="string", length=200, options={"default" : ""})
+     */
+    private $krankenversicherungsart;
+
+
+    /**
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 50,
+     *      minMessage = "Die Nummer darf nicht kürzer als {{ limit }} Zeichen sein",
+     *      maxMessage = "Die Nummer darf nicht länger als {{ limit }} Zeichen sein",
+     * )
+     */
+    private $krankenkassennummer;
+
+    /**
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 50,
+     *      minMessage = "Das Feld darf nicht kürzer als {{ limit }} Zeichen sein",
+     *      maxMessage = "Das Feld darf nicht länger als {{ limit }} Zeichen sein",
+     * )
+     */
+    private $krankenkasse;
+
+    /**
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 50,
+     *      minMessage = "Das Feld darf nicht kürzer als {{ limit }} Zeichen sein",
+     *      maxMessage = "Das Feld darf nicht länger als {{ limit }} Zeichen sein",
+     * )
+     */
+    private $kassennameZurBedruckung;
+
+    /**
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 50,
+     *      minMessage = "Die Nummer darf nicht kürzer als {{ limit }} Zeichen sein",
+     *      maxMessage = "Die Nummer darf nicht länger als {{ limit }} Zeichen sein",
+     * )
+     */
+    private $versichertennummer;
+
+    /**
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 50,
+     *      minMessage = "Die Nummer darf nicht kürzer als {{ limit }} Zeichen sein",
+     *      maxMessage = "Die Nummer darf nicht länger als {{ limit }} Zeichen sein",
+     * )
+     */
+    private $egkVersichertenNr;
+
+    /**
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 50,
+     *      minMessage = "Das Feld darf nicht kürzer als {{ limit }} Zeichen sein",
+     *      maxMessage = "Das Feld darf nicht länger als {{ limit }} Zeichen sein",
+     * )
+     */
+    private $kostentraegerabrechnungsbereich;
+
+    /**
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 50,
+     *      minMessage = "Das Feld darf nicht kürzer als {{ limit }} Zeichen sein",
+     *      maxMessage = "Das Feld darf nicht länger als {{ limit }} Zeichen sein",
+     * )
+     */
+    private $kvBereich;
+
+    /**
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 50,
+     *      minMessage = "Das Feld darf nicht kürzer als {{ limit }} Zeichen sein",
+     *      maxMessage = "Das Feld darf nicht länger als {{ limit }} Zeichen sein",
+     * )
+     */
+    private $abrechnungsvknr;
+
+    /**
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 50,
+     *      minMessage = "Das Feld darf nicht kürzer als {{ limit }} Zeichen sein",
+     *      maxMessage = "Das Feld darf nicht länger als {{ limit }} Zeichen sein",
+     * )
+     */
+    private $sonstige;
+
+    /**
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 50,
+     *      minMessage = "Das Feld darf nicht kürzer als {{ limit }} Zeichen sein",
+     *      maxMessage = "Das Feld darf nicht länger als {{ limit }} Zeichen sein",
+     * )
+     */
+    private $versichertenartmfr;
+
+    /**
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 50,
+     *      minMessage = "Das Feld darf nicht kürzer als {{ limit }} Zeichen sein",
+     *      maxMessage = "Das Feld darf nicht länger als {{ limit }} Zeichen sein",
+     * )
+     */
+    private $versichertenstatuskvk;
+
+    /**
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 50,
+     *      minMessage = "Das Feld darf nicht kürzer als {{ limit }} Zeichen sein",
+     *      maxMessage = "Das Feld darf nicht länger als {{ limit }} Zeichen sein",
+     * )
+     */
+    private $statusergaenzung;
+
+
+    /**
+     * @ORM\Column(type="date", length=50, nullable=true)
+     * @Assert\Date()
+     */
+    private $validTill;
+
+    /**
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
+     */
+    private $abrechnungsform;
+
+
+    /**
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
+     */
+    private $nachsorge;
+
 
     /**
     * @ORM\OneToMany(targetEntity="MedCheckup", mappedBy="patient") 
     */
     private $medCheckups;
 
+
     /**
     * @ORM\OneToMany(targetEntity="PatientArrangementReference", mappedBy="patient") 
     */
     private $patArrRefs;
-
-    public function __construct() 
+    
+    /**
+     * Constructor
+     */
+    public function __construct()
     {
-        $this->medCheckups = new ArrayCollection();
-        $this->patArrRefs = new ArrayCollection();
+        $this->medCheckups = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->patArrRefs = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
 
     /**
      * Get id
@@ -132,7 +298,7 @@ class Patient
      */
     public function setFirstName($firstName)
     {
-        $this->firstName = $firstName;
+        $this->firstName = is_null($firstName) ? '' : $firstName;
 
         return $this;
     }
@@ -156,7 +322,7 @@ class Patient
      */
     public function setLastName($lastName)
     {
-        $this->lastName = $lastName;
+        $this->lastName = is_null($lastName) ? '' : $lastName;
 
         return $this;
     }
@@ -169,88 +335,6 @@ class Patient
     public function getLastName()
     {
         return $this->lastName;
-    }
-
-    /**
-     * Set email
-     *
-     * @param string $email
-     *
-     * @return Patient
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * Get email
-     *
-     * @return string
-     */
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    /**
-     * Set phoneNumber
-     *
-     * @param string $phoneNumber
-     *
-     * @return Patient
-     */
-    public function setPhoneNumber($phoneNumber)
-    {
-        $this->phoneNumber = $phoneNumber;
-
-        return $this;
-    }
-
-    /**
-     * Get phoneNumber
-     *
-     * @return string
-     */
-    public function getPhoneNumber()
-    {
-        return $this->phoneNumber;
-    }
-
-    /**
-     * Add medCheckup
-     *
-     * @param \AppBundle\Entity\MedCheckup $medCheckup
-     *
-     * @return Patient
-     */
-    public function addMedCheckup(\AppBundle\Entity\MedCheckup $medCheckup)
-    {
-        $this->medCheckups[] = $medCheckup;
-
-        return $this;
-    }
-
-    /**
-     * Remove medCheckup
-     *
-     * @param \AppBundle\Entity\MedCheckup $medCheckup
-     */
-    public function removeMedCheckup(\AppBundle\Entity\MedCheckup $medCheckup)
-    {
-        $this->medCheckups->removeElement($medCheckup);
-    }
-
-    /**
-     * Get medCheckups
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getMedCheckups()
-    {
-        return $this->medCheckups;
     }
 
     /**
@@ -286,7 +370,7 @@ class Patient
      */
     public function setSex($sex)
     {
-        $this->sex = $sex;
+        $this->sex = is_null($sex) ? '' : $sex;
 
         return $this;
     }
@@ -310,7 +394,7 @@ class Patient
      */
     public function setAddress($address)
     {
-        $this->address = $address;
+        $this->address = is_null($address) ? '' : $address;
 
         return $this;
     }
@@ -323,6 +407,54 @@ class Patient
     public function getAddress()
     {
         return $this->address;
+    }
+
+    /**
+     * Set email
+     *
+     * @param string $email
+     *
+     * @return Patient
+     */
+    public function setEmail($email)
+    {
+        $this->email = is_null($email) ? '' : $email;
+
+        return $this;
+    }
+
+    /**
+     * Get email
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * Set phoneNumber
+     *
+     * @param string $phoneNumber
+     *
+     * @return Patient
+     */
+    public function setPhoneNumber($phoneNumber)
+    {
+        $this->phoneNumber = is_null($phoneNumber) ? '' : $phoneNumber;
+
+        return $this;
+    }
+
+    /**
+     * Get phoneNumber
+     *
+     * @return string
+     */
+    public function getPhoneNumber()
+    {
+        return $this->phoneNumber;
     }
 
     /**
@@ -374,6 +506,40 @@ class Patient
     }
 
     /**
+     * Add medCheckup
+     *
+     * @param \AppBundle\Entity\MedCheckup $medCheckup
+     *
+     * @return Patient
+     */
+    public function addMedCheckup(\AppBundle\Entity\MedCheckup $medCheckup)
+    {
+        $this->medCheckups[] = $medCheckup;
+
+        return $this;
+    }
+
+    /**
+     * Remove medCheckup
+     *
+     * @param \AppBundle\Entity\MedCheckup $medCheckup
+     */
+    public function removeMedCheckup(\AppBundle\Entity\MedCheckup $medCheckup)
+    {
+        $this->medCheckups->removeElement($medCheckup);
+    }
+
+    /**
+     * Get medCheckups
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMedCheckups()
+    {
+        return $this->medCheckups;
+    }
+
+    /**
      * Add patArrRef
      *
      * @param \AppBundle\Entity\PatientArrangementReference $patArrRef
@@ -405,5 +571,389 @@ class Patient
     public function getPatArrRefs()
     {
         return $this->patArrRefs;
+    }
+
+    /**
+     * Set krankenversicherungsart
+     *
+     * @param string $krankenversicherungsart
+     *
+     * @return Patient
+     */
+    public function setKrankenversicherungsart($krankenversicherungsart)
+    {
+        $this->krankenversicherungsart = is_null($krankenversicherungsart) ? '' : $krankenversicherungsart;
+
+        return $this;
+    }
+
+    /**
+     * Get krankenversicherungsart
+     *
+     * @return string
+     */
+    public function getKrankenversicherungsart()
+    {
+        return $this->krankenversicherungsart;
+    }
+
+    /**
+     * Set krankenkassennummer
+     *
+     * @param string $krankenkassennummer
+     *
+     * @return Patient
+     */
+    public function setKrankenkassennummer($krankenkassennummer)
+    {
+        $this->krankenkassennummer = is_null($krankenkassennummer) ? '' : $krankenkassennummer;
+
+        return $this;
+    }
+
+    /**
+     * Get krankenkassennummer
+     *
+     * @return string
+     */
+    public function getKrankenkassennummer()
+    {
+        return $this->krankenkassennummer;
+    }
+
+    /**
+     * Set krankenkasse
+     *
+     * @param string $krankenkasse
+     *
+     * @return Patient
+     */
+    public function setKrankenkasse($krankenkasse)
+    {
+        $this->krankenkasse = is_null($krankenkasse) ? '' : $krankenkasse;
+
+        return $this;
+    }
+
+    /**
+     * Get krankenkasse
+     *
+     * @return string
+     */
+    public function getKrankenkasse()
+    {
+        return $this->krankenkasse;
+    }
+
+    /**
+     * Set kassennameZurBedruckung
+     *
+     * @param string $kassennameZurBedruckung
+     *
+     * @return Patient
+     */
+    public function setKassennameZurBedruckung($kassennameZurBedruckung)
+    {
+        $this->kassennameZurBedruckung = is_null($kassennameZurBedruckung) ? '' : $kassennameZurBedruckung;
+
+        return $this;
+    }
+
+    /**
+     * Get kassennameZurBedruckung
+     *
+     * @return string
+     */
+    public function getKassennameZurBedruckung()
+    {
+        return $this->kassennameZurBedruckung;
+    }
+
+    /**
+     * Set versichertennummer
+     *
+     * @param string $versichertennummer
+     *
+     * @return Patient
+     */
+    public function setVersichertennummer($versichertennummer)
+    {
+        $this->versichertennummer = is_null($versichertennummer) ? '' : $versichertennummer;
+
+        return $this;
+    }
+
+    /**
+     * Get versichertennummer
+     *
+     * @return string
+     */
+    public function getVersichertennummer()
+    {
+        return $this->versichertennummer;
+    }
+
+    /**
+     * Set egkVersichertenNr
+     *
+     * @param string $egkVersichertenNr
+     *
+     * @return Patient
+     */
+    public function setEgkVersichertenNr($egkVersichertenNr)
+    {
+        $this->egkVersichertenNr = is_null($egkVersichertenNr) ? '' : $egkVersichertenNr;
+
+        return $this;
+    }
+
+    /**
+     * Get egkVersichertenNr
+     *
+     * @return string
+     */
+    public function getEgkVersichertenNr()
+    {
+        return $this->egkVersichertenNr;
+    }
+
+    /**
+     * Set kostentraegerabrechnungsbereich
+     *
+     * @param string $kostentraegerabrechnungsbereich
+     *
+     * @return Patient
+     */
+    public function setKostentraegerabrechnungsbereich($kostentraegerabrechnungsbereich)
+    {
+        $this->kostentraegerabrechnungsbereich = is_null($kostentraegerabrechnungsbereich) ? '' : $kostentraegerabrechnungsbereich;
+
+        return $this;
+    }
+
+    /**
+     * Get kostentraegerabrechnungsbereich
+     *
+     * @return string
+     */
+    public function getKostentraegerabrechnungsbereich()
+    {
+        return $this->kostentraegerabrechnungsbereich;
+    }
+
+    /**
+     * Set kvBereich
+     *
+     * @param string $kvBereich
+     *
+     * @return Patient
+     */
+    public function setKvBereich($kvBereich)
+    {
+        $this->kvBereich = is_null($kvBereich) ? '' : $kvBereich;
+
+        return $this;
+    }
+
+    /**
+     * Get kvBereich
+     *
+     * @return string
+     */
+    public function getKvBereich()
+    {
+        return $this->kvBereich;
+    }
+
+    /**
+     * Set abrechnungsvknr
+     *
+     * @param string $abrechnungsvknr
+     *
+     * @return Patient
+     */
+    public function setAbrechnungsvknr($abrechnungsvknr)
+    {
+        $this->abrechnungsvknr = is_null($abrechnungsvknr) ? '' : $abrechnungsvknr;
+
+        return $this;
+    }
+
+    /**
+     * Get abrechnungsvknr
+     *
+     * @return string
+     */
+    public function getAbrechnungsvknr()
+    {
+        return $this->abrechnungsvknr;
+    }
+
+    /**
+     * Set sonstige
+     *
+     * @param string $sonstige
+     *
+     * @return Patient
+     */
+    public function setSonstige($sonstige)
+    {
+        $this->sonstige = is_null($sonstige) ? '' : $sonstige;
+
+        return $this;
+    }
+
+    /**
+     * Get sonstige
+     *
+     * @return string
+     */
+    public function getSonstige()
+    {
+        return $this->sonstige;
+    }
+
+    /**
+     * Set versichertenartmfr
+     *
+     * @param string $versichertenartmfr
+     *
+     * @return Patient
+     */
+    public function setVersichertenartmfr($versichertenartmfr)
+    {
+        $this->versichertenartmfr = is_null($versichertenartmfr) ? '' : $versichertenartmfr;
+
+        return $this;
+    }
+
+    /**
+     * Get versichertenartmfr
+     *
+     * @return string
+     */
+    public function getVersichertenartmfr()
+    {
+        return $this->versichertenartmfr;
+    }
+
+    /**
+     * Set versichertenstatuskvk
+     *
+     * @param string $versichertenstatuskvk
+     *
+     * @return Patient
+     */
+    public function setVersichertenstatuskvk($versichertenstatuskvk)
+    {
+        $this->versichertenstatuskvk = is_null($versichertenstatuskvk) ? '' : $versichertenstatuskvk;
+
+        return $this;
+    }
+
+    /**
+     * Get versichertenstatuskvk
+     *
+     * @return string
+     */
+    public function getVersichertenstatuskvk()
+    {
+        return $this->versichertenstatuskvk;
+    }
+
+    /**
+     * Set statusergaenzung
+     *
+     * @param string $statusergaenzung
+     *
+     * @return Patient
+     */
+    public function setStatusergaenzung($statusergaenzung)
+    {
+        $this->statusergaenzung = is_null($statusergaenzung) ? '' : $statusergaenzung;
+
+        return $this;
+    }
+
+    /**
+     * Get statusergaenzung
+     *
+     * @return string
+     */
+    public function getStatusergaenzung()
+    {
+        return $this->statusergaenzung;
+    }
+
+    /**
+     * Set validTill
+     *
+     * @param \DateTime $validTill
+     *
+     * @return Patient
+     */
+    public function setValidTill($validTill)
+    {
+        $this->validTill = $validTill;
+
+        return $this;
+    }
+
+    /**
+     * Get validTill
+     *
+     * @return \DateTime
+     */
+    public function getValidTill()
+    {
+        return $this->validTill;
+    }
+
+    /**
+     * Set abrechnungsform
+     *
+     * @param string $abrechnungsform
+     *
+     * @return Patient
+     */
+    public function setAbrechnungsform($abrechnungsform)
+    {
+        $this->abrechnungsform = is_null($abrechnungsform) ? '' : $abrechnungsform;
+
+        return $this;
+    }
+
+    /**
+     * Get abrechnungsform
+     *
+     * @return string
+     */
+    public function getAbrechnungsform()
+    {
+        return $this->abrechnungsform;
+    }
+
+    /**
+     * Set nachsorge
+     *
+     * @param string $nachsorge
+     *
+     * @return Patient
+     */
+    public function setNachsorge($nachsorge)
+    {
+        $this->nachsorge = is_null($nachsorge) ? '' : $nachsorge;
+
+        return $this;
+    }
+
+    /**
+     * Get nachsorge
+     *
+     * @return string
+     */
+    public function getNachsorge()
+    {
+        return $this->nachsorge;
     }
 }

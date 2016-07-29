@@ -1,0 +1,21 @@
+<table id="users_table" class="table table_main table-striped table-hover" style="width: 100%">
+	<thead>
+        <tr>
+        	<th>Id</th>
+            <th>Name</th>
+            <th>E-Mail</th>
+            <th>Tel. Nummer</th>
+            <th>Gruppe</th>
+        </tr>
+    </thead>
+
+    {% for u in users %}
+        <tr>
+        	<td>{{ u.id }}</td>
+            <td>{{ u.firstName ~ " " ~ u.lastName }}</td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.phoneNumber }}</td>
+            <td>{{ u.userGroup.name }}</td>
+        </tr>
+    {% endfor %}
+</table>

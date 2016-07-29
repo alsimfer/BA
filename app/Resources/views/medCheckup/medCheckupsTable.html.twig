@@ -19,7 +19,7 @@
             <td>{{ mc.sysUser.firstName ~ " " ~ mc.sysUser.lastName }}</td>
 
             {# Check if the date is not '0000-00-00' #}
-            {% if mc.dateAndTime is defined and mc.dateAndTime | date('d.m.Y') != "30.11.-0001" %}
+            {% if mc.dateAndTime is  not empty and mc.dateAndTime | date('d.m.Y') != "30.11.-0001" %}
                 <td>{{ mc.dateAndTime | date('d.m.Y H:i') }}</td>
             {% else %}
                 <td></td>

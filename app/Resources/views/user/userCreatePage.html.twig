@@ -4,7 +4,7 @@
 {% block main %}
     
     <div class="col-md-8 col-md-offset-2">
-        <h2 class="page-header">Persönliche Einstellungen</h2>        
+        <h2 class="page-header">Benutzer einfügen</h2>        
         
         {{ form_start(form) }}
 		{{ form_errors(form) }}
@@ -42,6 +42,15 @@
 				<div class="col-sm-10">
 					{{ form_widget(form.phoneNumber) }}
 				</div>  	
+			</div>
+
+			<div class="form-group row">
+				{{ form_errors(form.userGroup) }}
+				{{ form_label(form.userGroup) }}
+				
+				<div class="col-sm-10">
+					{{ form_widget(form.userGroup) }}
+				</div>  
 			</div>
 
 			<div class="form-group row">

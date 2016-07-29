@@ -46,7 +46,7 @@ class MedCheckup
      * )
      * @Assert\NotBlank()
      */
-    private $type = '';
+    private $type;
 
     /**
      * @ORM\Column(type="datetime")
@@ -56,30 +56,32 @@ class MedCheckup
     private $dateAndTime;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer", options={"default" : 0})
      */
-    private $height = '';
+    private $height;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
+     * @ORM\Column(type="float", options={"default" : 0.0})
      */
-    private $weight = '';    
+    private $weight;    
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer", options={"default" : 0})
      */
-    private $waist = '';   
+    private $waist;   
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer", options={"default" : 0})
      */
-    private $hips = '';   
+    private $hips;   
 
     /**
-     * @ORM\Column(type="string", length=500, nullable=true)
+     * @ORM\Column(type="string", length=500, options={"default" : ""})
      */
-    private $source = '';
+    private $source;
 
+
+    
 
     /**
      * Get id
@@ -114,7 +116,30 @@ class MedCheckup
     {
         return $this->type;
     }
-    
+
+    /**
+     * Set dateAndTime
+     *
+     * @param \DateTime $dateAndTime
+     *
+     * @return MedCheckup
+     */
+    public function setDateAndTime($dateAndTime)
+    {
+        $this->dateAndTime = $dateAndTime;
+
+        return $this;
+    }
+
+    /**
+     * Get dateAndTime
+     *
+     * @return \DateTime
+     */
+    public function getDateAndTime()
+    {
+        return $this->dateAndTime;
+    }
 
     /**
      * Set height
@@ -213,6 +238,30 @@ class MedCheckup
     }
 
     /**
+     * Set source
+     *
+     * @param string $source
+     *
+     * @return MedCheckup
+     */
+    public function setSource($source)
+    {
+        $this->source = is_null($source) ? '' : $source;
+
+        return $this;
+    }
+
+    /**
+     * Get source
+     *
+     * @return string
+     */
+    public function getSource()
+    {
+        return $this->source;
+    }
+
+    /**
      * Set patient
      *
      * @param \AppBundle\Entity\Patient $patient
@@ -258,53 +307,5 @@ class MedCheckup
     public function getSysUser()
     {
         return $this->sysUser;
-    }
-
-    /**
-     * Set source
-     *
-     * @param string $source
-     *
-     * @return MedCheckup
-     */
-    public function setSource($source)
-    {
-        $this->source = $source;
-
-        return $this;
-    }
-
-    /**
-     * Get source
-     *
-     * @return string
-     */
-    public function getSource()
-    {
-        return $this->source;
-    }
-
-    /**
-     * Set dateAndTime
-     *
-     * @param \DateTime $dateAndTime
-     *
-     * @return MedCheckup
-     */
-    public function setDateAndTime($dateAndTime)
-    {
-        $this->dateAndTime = $dateAndTime;
-
-        return $this;
-    }
-
-    /**
-     * Get dateAndTime
-     *
-     * @return \DateTime
-     */
-    public function getDateAndTime()
-    {
-        return $this->dateAndTime;
     }
 }

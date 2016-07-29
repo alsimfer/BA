@@ -20,22 +20,22 @@ class Hospital
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
      * @Assert\Length(
      *      max = 50,
      *      maxMessage = "Der Name darf nicht länger als {{ limit }} Zeichen sein."
      * )     
      */
-    private $name = '';
+    private $name;
 
     /**
-     * @ORM\Column(type="string", length=500)
+     * @ORM\Column(type="string", length=500, options={"default" : ""})
      * @Assert\Length(
      *      max = 500,
      *      maxMessage = "Die Beschreibung darf nicht länger als {{ limit }} Zeichen sein."
      * )
      */
-    private $description = '';
+    private $description;
 
 	/**
 	* @ORM\OneToMany(targetEntity="Patient", mappedBy="hospital") 
@@ -47,6 +47,8 @@ class Hospital
 		$this->patients = new ArrayCollection();
 	}
 
+
+    
 
     /**
      * Get id
@@ -67,7 +69,7 @@ class Hospital
      */
     public function setName($name)
     {
-        $this->name = $name;
+        $this->name = is_null($name) ? '' : $name;
 
         return $this;
     }
@@ -91,7 +93,7 @@ class Hospital
      */
     public function setDescription($description)
     {
-        $this->description = $description;
+        $this->description = is_null($description) ? '' : $description;
 
         return $this;
     }

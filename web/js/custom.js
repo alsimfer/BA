@@ -114,6 +114,8 @@ function adjustActiveListItem() {
         $("#arrangements_li").addClass("active");
     } else if (jQuery.inArray("log", arr) !== -1) {
         $("#log_li").addClass("active");
+    } else if (jQuery.inArray("patient-arrangement", arr) !== -1) {
+        $("#patient_arrangement_li").addClass("active");
     }
 }
 

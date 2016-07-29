@@ -1,0 +1,40 @@
+<!-- Patients Table -->
+<table id="patient_arrangement_table" class="table table_main table-striped table-hover" style="width: 100%">
+	<thead>
+        <tr>
+        	<th>Id</th>
+        	<th>Patient</th>
+        	<th>Kurs</th>
+        	<th>Besucht</th>
+        	<th>Commentare</th>
+        	
+        </tr>
+    </thead>
+
+    {% for par in patArrRefs %}
+        <tr>
+        	<td>{{ par.id }}</td>
+        	<td>{{ par.patient.firstName ~ " " ~ par.patient.lastName }}</td>
+
+        	{% if par.arrangement.name is not empty %}
+                <td>{{ par.arrangement.name }}</td>
+            {% else %}
+                <td></td>
+            {% endif %}
+        	
+            {% if par.attended == 1 %}
+                <td><span class="glyphicon glyphicon-exclamation-sign" style="color: red;" aria-hidden="true"></span></td>
+            {% elseif par.attended == 2 %}
+                <td><span class="glyphicon glyphicon-ok" style="color: green;" aria-hidden="true"></span></td>                
+            {% else %}
+                <td></td>
+            {% endif %}                
+        
+            {% if par.comments is not empty %}
+                <td>{{ par.comments }}</td>
+            {% else %}
+                <td></td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+</table>

@@ -21,7 +21,7 @@
                     <li id="patients_li"><a href="{{ path('patientsPage') }}">Patienten</a></li>
                     <li id="med_checkups_li"><a href="{{ path('medCheckupsPage') }}">Untersuchungen</a></li>
                     <li id="arrangements_li"><a href="{{ path('arrangementsPage') }}">Kurse</a></li>
-                    <li><a href="">Kursverlauf</a></li>
+                    <li id="patient_arrangement_li"><a href="{{ path('patientArrangementPage') }}">Kursverlauf</a></li>
                     
                     {% if user.userGroup.name is defined and user.userGroup.name == ("root" or "admin") %}
                         <li><a href="">Änderungsprotokoll</a></li>

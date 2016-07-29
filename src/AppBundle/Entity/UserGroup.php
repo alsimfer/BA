@@ -20,22 +20,22 @@ class UserGroup
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=50, options={"default" : ""})
      * @Assert\Length(
      *      max = 50,
      *      maxMessage = "Der Name darf nicht länger als {{ limit }} Zeichen sein."
      * )     
      */
-    private $name = '';
+    private $name;
 
     /**
-     * @ORM\Column(type="string", length=500)
+     * @ORM\Column(type="string", length=500, options={"default" : ""})
      * @Assert\Length(
      *      max = 500,
      *      maxMessage = "Die Beschreibung darf nicht länger als {{ limit }} Zeichen sein."
      * )
      */
-    private $description = '';
+    private $description;
 
 	/**
 	* @ORM\OneToMany(targetEntity="SysUser", mappedBy="userGroup") 
@@ -46,6 +46,8 @@ class UserGroup
 	{
 		$this->sysUsers = new ArrayCollection();
 	}
+
+    
 
     /**
      * Get id
@@ -66,7 +68,7 @@ class UserGroup
      */
     public function setName($name)
     {
-        $this->name = $name;
+        $this->name = is_null($name) ? '' : $name;;
 
         return $this;
     }
@@ -82,55 +84,6 @@ class UserGroup
     }
 
     /**
-     * Add sysUser
-     *
-     * @param \AppBundle\Entity\SysUser $sysUser
-     *
-     * @return UserGroup
-     */
-    public function addSysUser(\AppBundle\Entity\SysUser $sysUser)
-    {
-        $this->sysUser[] = $sysUser;
-
-        return $this;
-    }
-
-    /**
-     * Remove sysUser
-     *
-     * @param \AppBundle\Entity\SysUser $sysUser
-     */
-    public function removeSysUser(\AppBundle\Entity\SysUser $sysUser)
-    {
-        $this->sysUser->removeElement($sysUser);
-    }
-
-    /**
-     * Get sysUser
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getSysUser()
-    {
-        return $this->sysUser;
-    }
-
-    /**
-     * Get sysUsers
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getSysUsers()
-    {
-        return $this->sysUsers;
-    }
-
-    public function __toString() 
-    {
-        return $this->getName();
-    }
-
-    /**
      * Set description
      *
      * @param string $description
@@ -139,7 +92,7 @@ class UserGroup
      */
     public function setDescription($description)
     {
-        $this->description = $description;
+        $this->description = is_null($description) ? '' : $description;;
 
         return $this;
     }
@@ -152,5 +105,39 @@ class UserGroup
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Add sysUser
+     *
+     * @param \AppBundle\Entity\SysUser $sysUser
+     *
+     * @return UserGroup
+     */
+    public function addSysUser(\AppBundle\Entity\SysUser $sysUser)
+    {
+        $this->sysUsers[] = $sysUser;
+
+        return $this;
+    }
+
+    /**
+     * Remove sysUser
+     *
+     * @param \AppBundle\Entity\SysUser $sysUser
+     */
+    public function removeSysUser(\AppBundle\Entity\SysUser $sysUser)
+    {
+        $this->sysUsers->removeElement($sysUser);
+    }
+
+    /**
+     * Get sysUsers
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSysUsers()
+    {
+        return $this->sysUsers;
     }
 }
