@@ -1,0 +1,84 @@
+<div id="menu1" class="tab-pane fade in active">
+	<p style="margin-top: 15px"></p>
+	<div class="form-group row">
+		{{ form_errors(form.type) }}
+		{{ form_label(form.type) }}
+		
+		<div class="col-sm-10">
+			{{ form_widget(form.type) }}
+		</div>
+	</div>
+	<div class="form-group row">
+		{{ form_errors(form.patient) }}
+		{{ form_label(form.patient) }}
+		
+		<div class="col-sm-10">
+			{{ form_widget(form.patient) }}
+		</div>
+	</div>
+	<div class="form-group row">
+		{{ form_errors(form.sysUser) }}
+		{{ form_label(form.sysUser) }}
+		
+		<div class="col-sm-10">
+			{{ form_widget(form.sysUser) }}
+		</div>
+	</div>
+
+	<div id="dateTimePickerContainer" class="form-group row">
+		{{ form_errors(form.dateAndTime) }}
+		{{ form_label(form.dateAndTime) }}
+		
+		<div class="col-sm-10">
+	        <div class="input-group time">
+				{{ form_widget(form.dateAndTime) }}
+				<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="form-group row">
+		{{ form_errors(form.source) }}
+		{{ form_label(form.source) }}
+		
+		<div class="col-sm-10">
+			{{ form_widget(form.source) }}
+		</div>
+	</div>
+
+	<div class="form-group row">
+		{{ form_errors(form.height) }}
+		{{ form_label(form.height) }}
+		
+		<div class="col-sm-2">
+			{{ form_widget(form.height) }}
+		</div>
+
+		{{ form_errors(form.hips) }}
+		{{ form_label(form.hips) }}
+		
+		<div class="col-sm-2">
+			{{ form_widget(form.hips) }}
+		</div>
+
+		{{ form_errors(form.waist) }}
+		{{ form_label(form.waist) }}
+		
+		<div class="col-sm-2">
+			{{ form_widget(form.waist) }}
+		</div>
+	</div>
+
+	<div class="form-group row">
+		
+		{{ form_errors(form.weight) }}
+		{{ form_label(form.weight) }}
+		
+		<div class="col-sm-2">
+			{{ form_widget(form.weight) }}
+		</div>
+	</div>
+
+	
+</div>

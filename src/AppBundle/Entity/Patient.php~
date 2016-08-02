@@ -298,7 +298,7 @@ class Patient
      */
     public function setFirstName($firstName)
     {
-        $this->firstName = is_null($firstName) ? '' : $firstName;;
+        $this->firstName = is_null($firstName) ? '' : $firstName;
 
         return $this;
     }
@@ -322,7 +322,7 @@ class Patient
      */
     public function setLastName($lastName)
     {
-        $this->lastName = is_null($lastName) ? '' : $lastName;;
+        $this->lastName = is_null($lastName) ? '' : $lastName;
 
         return $this;
     }
@@ -370,7 +370,7 @@ class Patient
      */
     public function setSex($sex)
     {
-        $this->sex = is_null($sex) ? '' : $sex;;
+        $this->sex = is_null($sex) ? '' : $sex;
 
         return $this;
     }
@@ -394,7 +394,7 @@ class Patient
      */
     public function setAddress($address)
     {
-        $this->address = is_null($address) ? '' : $address;;
+        $this->address = is_null($address) ? '' : $address;
 
         return $this;
     }
@@ -418,7 +418,7 @@ class Patient
      */
     public function setEmail($email)
     {
-        $this->email = is_null($email) ? '' : $email;;
+        $this->email = is_null($email) ? '' : $email;
 
         return $this;
     }
@@ -442,7 +442,7 @@ class Patient
      */
     public function setPhoneNumber($phoneNumber)
     {
-        $this->phoneNumber = is_null($phoneNumber) ? '' : $phoneNumber;;
+        $this->phoneNumber = is_null($phoneNumber) ? '' : $phoneNumber;
 
         return $this;
     }
@@ -571,5 +571,389 @@ class Patient
     public function getPatArrRefs()
     {
         return $this->patArrRefs;
+    }
+
+    /**
+     * Set krankenversicherungsart
+     *
+     * @param string $krankenversicherungsart
+     *
+     * @return Patient
+     */
+    public function setKrankenversicherungsart($krankenversicherungsart)
+    {
+        $this->krankenversicherungsart = is_null($krankenversicherungsart) ? '' : $krankenversicherungsart;
+
+        return $this;
+    }
+
+    /**
+     * Get krankenversicherungsart
+     *
+     * @return string
+     */
+    public function getKrankenversicherungsart()
+    {
+        return $this->krankenversicherungsart;
+    }
+
+    /**
+     * Set krankenkassennummer
+     *
+     * @param string $krankenkassennummer
+     *
+     * @return Patient
+     */
+    public function setKrankenkassennummer($krankenkassennummer)
+    {
+        $this->krankenkassennummer = is_null($krankenkassennummer) ? '' : $krankenkassennummer;
+
+        return $this;
+    }
+
+    /**
+     * Get krankenkassennummer
+     *
+     * @return string
+     */
+    public function getKrankenkassennummer()
+    {
+        return $this->krankenkassennummer;
+    }
+
+    /**
+     * Set krankenkasse
+     *
+     * @param string $krankenkasse
+     *
+     * @return Patient
+     */
+    public function setKrankenkasse($krankenkasse)
+    {
+        $this->krankenkasse = is_null($krankenkasse) ? '' : $krankenkasse;
+
+        return $this;
+    }
+
+    /**
+     * Get krankenkasse
+     *
+     * @return string
+     */
+    public function getKrankenkasse()
+    {
+        return $this->krankenkasse;
+    }
+
+    /**
+     * Set kassennameZurBedruckung
+     *
+     * @param string $kassennameZurBedruckung
+     *
+     * @return Patient
+     */
+    public function setKassennameZurBedruckung($kassennameZurBedruckung)
+    {
+        $this->kassennameZurBedruckung = is_null($kassennameZurBedruckung) ? '' : $kassennameZurBedruckung;
+
+        return $this;
+    }
+
+    /**
+     * Get kassennameZurBedruckung
+     *
+     * @return string
+     */
+    public function getKassennameZurBedruckung()
+    {
+        return $this->kassennameZurBedruckung;
+    }
+
+    /**
+     * Set versichertennummer
+     *
+     * @param string $versichertennummer
+     *
+     * @return Patient
+     */
+    public function setVersichertennummer($versichertennummer)
+    {
+        $this->versichertennummer = is_null($versichertennummer) ? '' : $versichertennummer;
+
+        return $this;
+    }
+
+    /**
+     * Get versichertennummer
+     *
+     * @return string
+     */
+    public function getVersichertennummer()
+    {
+        return $this->versichertennummer;
+    }
+
+    /**
+     * Set egkVersichertenNr
+     *
+     * @param string $egkVersichertenNr
+     *
+     * @return Patient
+     */
+    public function setEgkVersichertenNr($egkVersichertenNr)
+    {
+        $this->egkVersichertenNr = is_null($egkVersichertenNr) ? '' : $egkVersichertenNr;
+
+        return $this;
+    }
+
+    /**
+     * Get egkVersichertenNr
+     *
+     * @return string
+     */
+    public function getEgkVersichertenNr()
+    {
+        return $this->egkVersichertenNr;
+    }
+
+    /**
+     * Set kostentraegerabrechnungsbereich
+     *
+     * @param string $kostentraegerabrechnungsbereich
+     *
+     * @return Patient
+     */
+    public function setKostentraegerabrechnungsbereich($kostentraegerabrechnungsbereich)
+    {
+        $this->kostentraegerabrechnungsbereich = is_null($kostentraegerabrechnungsbereich) ? '' : $kostentraegerabrechnungsbereich;
+
+        return $this;
+    }
+
+    /**
+     * Get kostentraegerabrechnungsbereich
+     *
+     * @return string
+     */
+    public function getKostentraegerabrechnungsbereich()
+    {
+        return $this->kostentraegerabrechnungsbereich;
+    }
+
+    /**
+     * Set kvBereich
+     *
+     * @param string $kvBereich
+     *
+     * @return Patient
+     */
+    public function setKvBereich($kvBereich)
+    {
+        $this->kvBereich = is_null($kvBereich) ? '' : $kvBereich;
+
+        return $this;
+    }
+
+    /**
+     * Get kvBereich
+     *
+     * @return string
+     */
+    public function getKvBereich()
+    {
+        return $this->kvBereich;
+    }
+
+    /**
+     * Set abrechnungsvknr
+     *
+     * @param string $abrechnungsvknr
+     *
+     * @return Patient
+     */
+    public function setAbrechnungsvknr($abrechnungsvknr)
+    {
+        $this->abrechnungsvknr = is_null($abrechnungsvknr) ? '' : $abrechnungsvknr;
+
+        return $this;
+    }
+
+    /**
+     * Get abrechnungsvknr
+     *
+     * @return string
+     */
+    public function getAbrechnungsvknr()
+    {
+        return $this->abrechnungsvknr;
+    }
+
+    /**
+     * Set sonstige
+     *
+     * @param string $sonstige
+     *
+     * @return Patient
+     */
+    public function setSonstige($sonstige)
+    {
+        $this->sonstige = is_null($sonstige) ? '' : $sonstige;
+
+        return $this;
+    }
+
+    /**
+     * Get sonstige
+     *
+     * @return string
+     */
+    public function getSonstige()
+    {
+        return $this->sonstige;
+    }
+
+    /**
+     * Set versichertenartmfr
+     *
+     * @param string $versichertenartmfr
+     *
+     * @return Patient
+     */
+    public function setVersichertenartmfr($versichertenartmfr)
+    {
+        $this->versichertenartmfr = is_null($versichertenartmfr) ? '' : $versichertenartmfr;
+
+        return $this;
+    }
+
+    /**
+     * Get versichertenartmfr
+     *
+     * @return string
+     */
+    public function getVersichertenartmfr()
+    {
+        return $this->versichertenartmfr;
+    }
+
+    /**
+     * Set versichertenstatuskvk
+     *
+     * @param string $versichertenstatuskvk
+     *
+     * @return Patient
+     */
+    public function setVersichertenstatuskvk($versichertenstatuskvk)
+    {
+        $this->versichertenstatuskvk = is_null($versichertenstatuskvk) ? '' : $versichertenstatuskvk;
+
+        return $this;
+    }
+
+    /**
+     * Get versichertenstatuskvk
+     *
+     * @return string
+     */
+    public function getVersichertenstatuskvk()
+    {
+        return $this->versichertenstatuskvk;
+    }
+
+    /**
+     * Set statusergaenzung
+     *
+     * @param string $statusergaenzung
+     *
+     * @return Patient
+     */
+    public function setStatusergaenzung($statusergaenzung)
+    {
+        $this->statusergaenzung = is_null($statusergaenzung) ? '' : $statusergaenzung;
+
+        return $this;
+    }
+
+    /**
+     * Get statusergaenzung
+     *
+     * @return string
+     */
+    public function getStatusergaenzung()
+    {
+        return $this->statusergaenzung;
+    }
+
+    /**
+     * Set validTill
+     *
+     * @param \DateTime $validTill
+     *
+     * @return Patient
+     */
+    public function setValidTill($validTill)
+    {
+        $this->validTill = $validTill;
+
+        return $this;
+    }
+
+    /**
+     * Get validTill
+     *
+     * @return \DateTime
+     */
+    public function getValidTill()
+    {
+        return $this->validTill;
+    }
+
+    /**
+     * Set abrechnungsform
+     *
+     * @param string $abrechnungsform
+     *
+     * @return Patient
+     */
+    public function setAbrechnungsform($abrechnungsform)
+    {
+        $this->abrechnungsform = is_null($abrechnungsform) ? '' : $abrechnungsform;
+
+        return $this;
+    }
+
+    /**
+     * Get abrechnungsform
+     *
+     * @return string
+     */
+    public function getAbrechnungsform()
+    {
+        return $this->abrechnungsform;
+    }
+
+    /**
+     * Set nachsorge
+     *
+     * @param string $nachsorge
+     *
+     * @return Patient
+     */
+    public function setNachsorge($nachsorge)
+    {
+        $this->nachsorge = is_null($nachsorge) ? '' : $nachsorge;
+
+        return $this;
+    }
+
+    /**
+     * Get nachsorge
+     *
+     * @return string
+     */
+    public function getNachsorge()
+    {
+        return $this->nachsorge;
     }
 }

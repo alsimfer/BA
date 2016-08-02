@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity
@@ -29,16 +30,19 @@ class PatientArrangementReference
     * @ORM\ManyToOne(targetEntity="Patient", inversedBy="patArrRefs") 
     * @ORM\JoinColumn(name="patient_id", referencedColumnName="id") 
     * @Assert\NotBlank(
-    *   message="Dieser Wert darf nicht leer sein"  
-    * ) 
+    *   message="Dieser Wert darf nicht leer sein.",
+    *   groups={"definedRef"}  
+    * )
     */
     private $patient;
+
 
     /**
     * @ORM\ManyToOne(targetEntity="Arrangement", inversedBy="patArrRefs")
     * @ORM\JoinColumn(name="arrangement_id", referencedColumnName="id") 
     * @Assert\NotBlank(
-    *   message="Dieser Wert darf nicht leer sein"  
+    *   message="Dieser Wert darf nicht leer sein.",
+    *   groups={"definedRef"}  
     * ) 
     */
     private $arrangement;

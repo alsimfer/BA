@@ -12,13 +12,13 @@
 		<div class="tab-content">
 		    <div id="menu1" class="tab-pane fade in active">
 		    	<p style="margin-top: 15px"></p>
-	      		{{ include('medCheckup/medCheckupGeneral.html.twig') }}
+	      		{{ include('medCheckup/medCheckupInfoMenu1.html.twig') }}
 		    					       
 		    </div>
 
 		    <div id="menu2" class="tab-pane fade col_md_2">
 		    	<p style="margin-top: 15px"></p>
-		      	{{ include('patient/patientGeneral.html.twig', {patient: medCheckup.patient}) }}
+		      	{{ include('patient/patientinfoMenu1.html.twig', {patient: medCheckup.patient}) }}
 		    </div>
 		    
 

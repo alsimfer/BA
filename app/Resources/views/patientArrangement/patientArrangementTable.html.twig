@@ -14,9 +14,14 @@
     {% for par in patArrRefs %}
         <tr>
         	<td>{{ par.id }}</td>
-        	<td>{{ par.patient.firstName ~ " " ~ par.patient.lastName }}</td>
 
-        	{% if par.arrangement.name is not empty %}
+            {% if par.patient is not empty and par.patient.lastName is not empty %}
+                <td>{{ par.patient.lastName }}</td>
+            {% else %}
+                <td></td>
+            {% endif %}
+
+        	{% if par.arrangement is not empty and par.arrangement.name is not empty %}
                 <td>{{ par.arrangement.name }}</td>
             {% else %}
                 <td></td>

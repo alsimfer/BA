@@ -81,9 +81,7 @@ $(function() {
         }
         
     });
- 
-    // Adjust active class on links from navbar depending on current URL
-    adjustActiveListItem();    
+
 
     /**
      * For a later cause. 
@@ -93,10 +91,13 @@ $(function() {
      */
     $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
         //$.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
-        console.log('tab changed');
+//        console.log('tab changed');
     } );
 
-    
+ 
+    // Adjust active class on links from navbar depending on current URL
+    adjustActiveListItem();    
+    initMedCheckupForm();    
 });
 
 // Dynamically adjust links class on the navbar
@@ -117,6 +118,49 @@ function adjustActiveListItem() {
     } else if (jQuery.inArray("patient-arrangement", arr) !== -1) {
         $("#patient_arrangement_li").addClass("active");
     }
+}
+
+// Use Checkboxes for medCheckup forms to show / not show content.
+function initMedCheckupForm() {
+
+    var somKom = $('#somKom');
+    var psyKom = $('#psyKom');
+    var psyVerKom = $('#psyVerKom');
+
+    var arr = [somKom, psyKom, psyVerKom];
+
+    $.each(arr, function(i, val) {
+        // Toggle hidden divs.
+        val.change(function() {
+            divName = val.attr("id") + "_div";
+            var div = $("#" + divName);
+
+            div.toggleClass("hidden");    
+
+            // Check if the text inputs in this div should be disabled depending on correspondent CBs.
+            div.find(':checkbox').each(function() {
+                var id = $(this).attr("id");
+                var divId = id + "Text";
+                if ($(this).is(":checked")) {
+                    $("#" + divId).attr("disabled", false);
+                } else {
+                    $("#" + divId).attr("disabled", true);
+                }
+
+                $(this).change(function() {
+                    if ($(this).is(':checked')) {
+                        $("#" + divId).attr("disabled", false);
+                    } else {
+                        $("#" + divId).attr("disabled", true);
+                    }
+                });
+            });
+
+        })
+        
+    });
+
+    
 }
 
 

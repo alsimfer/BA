@@ -68,7 +68,7 @@ class PatientArrangementController extends Controller
         $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findAll();
         $arrangements = $this->getDoctrine()->getRepository('AppBundle:Arrangement')->findAll();
         
-        $form = $this->createFormBuilder($patArrRef, array('validation_groups' => array('registration'),))
+        $form = $this->createFormBuilder($patArrRef, array('validation_groups' => array('registration', 'definedRef'),))
             ->add('patient', ChoiceType::class, array(
                 'label' => 'Patient', 
                 'label_attr' => array('class' => 'col-sm-2 col-form-label'),
@@ -114,11 +114,30 @@ class PatientArrangementController extends Controller
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
+
+
+// $validator = $this->get('validator');
+// $errors = $validator->validate($patArrRef);
+
+// if (count($errors) > 0) {
+    
+     
+//     $errorsString = (string) $errors;
+
+// //    return new Response($errorsString);
+//     return $this->render('author/validation.html.twig', array(
+//         'errors' => $errors,
+//     ));
+
+// } else {
+//     dump("alles gut");
+// }
+// die();
             $patArrRef->setPatient($form['patient']->getData());
             $patArrRef->setArrangement($form['arrangement']->getData());
             $patArrRef->setAttended($form['attended']->getData());
             $patArrRef->setComments($form['comments']->getData());
-            
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($patArrRef);
             $em->flush();

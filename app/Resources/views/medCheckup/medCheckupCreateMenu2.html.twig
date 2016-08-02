@@ -1,0 +1,306 @@
+<div id="menu2" class="tab-pane fade col_md_2">
+	<p style="margin-top: 15px"></p>
+
+	<div id="somKomDivStart" class="well well-sm">	
+		<div class="form-group row">		    
+			<label class="col-sm-10 col-form-label required" for="somKom">Somatische Komorbiditäten</label>			
+			<div class="col-sm-2">		    
+        		<input id="somKom" type="checkbox"> Alle anzeigen</input>								       
+			</div><!-- /col-sm-2 -->		        							
+		</div>
+
+		<div id="somKom_div" class="hidden">
+
+			<div class="form-group row">
+				{{ form_errors(form.arterielleHypertonie) }}
+				{{ form_errors(form.arterielleHypertonieText) }}
+				{{ form_label(form.arterielleHypertonie) }}
+				
+				<div class="col-sm-8">
+			        <div class="input-group">
+			        	<span class="input-group-addon">
+							{{ form_widget(form.arterielleHypertonie) }}
+						</span>
+						{{ form_widget(form.arterielleHypertonieText) }}
+					</div>
+				</div>
+
+			</div>
+			
+			<div class="form-group row">
+				{{ form_errors(form.andereKardialeKomorbiditaeten) }}
+				{{ form_errors(form.andereKardialeKomorbiditaetenText) }}
+				{{ form_label(form.andereKardialeKomorbiditaeten) }}
+				
+				<div class="col-sm-8">
+			        <div class="input-group">
+			        	<span class="input-group-addon">
+							{{ form_widget(form.andereKardialeKomorbiditaeten) }}
+						</span>
+						{{ form_widget(form.andereKardialeKomorbiditaetenText) }}
+					</div>
+				</div>
+
+			</div>
+
+			<div class="form-group row">
+				{{ form_errors(form.insulinpflichtigerDiabetes) }}
+				{{ form_errors(form.insulinpflichtigerDiabetesText) }}
+				{{ form_label(form.insulinpflichtigerDiabetes) }}
+				
+				<div class="col-sm-8">
+			        <div class="input-group">
+			        	<span class="input-group-addon">
+							{{ form_widget(form.insulinpflichtigerDiabetes) }}
+						</span>
+						{{ form_widget(form.insulinpflichtigerDiabetesText) }}
+					</div>
+				</div>
+
+			</div>
+			
+			<div class="form-group row">
+				{{ form_errors(form.nichtInsulinpflichtigerDiabetes) }}
+				{{ form_errors(form.nichtInsulinpflichtigerDiabetesText) }}
+				{{ form_label(form.nichtInsulinpflichtigerDiabetes) }}
+				
+				<div class="col-sm-8">
+			        <div class="input-group">
+			        	<span class="input-group-addon">
+							{{ form_widget(form.nichtInsulinpflichtigerDiabetes) }}
+						</span>
+						{{ form_widget(form.nichtInsulinpflichtigerDiabetesText) }}
+					</div>
+				</div>
+
+			</div>
+
+			<div class="form-group row">
+				{{ form_errors(form.pulmonaleKomorbiditaeten) }}
+				{{ form_errors(form.pulmonaleKomorbiditaetenText) }}
+				{{ form_label(form.pulmonaleKomorbiditaeten) }}
+				
+				<div class="col-sm-8">
+			        <div class="input-group">
+			        	<span class="input-group-addon">
+							{{ form_widget(form.pulmonaleKomorbiditaeten) }}
+						</span>
+						{{ form_widget(form.pulmonaleKomorbiditaetenText) }}
+					</div>
+				</div>
+
+			</div>
+
+			<div class="form-group row">
+				{{ form_errors(form.fettstoffwechselstoerungen) }}
+				{{ form_errors(form.fettstoffwechselstoerungenText) }}
+				{{ form_label(form.fettstoffwechselstoerungen) }}
+				
+				<div class="col-sm-8">
+			        <div class="input-group">
+			        	<span class="input-group-addon">
+							{{ form_widget(form.fettstoffwechselstoerungen) }}
+						</span>
+						{{ form_widget(form.fettstoffwechselstoerungenText) }}
+					</div>
+				</div>
+
+			</div>
+
+			<div class="form-group row">
+				{{ form_errors(form.endokrineKomorbiditaeten) }}
+				{{ form_errors(form.endokrineKomorbiditaetenText) }}
+				{{ form_label(form.endokrineKomorbiditaeten) }}
+				
+				<div class="col-sm-8">
+			        <div class="input-group">
+			        	<span class="input-group-addon">
+							{{ form_widget(form.endokrineKomorbiditaeten) }}
+						</span>
+						{{ form_widget(form.endokrineKomorbiditaetenText) }}
+					</div>
+				</div>
+
+			</div>
+
+			<div class="form-group row">
+				{{ form_errors(form.gastroenterologischeKomorbiditaeten) }}
+				{{ form_errors(form.gastroenterologischeKomorbiditaetenText) }}
+				{{ form_label(form.gastroenterologischeKomorbiditaeten) }}
+				
+				<div class="col-sm-8">
+			        <div class="input-group">
+			        	<span class="input-group-addon">
+							{{ form_widget(form.gastroenterologischeKomorbiditaeten) }}
+						</span>
+						{{ form_widget(form.gastroenterologischeKomorbiditaetenText) }}
+					</div>
+				</div>
+
+			</div>
+
+			<div class="form-group row">
+				{{ form_errors(form.varikosis) }}
+				{{ form_errors(form.varikosisText) }}
+				{{ form_label(form.varikosis) }}
+				
+				<div class="col-sm-8">
+			        <div class="input-group">
+			        	<span class="input-group-addon">
+							{{ form_widget(form.varikosis) }}
+						</span>
+						{{ form_widget(form.varikosisText) }}
+					</div>
+				</div>
+
+			</div>
+
+			<div class="form-group row">
+				{{ form_errors(form.orthopaedischeKomorbiditaeten) }}
+				{{ form_errors(form.orthopaedischeKomorbiditaetenText) }}
+				{{ form_label(form.orthopaedischeKomorbiditaeten) }}
+				
+				<div class="col-sm-8">
+			        <div class="input-group">
+			        	<span class="input-group-addon">
+							{{ form_widget(form.orthopaedischeKomorbiditaeten) }}
+						</span>
+						{{ form_widget(form.orthopaedischeKomorbiditaetenText) }}
+					</div>
+				</div>
+
+			</div>
+
+			<div class="form-group row">
+				{{ form_errors(form.neurologischeKomorbiditaeten) }}
+				{{ form_errors(form.neurologischeKomorbiditaetenText) }}
+				{{ form_label(form.neurologischeKomorbiditaeten) }}
+				
+				<div class="col-sm-8">
+			        <div class="input-group">
+			        	<span class="input-group-addon">
+							{{ form_widget(form.neurologischeKomorbiditaeten) }}
+						</span>
+						{{ form_widget(form.neurologischeKomorbiditaetenText) }}
+					</div>
+				</div>
+
+			</div>
+
+			<div class="form-group row">
+				{{ form_errors(form.renaleKomorbiditaeten) }}
+				{{ form_errors(form.renaleKomorbiditaetenText) }}
+				{{ form_label(form.renaleKomorbiditaeten) }}
+				
+				<div class="col-sm-8">
+			        <div class="input-group">
+			        	<span class="input-group-addon">
+							{{ form_widget(form.renaleKomorbiditaeten) }}
+						</span>
+						{{ form_widget(form.renaleKomorbiditaetenText) }}
+					</div>
+				</div>
+
+			</div>
+
+			<div class="form-group row">
+				{{ form_errors(form.oedeme) }}
+				{{ form_errors(form.oedemeText) }}
+				{{ form_label(form.oedeme) }}
+				
+				<div class="col-sm-8">
+			        <div class="input-group">
+			        	<span class="input-group-addon">
+							{{ form_widget(form.oedeme) }}
+						</span>
+						{{ form_widget(form.oedemeText) }}
+					</div>
+				</div>
+
+			</div>
+
+			<div class="form-group row">
+				{{ form_errors(form.organtransplantation) }}
+				{{ form_errors(form.organtransplantationText) }}
+				{{ form_label(form.organtransplantation) }}
+				
+				<div class="col-sm-8">
+			        <div class="input-group">
+			        	<span class="input-group-addon">
+							{{ form_widget(form.organtransplantation) }}
+						</span>
+						{{ form_widget(form.organtransplantationText) }}
+					</div>
+				</div>
+
+			</div>
+
+			<div class="form-group row">
+				{{ form_errors(form.praderWilliSyndrom) }}
+				{{ form_errors(form.praderWilliSyndromText) }}
+				{{ form_label(form.praderWilliSyndrom) }}
+				
+				<div class="col-sm-8">
+			        <div class="input-group">
+			        	<span class="input-group-addon">
+							{{ form_widget(form.praderWilliSyndrom) }}
+						</span>
+						{{ form_widget(form.praderWilliSyndromText) }}
+					</div>
+				</div>
+
+			</div>
+
+			<div class="form-group row">
+				{{ form_errors(form.nikotinabusus) }}
+				{{ form_errors(form.nikotinabususText) }}
+				{{ form_label(form.nikotinabusus) }}
+				
+				<div class="col-sm-8">
+			        <div class="input-group">
+			        	<span class="input-group-addon">
+							{{ form_widget(form.nikotinabusus) }}
+						</span>
+						{{ form_widget(form.nikotinabususText) }}
+					</div>
+				</div>
+
+			</div>
+
+			<div class="form-group row">
+				{{ form_errors(form.alkoholabusus) }}
+				{{ form_errors(form.alkoholabususText) }}
+				{{ form_label(form.alkoholabusus) }}
+				
+				<div class="col-sm-8">
+			        <div class="input-group">
+			        	<span class="input-group-addon">
+							{{ form_widget(form.alkoholabusus) }}
+						</span>
+						{{ form_widget(form.alkoholabususText) }}
+					</div>
+				</div>
+
+			</div>
+
+			<div class="form-group row">
+				{{ form_errors(form.weiteres) }}
+				{{ form_errors(form.weiteresText) }}
+				{{ form_label(form.weiteres) }}
+				
+				<div class="col-sm-8">
+			        <div class="input-group">
+			        	<span class="input-group-addon">
+							{{ form_widget(form.weiteres) }}
+						</span>
+						{{ form_widget(form.weiteresText) }}
+					</div>
+				</div>
+
+			</div>
+
+
+		</div>
+	</div><!-- /well -->
+
+</div>

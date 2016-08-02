@@ -29,11 +29,11 @@ framework:
         handler_id:  session.handler.native_file
         save_path:   "%kernel.root_dir%/../var/sessions/%kernel.environment%"
         name: SFSESSID
-        cookie_lifetime: 2000000 # change this if you want
+        cookie_lifetime: 0 # change this if you want
 #        save_path: "%kernel.root_dir%/sessions"
         gc_divisor: 100
-        gc_maxlifetime: 1800 # change this if you want
-        gc_probability: 1
+        gc_maxlifetime: 3600 # change this if you want
+        gc_probability: 100
 
 # Twig Configuration
 twig:
