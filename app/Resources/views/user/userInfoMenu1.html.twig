@@ -1,0 +1,58 @@
+<dl class="container-fluid">
+
+	<dt>Vorname</dt>
+	{% if user.firstName is not empty and user.firstName|length > 0 %}
+    	<dd class="bg-success">- {{ user.firstName }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Nachname</dt>
+	{% if user.lastName is not empty and user.lastName|length > 0 %}
+    	<dd class="bg-success">- {{ user.lastName }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Geburtstag</dt>
+	{% if user.birthDate is not empty %}
+    	<dd class="bg-success">- {{ user.birthDate | date('d.m.Y') }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Geschlecht</dt>
+	{% if user.sex is not empty and user.sex|length > 0 %}
+    	<dd class="bg-success">- {{ user.sex }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>E-Mail</dt>
+	{% if user.email is not empty and user.email|length > 0 %}
+    	<dd class="bg-success">- {{ user.email }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+	
+	<dt>Tel. Nummer</dt>
+	{% if user.phoneNumber is not empty and user.phoneNumber|length > 0 %}
+    	<dd class="bg-success">- {{ user.phoneNumber }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+	
+	<dt>Adresse</dt>
+	{% if user.address is not empty and user.address|length > 0 %}
+    	<dd class="bg-success">- {{ user.address }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+		
+	<dt>Benutzer Gruppe</dt>
+	{% if user.userGroup is not empty %}
+    	<dd class="bg-success">- {{ user.userGroup.name }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+</dl>		

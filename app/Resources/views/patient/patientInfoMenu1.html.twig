@@ -57,8 +57,8 @@
     {% endif %}
 
 	<dt>Betreuer</dt>
-	{% if patient.caretaker is not empty and patient.caretaker.lastName is not empty %}
-    	<dd class="bg-success">- {{ patient.caretaker.firstName ~ " " ~ patient.caretaker.lastName }}</dd>
+	{% if patient.sysUser is not empty and patient.sysUser.lastName is not empty %}
+    	<dd class="bg-success">- {{ patient.sysUser.firstName ~ " " ~ patient.sysUser.lastName }}</dd>
 	{% else %}
 		<dd class="bg-warning">- Nicht eingegeben</dd>
     {% endif %}

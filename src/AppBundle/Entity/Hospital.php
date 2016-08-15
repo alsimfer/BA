@@ -42,9 +42,15 @@ class Hospital
 	*/
 	private $patients;
 
+    /**
+    * @ORM\OneToMany(targetEntity="SysUser", mappedBy="hospital") 
+    */
+    private $sysUsers;
+
 	public function __construct() 
 	{
-		$this->patients = new ArrayCollection();
+        $this->patients = new ArrayCollection();
+		$this->sysUsers = new ArrayCollection();
 	}
 
 
@@ -140,5 +146,39 @@ class Hospital
     public function getPatients()
     {
         return $this->patients;
+    }
+
+    /**
+     * Add sysUser
+     *
+     * @param \AppBundle\Entity\SysUser $sysUser
+     *
+     * @return Hospital
+     */
+    public function addSysUser(\AppBundle\Entity\SysUser $sysUser)
+    {
+        $this->sysUsers[] = $sysUser;
+
+        return $this;
+    }
+
+    /**
+     * Remove sysUser
+     *
+     * @param \AppBundle\Entity\SysUser $sysUser
+     */
+    public function removeSysUser(\AppBundle\Entity\SysUser $sysUser)
+    {
+        $this->sysUsers->removeElement($sysUser);
+    }
+
+    /**
+     * Get sysUsers
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSysUsers()
+    {
+        return $this->sysUsers;
     }
 }

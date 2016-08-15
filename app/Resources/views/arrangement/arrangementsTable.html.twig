@@ -4,6 +4,7 @@
         <tr>
         	<th>Id</th>
             <th>Name</th>
+            <th>Kursleiter</th>
             <th>Datum</th>
             <th>Beschreibung</th>
             <th>Max. Teilnehmer</th>
@@ -14,6 +15,19 @@
         <tr>
         	<td>{{ a.id }}</td>
             <td>{{ a.name }}</td>
+            
+            <td>
+                {% if a.sysUser is not empty %}
+                    {% if a.sysUser.firstName is not empty %}
+                        {{ a.sysUser.firstName ~ " " }} 
+                    {% endif %}
+                    {% if a.sysUser.lastName is not empty %}
+                        {{ a.sysUser.lastName }} 
+                    {% endif %}
+                {% endif %}
+
+            </td>
+
             <td>{{ a.dateTime | date('d.m.Y') ~ ", um " ~ a.dateTime | date('H:i') }}</td>
             <td>{{ a.description }}</td>
             <td>{{ a.maxParticipants }}</td>

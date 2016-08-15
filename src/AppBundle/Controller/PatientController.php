@@ -29,28 +29,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 class PatientController extends Controller implements AuthenticationController
 {
-    /**
-     * @Route("/", name="indexPage")
-     */
-    public function indexAction(Request $request)
-    {
-        $util = $this->get('util');
-        $sysUser = $util->checkLoggedUser($request);
-
-        if (!$sysUser) {
-            return $this->redirectToRoute('loginPage');
-        }
-
-        return $this->render('default/indexPage.html.twig', 
-            array(
-                'title' => 'AOK | Index',
-                'user' => $sysUser,
-                'pageHeader' => 'DB Schema'
-            )
-        );       
-    }
-
-
+    
     /**
      * @Route("/patients", name="patientsPage")
      */
@@ -88,7 +67,7 @@ class PatientController extends Controller implements AuthenticationController
 
         $patient = new Patient();
         $hospitals = $this->getDoctrine()->getRepository('AppBundle:Hospital')->findAll();
-        $caretakers = $this->getDoctrine()->getRepository('AppBundle:Caretaker')->findAll();
+        $sysUsers = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findBy(array('userGroup' => 5));
 
         $form = $this->createFormBuilder($patient, array('validation_groups' => array('registration'),))
             ->add('firstName', TextType::class, array(
@@ -143,13 +122,13 @@ class PatientController extends Controller implements AuthenticationController
                 },                
                 'placeholder' => 'Wählen Sie ein Krankenhaus aus',
             ))
-            ->add('caretaker', ChoiceType::class, array(
+            ->add('sysUser', ChoiceType::class, array(
                 'label' => 'Betreuer', 
                 'label_attr' => array('class' => 'col-sm-4 col-form-label'),
                 'attr' => array('class' => 'form-control'),
-                'choices' => $caretakers,
-                'choice_label' => function($caretaker, $key, $index) {
-                    return $caretaker->getFirstName().' '.$caretaker->getLastName();
+                'choices' => $sysUsers,
+                'choice_label' => function($sysUser, $key, $index) {
+                    return $sysUser->getFirstName().' '.$sysUser->getLastName();
                 },                
                 'placeholder' => 'Wählen Sie ein Betreuer aus',
             ))
@@ -266,7 +245,7 @@ class PatientController extends Controller implements AuthenticationController
             $patient->setPhoneNumber($form['phoneNumber']->getData());
             $patient->setAddress($form['address']->getData());
             $patient->setHospital($form['hospital']->getData());
-            $patient->setCaretaker($form['caretaker']->getData());
+            $patient->setSysUser($form['sysUser']->getData());
 
             $patient->setKrankenversicherungsart($form['krankenversicherungsart']->getData());
             $patient->setKrankenkassennummer($form['krankenkassennummer']->getData());
@@ -295,7 +274,7 @@ class PatientController extends Controller implements AuthenticationController
         }
         
         return $this->render('patient/patientCreatePage.html.twig', array(
-            'title' => 'AOK | Patienten',
+            'title' => 'AOK | Patienten | Erstellen',
             'form' => $form->createView(),
             'user' => $sysUser,
             'validation_groups' => array('registration')
@@ -325,7 +304,7 @@ class PatientController extends Controller implements AuthenticationController
 
         return $this->render('patient/patientInfoPage.html.twig', 
             array(
-                'title' => 'AOK | Kurse',
+                'title' => 'AOK | Patienten | Info',
                 'user' => $sysUser,
                 'arrangements' => $arrangements,
                 'patient' => $patient,
@@ -348,8 +327,8 @@ class PatientController extends Controller implements AuthenticationController
 
         $patient = $this->getDoctrine()->getRepository('AppBundle:Patient')->findOneById($id);
         $hospitals = $this->getDoctrine()->getRepository('AppBundle:Hospital')->findAll();
-        $caretakers = $this->getDoctrine()->getRepository('AppBundle:Caretaker')->findAll();
-        
+        $sysUsers = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findBy(array('userGroup' => 5));   
+
         $form = $this->createFormBuilder($patient, array('validation_groups' => array('registration'),))
             ->add('firstName', TextType::class, array(
                 'label' => 'Vorname', 
@@ -403,13 +382,13 @@ class PatientController extends Controller implements AuthenticationController
                 },                
                 'placeholder' => 'Wählen Sie ein Krankenhaus aus',
             ))
-            ->add('caretaker', ChoiceType::class, array(
+            ->add('sysUser', ChoiceType::class, array(
                 'label' => 'Betreuer', 
                 'label_attr' => array('class' => 'col-sm-4 col-form-label'),
                 'attr' => array('class' => 'form-control'),
-                'choices' => $caretakers,
-                'choice_label' => function($caretaker, $key, $index) {
-                    return $caretaker->getFirstName().' '.$caretaker->getLastName();
+                'choices' => $sysUsers,
+                'choice_label' => function($sysUser, $key, $index) {
+                    return $sysUser->getFirstName().' '.$sysUser->getLastName();
                 },                
                 'placeholder' => 'Wählen Sie ein Betreuer aus',
             ))
@@ -526,7 +505,7 @@ class PatientController extends Controller implements AuthenticationController
             $patient->setPhoneNumber($form['phoneNumber']->getData());
             $patient->setAddress($form['address']->getData());
             $patient->setHospital($form['hospital']->getData());
-            $patient->setCaretaker($form['caretaker']->getData());
+            $patient->setSysUser($form['sysUser']->getData());
 
             $patient->setKrankenversicherungsart($form['krankenversicherungsart']->getData());
             $patient->setKrankenkassennummer($form['krankenkassennummer']->getData());
@@ -555,7 +534,7 @@ class PatientController extends Controller implements AuthenticationController
         }
         
         return $this->render('patient/patientEditPage.html.twig', array(
-            'title' => 'AOK | Patienten',
+            'title' => 'AOK | Patienten | Bearbeiten',
             'form' => $form->createView(),
             'user' => $sysUser,
             'validation_groups' => array('registration')

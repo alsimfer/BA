@@ -37,9 +37,16 @@ class LoginController extends Controller
         $session->remove('user_id');
         
         $sysUser = new SysUser();
-        $form = $this->createFormBuilder($sysUser)
-            ->add('email', TextType::class, array('label' => 'E-Mail', 'attr' => array('class' => 'form-control','style' => 'margin-bottom: 15px')))
-            ->add('password', PasswordType::class, array('label' => 'Kennwort', 'attr' => array('class' => 'form-control','style' => 'margin-bottom: 15px')))
+        $form = $this->createFormBuilder($sysUser, array('validation_groups' => array('loginAction'),))
+            ->add('email', TextType::class, array(
+                'label' => 'E-Mail', 
+                'label_attr' => array('class' => 'col-sm-4 col-form-label'),
+                'attr' => array('class' => 'form-control')))
+            ->add('password', PasswordType::class, array(
+                'label' => 'Kennwort', 
+                'label_attr' => array('class' => 'col-sm-4 col-form-label'),
+                'required' => false,
+                'attr' => array('class' => 'form-control')))
             ->add('save', SubmitType::class, array('label' => 'Ok', 'attr' => array('class' => 'btn btn-primary'))) 
             ->getForm();
         
@@ -58,7 +65,7 @@ class LoginController extends Controller
             } else {
                 $session = $request->getSession();
                 $session->set('user_id', $sysUser->getId());
-                return $this->redirectToRoute('patientsPage');
+                return $this->redirectToRoute('indexPage');
             }
         }
         
@@ -90,7 +97,7 @@ class LoginController extends Controller
             );
             
             if (!$sysUser) {
-                $this->addFlash('notice', 'Kein Benutzer mit eingegebener E-Mail gefunden.');
+                $this->addFlash('notice', 'Kein Benutzer mit eingegebener E-Mail gefunden');
             } else {
                 $password = $sysUser->getPassword();
                 $password = substr($password, 0, 5);
@@ -99,7 +106,7 @@ class LoginController extends Controller
                 $em = $this->getDoctrine()->getManager();                
                 $em->flush();
                 $this->sendEmail('Neues Kennwort', $sysUser, 'email/password', $password);
-                $this->addFlash('notice', 'Neues Kennwort wurde an die eingegebene E-Mail verschickt.');
+                $this->addFlash('notice', 'Neues Kennwort wurde an die eingegebene E-Mail verschickt');
                 return $this->redirectToRoute('loginPage');
             }
         }

@@ -6,6 +6,7 @@
             <th>E-Mail</th>
             <th>Tel. Nummer</th>
             <th>Gruppe</th>
+            <th>Krankenhaus</th>
         </tr>
     </thead>
 
@@ -16,6 +17,12 @@
             <td>{{ u.email }}</td>
             <td>{{ u.phoneNumber }}</td>
             <td>{{ u.userGroup.name }}</td>
+            
+            <td>
+                {% if u.hospital is not empty %}
+                    {{ u.hospital.name }}            
+                {% endif %}
+            </td>
         </tr>
     {% endfor %}
 </table>

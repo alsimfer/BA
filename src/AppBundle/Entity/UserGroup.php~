@@ -42,9 +42,15 @@ class UserGroup
 	*/
 	private $sysUsers;
 
+    /**
+    * @ORM\OneToMany(targetEntity="NavigationRules", mappedBy="userGroup") 
+    */
+    private $navigationRules;
+
 	public function __construct() 
 	{
 		$this->sysUsers = new ArrayCollection();
+        $this->navigationRules = new ArrayCollection();
 	}
 
     
@@ -139,5 +145,39 @@ class UserGroup
     public function getSysUsers()
     {
         return $this->sysUsers;
+    }
+
+    /**
+     * Add navigationRule
+     *
+     * @param \AppBundle\Entity\NavigationRules $navigationRule
+     *
+     * @return UserGroup
+     */
+    public function addNavigationRule(\AppBundle\Entity\NavigationRules $navigationRule)
+    {
+        $this->navigationRules[] = $navigationRule;
+
+        return $this;
+    }
+
+    /**
+     * Remove navigationRule
+     *
+     * @param \AppBundle\Entity\NavigationRules $navigationRule
+     */
+    public function removeNavigationRule(\AppBundle\Entity\NavigationRules $navigationRule)
+    {
+        $this->navigationRules->removeElement($navigationRule);
+    }
+
+    /**
+     * Get navigationRules
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getNavigationRules()
+    {
+        return $this->navigationRules;
     }
 }

@@ -35,7 +35,7 @@ $(function() {
             },
         },
         "columnDefs": [
-            { "visible": false, "targets": 0 }
+            // { "visible": false, "targets": 0 }
         ],
         responsive: true
 
@@ -109,6 +109,8 @@ function adjustActiveListItem() {
 
     if (jQuery.inArray("patients", arr) !== -1) {
         $("#patients_li").addClass("active");
+    } else if (jQuery.inArray("coachings", arr) !== -1) {
+        $("#coachings_li").addClass("active");
     } else if (jQuery.inArray("med-checkups", arr) !== -1) {
         $("#med_checkups_li").addClass("active");
     } else if (jQuery.inArray("arrangements", arr) !== -1) {

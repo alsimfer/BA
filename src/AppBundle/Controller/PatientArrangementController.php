@@ -29,7 +29,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 class PatientArrangementController extends Controller
 {
     /**
-     * @Route("/patient-arrangement", name="patientArrangementPage")
+     * @Route("/patient-arrangements", name="patientArrangementPage")
      */
     public function patientArrangementAction(Request $request)
     {
@@ -53,7 +53,7 @@ class PatientArrangementController extends Controller
 
 
     /**
-     * @Route("/patient-arrangement/create", name="patientArrangementCreatePage")
+     * @Route("/patient-arrangements/create", name="patientArrangementCreatePage")
      */
     public function patientArrangementCreateAction(Request $request)
     {
@@ -115,24 +115,6 @@ class PatientArrangementController extends Controller
         
         if ($form->isSubmitted() && $form->isValid()) {
 
-
-// $validator = $this->get('validator');
-// $errors = $validator->validate($patArrRef);
-
-// if (count($errors) > 0) {
-    
-     
-//     $errorsString = (string) $errors;
-
-// //    return new Response($errorsString);
-//     return $this->render('author/validation.html.twig', array(
-//         'errors' => $errors,
-//     ));
-
-// } else {
-//     dump("alles gut");
-// }
-// die();
             $patArrRef->setPatient($form['patient']->getData());
             $patArrRef->setArrangement($form['arrangement']->getData());
             $patArrRef->setAttended($form['attended']->getData());
@@ -156,7 +138,7 @@ class PatientArrangementController extends Controller
 
 
     /**
-     * @Route("/patient-arrangement/edit/{id}", name="patientArrangementEditPage")
+     * @Route("/patient-arrangements/edit/{id}", name="patientArrangementEditPage")
      */
     public function patientArrangementEditAction(Request $request, $id)
     {
@@ -239,7 +221,7 @@ class PatientArrangementController extends Controller
     }
 
     /**
-     * @Route("/patient-arrangement/info/{id}", name="patientArrangementInfoPage")
+     * @Route("/patient-arrangements/info/{id}", name="patientArrangementInfoPage")
      */
     public function patientArrangementInfoAction(Request $request, $id)
     {
@@ -266,7 +248,7 @@ class PatientArrangementController extends Controller
     }
 
    /**
-     * @Route("/patient-arrangement/delete/{id}", name="patientArrangementDeletePage")
+     * @Route("/patient-arrangements/delete/{id}", name="patientArrangementDeletePage")
      */
     public function patientArrangementDeleteAction(Request $request, $id)
     {

@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{title}}
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="error-template">
+                <h1>
+                    Kein Zugang!</h1>
+                <h2>
+                    Die angefordete Seite konnte nicht angezeigt werden
+                	
+            	</h2>
+
+                <div class="error-details">
+                    Sie dürfen diese Seite nicht laden. Bitte wenden Sie sich an Administrator für zusätzliche Rechte.
+                </div>
+                <div class="error-actions">
+                    <a href="/" class="btn btn-primary btn-lg" style="margin-top: 15px;"><span class="glyphicon glyphicon-home"></span> Hauptseite</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

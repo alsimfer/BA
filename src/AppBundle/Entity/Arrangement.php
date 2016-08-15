@@ -18,6 +18,12 @@ class Arrangement
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+    
+    /**
+    * @ORM\ManyToOne(targetEntity="SysUser", inversedBy="arrangements") 
+    * @ORM\JoinColumn(name="sys_user_id", referencedColumnName="id") 
+    */
+    private $sysUser;
 
     /**
      * @ORM\Column(type="string", length=255, options={"default" : ""})
@@ -213,5 +219,29 @@ class Arrangement
     public function getPatArrRefs()
     {
         return $this->patArrRefs;
+    }
+
+    /**
+     * Set sysUser
+     *
+     * @param \AppBundle\Entity\SysUser $sysUser
+     *
+     * @return Arrangement
+     */
+    public function setSysUser(\AppBundle\Entity\SysUser $sysUser = null)
+    {
+        $this->sysUser = $sysUser;
+
+        return $this;
+    }
+
+    /**
+     * Get sysUser
+     *
+     * @return \AppBundle\Entity\SysUser
+     */
+    public function getSysUser()
+    {
+        return $this->sysUser;
     }
 }

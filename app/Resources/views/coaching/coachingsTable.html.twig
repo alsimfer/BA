@@ -1,0 +1,50 @@
+<!-- MedCheckups Table -->
+<table id="coachings_table" class="table table_main table-striped" style="width:100%">
+	<thead>
+        <tr>
+            <th>Id</th>
+            <th>Patient</th>
+            <th>Betreuer</th>
+            <th>Datum</th>
+            <th>Ziele</th>
+            
+        </tr>
+    </thead>
+
+    {% for c in coachings %}
+        <tr>
+            <td>{{ c.id }}</td>
+            <td>
+                {% if c.patient.firstName is not empty %}
+                    {{ c.patient.firstName ~ " " }} 
+                {% endif %}
+                {% if c.patient.lastName is not empty %}
+                    {{ c.patient.lastName }} 
+
+                {% endif %}
+
+            </td>
+            <td>
+                {% if c.sysUser.firstName is not empty %}
+                    {{ c.sysUser.firstName ~ " " }} 
+                {% endif %}
+                {% if c.sysUser.lastName is not empty %}
+                    {{ c.sysUser.lastName }} 
+                {% endif %}
+            </td>
+            
+            <td>
+                {% if c.dateAndTime is not empty and c.dateAndTime | date('d.m.Y') != "30.11.-0001" %}
+                    {{ c.dateAndTime | date('d.m.Y H:i') }}
+                {% endif %}
+            </td>
+
+            <td>
+                {% if c.weekGoal is not empty %}
+                    {{ c.weekGoal }}            
+                {% endif %}
+            </td>
+            
+        </tr>
+    {% endfor %}
+</table>

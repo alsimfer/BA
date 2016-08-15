@@ -9,7 +9,7 @@
         	<th>E-Mail</th>
         	<th>Tel. Nummer</th>
         	<th>Krankenhaus</th>
-        	<th>Caretaker</th>
+        	<th>Betreuer</th>
         </tr>
     </thead>
 
@@ -34,8 +34,8 @@
     		{% else %}
     			<td></td>
     		{% endif %}
-        	{% if p.caretaker is not empty and p.caretaker.lastName is not empty %}
-        		<td>{{ p.caretaker.lastName }}</td>
+        	{% if p.sysUser is not empty and p.sysUser.lastName is not empty %}
+        		<td>{{ p.sysUser.lastName }}</td>
     		{% else %}
 				<td></td>    	
     		{% endif %}

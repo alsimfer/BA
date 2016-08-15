@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{title}}
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="error-template">
+                <h1>
+                    Oops!</h1>
+                <h2>
+                	404 Nicht gefunden
+            	</h2>
+
+                <div class="error-details">
+                    Die angefordete Seite konnte nicht gefunden werden
+                </div>
+                <div class="error-actions">
+                    <a href="/" class="btn btn-primary btn-lg" style="margin-top: 15px;"><span class="glyphicon glyphicon-home"></span> Hauptseite</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

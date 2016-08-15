@@ -1,0 +1,31 @@
+<dl class="container-fluid">
+
+	<dt>Patient</dt>
+	{% if coaching.patient is not empty %}
+    	<dd class="bg-success">- {{ coaching.patient.firstName ~ " " ~ coaching.patient.lastName }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+    <dt>Coach</dt>
+	{% if coaching.sysUser is not empty  %}
+    	<dd class="bg-success">- {{ coaching.sysUser.firstName ~ " " ~ coaching.sysUser.lastName }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Datum und Uhrzeit</dt>
+	{% if coaching.dateAndTime is not empty %}
+    	<dd class="bg-success">- {{ coaching.dateAndTime | date('d.m.Y H:i') }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+	
+	<dt>Wochenziel</dt>
+	{% if coaching.weekGoal is not empty and coaching.weekGoal|length > 0 %}
+    	<dd class="bg-success">- {{ coaching.weekGoal }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+</dl>		

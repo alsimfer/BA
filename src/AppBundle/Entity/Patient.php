@@ -31,6 +31,7 @@ class Patient
      *      max = 50,
      *      maxMessage = "Der Vorname darf nicht länger als {{ limit }} Zeichen sein."
      * )     
+     * @Assert\NotBlank()
      */
     private $firstName;
     
@@ -40,6 +41,7 @@ class Patient
      *      max = 50,
      *      maxMessage = "Der Nachname darf nicht länger als {{ limit }} Zeichen sein."
      * )
+     * @Assert\NotBlank()
      */
     private $lastName;
 
@@ -54,17 +56,6 @@ class Patient
      */
     private $sex;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Hospital", inversedBy="patients") 
-     * @ORM\JoinColumn(name="hospital_id", referencedColumnName="id") 
-     */
-    private $hospital;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Caretaker", inversedBy="patients") 
-     * @ORM\JoinColumn(name="caretaker_id", referencedColumnName="id") 
-     */
-    private $caretaker;
 
     /**
      * @ORM\Column(type="string", length=500, options={"default" : ""})     
@@ -98,7 +89,34 @@ class Patient
     private $phoneNumber;
 
 
+   
+    /**
+    * @ORM\OneToMany(targetEntity="MedCheckup", mappedBy="patient") 
+    */
+    private $medCheckups;
+
+    /**
+    * @ORM\OneToMany(targetEntity="Coaching", mappedBy="patient") 
+    */
+    private $coachings;
+
+    /**
+    * @ORM\OneToMany(targetEntity="PatientArrangementReference", mappedBy="patient") 
+    */
+    private $patArrRefs;
+     
+
+    /**
+     * @ORM\ManyToOne(targetEntity="SysUser", inversedBy="patients") 
+     * @ORM\JoinColumn(name="sys_user_id", referencedColumnName="id") 
+     */
+    private $sysUser;
     
+    /**
+     * @ORM\ManyToOne(targetEntity="Hospital", inversedBy="patients") 
+     * @ORM\JoinColumn(name="hospital_id", referencedColumnName="id") 
+     */
+    private $hospital;
 
 
 
@@ -260,23 +278,13 @@ class Patient
 
 
     /**
-    * @ORM\OneToMany(targetEntity="MedCheckup", mappedBy="patient") 
-    */
-    private $medCheckups;
-
-
-    /**
-    * @ORM\OneToMany(targetEntity="PatientArrangementReference", mappedBy="patient") 
-    */
-    private $patArrRefs;
-    
-    /**
      * Constructor
      */
     public function __construct()
     {
         $this->medCheckups = new \Doctrine\Common\Collections\ArrayCollection();
         $this->patArrRefs = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->coachings = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -481,29 +489,7 @@ class Patient
         return $this->hospital;
     }
 
-    /**
-     * Set caretaker
-     *
-     * @param \AppBundle\Entity\Caretaker $caretaker
-     *
-     * @return Patient
-     */
-    public function setCaretaker(\AppBundle\Entity\Caretaker $caretaker = null)
-    {
-        $this->caretaker = $caretaker;
-
-        return $this;
-    }
-
-    /**
-     * Get caretaker
-     *
-     * @return \AppBundle\Entity\Caretaker
-     */
-    public function getCaretaker()
-    {
-        return $this->caretaker;
-    }
+    
 
     /**
      * Add medCheckup
@@ -955,5 +941,121 @@ class Patient
     public function getNachsorge()
     {
         return $this->nachsorge;
+    }
+
+    /**
+     * Add coaching
+     *
+     * @param \AppBundle\Entity\Coaching $coaching
+     *
+     * @return Patient
+     */
+    public function addCoaching(\AppBundle\Entity\Coaching $coaching)
+    {
+        $this->coachings[] = $coaching;
+
+        return $this;
+    }
+
+    /**
+     * Remove coaching
+     *
+     * @param \AppBundle\Entity\Coaching $coaching
+     */
+    public function removeCoaching(\AppBundle\Entity\Coaching $coaching)
+    {
+        $this->coachings->removeElement($coaching);
+    }
+
+    /**
+     * Get coachings
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCoachings()
+    {
+        return $this->coachings;
+    }
+
+    /**
+     * Set coach
+     *
+     * @param \AppBundle\Entity\SysUser $coach
+     *
+     * @return Patient
+     */
+    public function setCoach(\AppBundle\Entity\SysUser $coach = null)
+    {
+        $this->coach = $coach;
+
+        return $this;
+    }
+
+    /**
+     * Get coach
+     *
+     * @return \AppBundle\Entity\SysUser
+     */
+    public function getCoach()
+    {
+        return $this->coach;
+    }
+
+    /**
+     * Add coacher
+     *
+     * @param \AppBundle\Entity\Coaching $coacher
+     *
+     * @return Patient
+     */
+    public function addCoacher(\AppBundle\Entity\Coaching $coacher)
+    {
+        $this->coacher[] = $coacher;
+
+        return $this;
+    }
+
+    /**
+     * Remove coacher
+     *
+     * @param \AppBundle\Entity\Coaching $coacher
+     */
+    public function removeCoacher(\AppBundle\Entity\Coaching $coacher)
+    {
+        $this->coacher->removeElement($coacher);
+    }
+
+    /**
+     * Get coacher
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCoacher()
+    {
+        return $this->coacher;
+    }
+
+    /**
+     * Set sysUser
+     *
+     * @param \AppBundle\Entity\SysUser $sysUser
+     *
+     * @return Patient
+     */
+    public function setSysUser(\AppBundle\Entity\SysUser $sysUser = null)
+    {
+        $this->sysUser = $sysUser;
+
+        return $this;
+    }
+
+    /**
+     * Get sysUser
+     *
+     * @return \AppBundle\Entity\SysUser
+     */
+    public function getSysUser()
+    {
+        return $this->sysUser;
     }
 }

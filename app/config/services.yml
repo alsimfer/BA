@@ -19,6 +19,14 @@ services:
     error_redirect_listener:
         class: AppBundle\EventListener\ErrorRedirectListener
         arguments:
-           router: "@router"
+            router: "@router"
         tags:
-           - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+    action_authenticator:
+        class: AppBundle\EventListener\ActionAuthenticator
+        arguments:
+            router: "@router"
+            em: "@doctrine.orm.entity_manager"
+        tags:           
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+   

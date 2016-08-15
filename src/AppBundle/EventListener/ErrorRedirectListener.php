@@ -6,6 +6,7 @@ use AppBundle\Controller\AuthenticationController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 class ErrorRedirectListener
@@ -20,10 +21,10 @@ class ErrorRedirectListener
     {
         $this->router = $router;
     }
-
+    
 
     public function onKernelException(GetResponseForExceptionEvent $event)
-    {
+    {        
         $exception = $event->getException();
 
         if ($exception instanceof NotFoundHttpException) {
@@ -36,7 +37,6 @@ class ErrorRedirectListener
 
             $url = $this->router->generate($route);
             $response = new RedirectResponse($url);
-            $event = new GetResponseForExceptionEvent();
             $event->setResponse($response);
 
         }

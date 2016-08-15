@@ -65,12 +65,23 @@ class ArrangementController extends Controller
         }
 
         $arrangement = new Arrangement();
+        $sysUsers = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findBy(array('userGroup' => 6));
 
         $form = $this->createFormBuilder($arrangement)
             ->add('name', TextType::class, array(
                 'label' => 'Name', 
                 'label_attr' => array('class' => 'col-sm-2 col-form-label'),
                 'attr' => array('class' => 'form-control')))
+            ->add('sysUser', ChoiceType::class, array(
+                'label' => 'Kursleiter', 
+                'label_attr' => array('class' => 'col-sm-2 col-form-label'),
+                'attr' => array('class' => 'form-control'),
+                'choices' => $sysUsers,
+                'choice_label' => function($sysUser, $key, $index) {
+                    return $sysUser->getFirstName().' '.$sysUser->getLastName();
+                },                
+                'placeholder' => 'Nicht bekannt',
+            ))
             ->add('description', TextareaType::class, array(
                 'label' => 'Beschreibung', 
                 'label_attr' => array('class' => 'col-sm-2 col-form-label'),
@@ -97,6 +108,7 @@ class ArrangementController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $arrangement->setName($form['name']->getData());
             $arrangement->setDescription($form['description']->getData());
+            $arrangement->setSysUser($form['sysUser']->getData());
             $arrangement->setDateTime($form['dateTime']->getData());
             $arrangement->setMaxParticipants($form['maxParticipants']->getData());
             
@@ -131,7 +143,8 @@ class ArrangementController extends Controller
         }
 
         $arrangement = $this->getDoctrine()->getRepository('AppBundle:Arrangement')->findOneById($id);
-        
+        $sysUsers = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findBy(array('userGroup' => 6));
+
         $form = $this->createFormBuilder($arrangement)
             ->add('name', TextType::class, array(
                 'label' => 'Name', 
@@ -141,6 +154,16 @@ class ArrangementController extends Controller
                 'label' => 'Beschreibung', 
                 'label_attr' => array('class' => 'col-sm-2 col-form-label'),
                 'attr' => array('class' => 'form-control')))
+            ->add('sysUser', ChoiceType::class, array(
+                'label' => 'Kursleiter', 
+                'label_attr' => array('class' => 'col-sm-2 col-form-label'),
+                'attr' => array('class' => 'form-control'),
+                'choices' => $sysUsers,
+                'choice_label' => function($sysUser, $key, $index) {
+                    return $sysUser->getFirstName().' '.$sysUser->getLastName();
+                },                
+                'placeholder' => 'Nicht bekannt',
+            ))
             ->add('maxParticipants', IntegerType::class, array(
                 'label' => 'Max. Teilnehmer', 
                 'label_attr' => array('class' => 'col-sm-2 col-form-label'),

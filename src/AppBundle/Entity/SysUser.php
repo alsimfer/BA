@@ -12,7 +12,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Table(name="sys_user") 
  * @UniqueEntity(
  *     fields={"email"}, 
- *     groups={"registration"},
+ *     groups={"createUserAction"},
  *     message="Diese E-Mail wird bereits verwendet"
  * )
  */
@@ -32,9 +32,30 @@ class SysUser
     private $userGroup;
 
     /**
+    * @ORM\ManyToOne(targetEntity="Hospital", inversedBy="sysUsers") 
+    * @ORM\JoinColumn(name="hospital_id", referencedColumnName="id") 
+    */
+    private $hospital;
+
+    /**
     * @ORM\OneToMany(targetEntity="MedCheckup", mappedBy="sysUser") 
     */
     private $medCheckups;
+
+    /**
+    * @ORM\OneToMany(targetEntity="Coaching", mappedBy="sysUser") 
+    */
+    private $coachings;
+    
+    /**
+    * @ORM\OneToMany(targetEntity="Patient", mappedBy="sysUser") 
+    */
+    private $patients;
+
+    /**
+    * @ORM\OneToMany(targetEntity="Arrangement", mappedBy="sysUser") 
+    */
+    private $arrangements;
 
     /**
      * @ORM\Column(type="string", length=50, options={"default" : ""})
@@ -42,6 +63,7 @@ class SysUser
      *      max = 50,
      *      maxMessage = "Der Vorname darf nicht länger als {{ limit }} Zeichen sein."
      * )
+     * @Assert\NotBlank()
      */
     private $firstName;
     
@@ -51,20 +73,42 @@ class SysUser
      *      max = 50,
      *      maxMessage = "Der Nachname darf nicht länger als {{ limit }} Zeichen sein."
      * )
+     * @Assert\NotBlank()
      */
     private $lastName;
+
+
+    /**
+     * @ORM\Column(type="string", length=500, options={"default" : ""})     
+     */
+    private $address;
+    
+    /**
+     * @ORM\Column(type="date", length=50, nullable=true)
+     * @Assert\Date()
+     */
+    private $birthDate;
+
+    /**
+     * @ORM\Column(type="string", length=50, options={"default" : ""})     
+     */
+    private $sex;
 
     /**
      * @ORM\Column(type="string", unique=true, length=150)
      * @Assert\Email(
      *     message = "Der Wert '{{ value }}' ist keine gültige E-Mail.",
-     *     checkMX = true
+     *     checkMX = true,
+     *     groups={"createUserAction"}
      * )
      * @Assert\Length(
      *     max = 150,
-     *     maxMessage = "Die E-Mail darf nicht länger als {{ limit }} Zeichen sein."
+     *     maxMessage = "Die E-Mail darf nicht länger als {{ limit }} Zeichen sein.",
+     *     groups={"createUserAction"}
      * )
-     * @Assert\NotBlank(groups={"registration"}) 
+     * @Assert\NotBlank(
+     *     message="E-Mail muss vorhanden sein",
+     *     groups={"createUserAction", "loginAction"})
      */
     private $email;
 
@@ -92,6 +136,10 @@ class SysUser
     public function __construct()
     {
         $this->medCheckups = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->coachings = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->patients = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->arrangements = new \Doctrine\Common\Collections\ArrayCollection();
+        
     }
 
    
@@ -282,5 +330,203 @@ class SysUser
     public function getMedCheckups()
     {
         return $this->medCheckups;
+    }
+
+    /**
+     * Add coaching
+     *
+     * @param \AppBundle\Entity\Coaching $coaching
+     *
+     * @return SysUser
+     */
+    public function addCoaching(\AppBundle\Entity\Coaching $coaching)
+    {
+        $this->coachings[] = $coaching;
+
+        return $this;
+    }
+
+    /**
+     * Remove coaching
+     *
+     * @param \AppBundle\Entity\Coaching $coaching
+     */
+    public function removeCoaching(\AppBundle\Entity\Coaching $coaching)
+    {
+        $this->coachings->removeElement($coaching);
+    }
+
+    /**
+     * Get coachings
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCoachings()
+    {
+        return $this->coachings;
+    }
+
+    /**
+     * Add patient
+     *
+     * @param \AppBundle\Entity\Patient $patient
+     *
+     * @return SysUser
+     */
+    public function addPatient(\AppBundle\Entity\Patient $patient)
+    {
+        $this->patients[] = $patient;
+
+        return $this;
+    }
+
+    /**
+     * Remove patient
+     *
+     * @param \AppBundle\Entity\Patient $patient
+     */
+    public function removePatient(\AppBundle\Entity\Patient $patient)
+    {
+        $this->patients->removeElement($patient);
+    }
+
+    /**
+     * Get patients
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPatients()
+    {
+        return $this->patients;
+    }
+
+    /**
+     * Set birthDate
+     *
+     * @param \DateTime $birthDate
+     *
+     * @return SysUser
+     */
+    public function setBirthDate($birthDate)
+    {
+        $this->birthDate = $birthDate;
+
+        return $this;
+    }
+
+    /**
+     * Get birthDate
+     *
+     * @return \DateTime
+     */
+    public function getBirthDate()
+    {
+        return $this->birthDate;
+    }
+
+    /**
+     * Set sex
+     *
+     * @param string $sex
+     *
+     * @return SysUser
+     */
+    public function setSex($sex)
+    {
+        $this->sex = $sex;
+
+        return $this;
+    }
+
+    /**
+     * Get sex
+     *
+     * @return string
+     */
+    public function getSex()
+    {
+        return $this->sex;
+    }
+
+    /**
+     * Set address
+     *
+     * @param string $address
+     *
+     * @return SysUser
+     */
+    public function setAddress($address)
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    /**
+     * Get address
+     *
+     * @return string
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+    /**
+     * Add arrangement
+     *
+     * @param \AppBundle\Entity\Arrangement $arrangement
+     *
+     * @return SysUser
+     */
+    public function addArrangement(\AppBundle\Entity\Arrangement $arrangement)
+    {
+        $this->arrangements[] = $arrangement;
+
+        return $this;
+    }
+
+    /**
+     * Remove arrangement
+     *
+     * @param \AppBundle\Entity\Arrangement $arrangement
+     */
+    public function removeArrangement(\AppBundle\Entity\Arrangement $arrangement)
+    {
+        $this->arrangements->removeElement($arrangement);
+    }
+
+    /**
+     * Get arrangements
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getArrangements()
+    {
+        return $this->arrangements;
+    }
+
+    /**
+     * Set hospital
+     *
+     * @param \AppBundle\Entity\Hospital $hospital
+     *
+     * @return SysUser
+     */
+    public function setHospital(\AppBundle\Entity\Hospital $hospital = null)
+    {
+        $this->hospital = $hospital;
+
+        return $this;
+    }
+
+    /**
+     * Get hospital
+     *
+     * @return \AppBundle\Entity\Hospital
+     */
+    public function getHospital()
+    {
+        return $this->hospital;
     }
 }

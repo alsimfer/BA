@@ -1,3 +1,4 @@
+{% form_theme form 'form/form_errors.html.twig' %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -37,10 +38,29 @@
 					                    </div> <!-- END PANEL HEADING-->
 
 					                    <div class="panel-body">     
-											{{ form_start(form) }}
-												{{ form_widget(form) }}
-											{{ form_end(form) }}
+                                            {{ form_start(form) }}
+                                            {{ form_errors(form) }}
+
+                                            <div class="form-group row">
+                                            {{ form_errors(form.email) }}
+                                                {{ form_label(form.email) }}
+                                                
+                                                <div class="col-sm-8">
+                                                    {{ form_widget(form.email) }}
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                            {{ form_errors(form.password) }}
+                                                {{ form_label(form.password) }}
+                                                
+                                                <div class="col-sm-8">
+                                                    {{ form_widget(form.password) }}
+                                                </div>
+                                            </div>
+											
                                             <a href="/password-issue" class="pull-right">Ich habe mein Kennwort vergessen</a>
+                                            {{ form_end(form) }}
 										</div> <!-- END PANEL BODY-->
 					                </div> <!-- END PANEL -->
 				    	        </div> <!-- END COLUMN -->

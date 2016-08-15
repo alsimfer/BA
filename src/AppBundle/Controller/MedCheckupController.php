@@ -54,7 +54,7 @@ class MedCheckupController extends Controller
 
 
     /**
-     * @Route("/med-checkup/create", name="medCheckupCreatePage")
+     * @Route("/med-checkups/create", name="medCheckupCreatePage")
      */
     public function medCheckupCreateAction(Request $request)
     {
@@ -373,7 +373,7 @@ class MedCheckupController extends Controller
         }
         
         return $this->render('medCheckup/medCheckupCreatePage.html.twig', array(
-            'title' => 'AOK | Untersuchung',
+            'title' => 'AOK | Untersuchungen | Erstellen',
             'form' => $form->createView(),
             'user' => $sysUser
         ));
@@ -683,7 +683,7 @@ class MedCheckupController extends Controller
         }
         
         return $this->render('medCheckup/medCheckupEditPage.html.twig', array(
-            'title' => 'AOK | Untersuchung',
+            'title' => 'AOK | Untersuchungen | Bearbeiten',
             'form' => $form->createView(),
             'user' => $sysUser
         ));
@@ -707,7 +707,7 @@ class MedCheckupController extends Controller
 
         return $this->render('medCheckup/medCheckupInfoPage.html.twig', 
             array(
-                'title' => 'AOK | Patienten',
+                'title' => 'AOK | Untersuchungen | Info',
                 'user' => $sysUser,
                 'medCheckup' => $medCheckup,
             )
