@@ -12,10 +12,7 @@ services:
     util:
         class: AppBundle\Service\Util
         arguments: ['@doctrine.orm.entity_manager']
-    # user_id_listener:
-    #     class: AppBundle\EventListener\UserIdListener
-    #     tags:
-    #         - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+
     error_redirect_listener:
         class: AppBundle\EventListener\ErrorRedirectListener
         arguments:
@@ -29,4 +26,10 @@ services:
             em: "@doctrine.orm.entity_manager"
         tags:           
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+    user_logger:
+        class: AppBundle\EventListener\UserLogger
+        arguments:
+            em: "@doctrine.orm.entity_manager"
+        tags:           
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
    

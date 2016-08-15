@@ -35,7 +35,7 @@ class Log
     private $field;
 
     /**
-     * @ORM\Column(type="string", length=500)
+     * @ORM\Column(type="string", length=50)
      */
     private $action;
 
@@ -51,7 +51,7 @@ class Log
     private $dateTime;  
 
     /**
-     * @ORM\Column(type="string", length=500)
+     * @ORM\Column(type="string", length=5000)
      */
     private $log;
 

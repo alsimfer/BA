@@ -1,0 +1,34 @@
+<!-- Arrangements Table -->
+<table id="arrangements_table" class="table table_main table-striped" style="width:100%">
+	<thead>
+        <tr>
+        	<th>Id</th>
+            <th>Benutzer</th>
+            <th>Aktion</th>
+            <th>Bereich</th>            
+            <th>Object ID</th>
+            <th>Datum</th>
+        </tr>
+    </thead>
+
+    {% for l in logs %}
+        <tr>
+        	<td>{{ l.id }}</td>
+                        
+            <td>
+                {% if l.userFirstName is not empty %}
+                    {{ l.userFirstName ~ " " }} 
+                {% endif %}    
+                {% if l.userLastName is not empty %}
+                    {{ l.userLastName }} 
+                {% endif %}
+
+            </td>
+            
+            <td>{{ l.action }}</td>
+            <td>{{ l.field }}</td>
+            <td>{{ l.objectId }}</td>
+            <td>{{ l.dateTime | date('d.m.Y') ~ ", um " ~ l.dateTime | date('H:i') }}</td>
+        </tr>
+    {% endfor %}
+</table>

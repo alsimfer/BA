@@ -55,7 +55,7 @@ class ArrangementController extends Controller
     /**
      * @Route("/arrangements/create", name="createArrangementPage")
      */
-    public function createArrangementAction(Request $request)
+    public function arrangementCreateAction(Request $request)
     {
         $util = $this->get('util');
         $sysUser = $util->checkLoggedUser($request);

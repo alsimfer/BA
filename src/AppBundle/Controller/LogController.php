@@ -31,7 +31,7 @@ class LogController extends Controller
     /**
      * @Route("/logs", name="logsPage")
      */
-    public function usersAction(Request $request)
+    public function logsAction(Request $request)
     {
         $util = $this->get('util');
         $sysUser = $util->checkLoggedUser($request);
@@ -40,12 +40,12 @@ class LogController extends Controller
             return $this->redirectToRoute('loginPage');
         }
 
-        $users = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findAll();
-        return $this->render('user/usersPage.html.twig', 
+        $logs = $this->getDoctrine()->getRepository('AppBundle:Log')->findAll();
+        return $this->render('log/logsPage.html.twig', 
             array(
-                'title' => 'AOK | Benutzer',
+                'title' => 'AOK | Änderungsprotokolle',
                 'user' => $sysUser,
-                'users' => $users,
+                'logs' => $logs,
                 
             )
         );
