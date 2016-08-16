@@ -35,7 +35,7 @@ class Log
     private $field;
 
     /**
-     * @ORM\Column(type="string", length=500)
+     * @ORM\Column(type="string", length=50)
      */
     private $action;
 
@@ -51,7 +51,7 @@ class Log
     private $dateTime;  
 
     /**
-     * @ORM\Column(type="string", length=500)
+     * @ORM\Column(type="string", length=5000)
      */
     private $log;
 
@@ -207,5 +207,29 @@ class Log
     public function getDateTime()
     {
         return $this->dateTime;
+    }
+
+    /**
+     * Set log
+     *
+     * @param string $log
+     *
+     * @return Log
+     */
+    public function setLog($log)
+    {
+        $this->log = $log;
+
+        return $this;
+    }
+
+    /**
+     * Get log
+     *
+     * @return string
+     */
+    public function getLog()
+    {
+        return $this->log;
     }
 }

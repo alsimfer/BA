@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-
+use Doctrine\ORM\PersistentCollection;
 /**
  * @ORM\Entity
  * @ORM\Table(name="sys_user") 
@@ -113,10 +113,10 @@ class SysUser
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=20, options={"default" : ""})
+     * @ORM\Column(type="string", length=25, options={"default" : ""})
      * @Assert\Length(
      *      min = 4,
-     *      max = 15,
+     *      max = 25,
      *      minMessage = "Die Nummer darf nicht kürzer als {{ limit }} Zeichen sein",
      *      maxMessage = "Die Nummer darf nicht länger als {{ limit }} Zeichen sein",
      * )
@@ -433,7 +433,7 @@ class SysUser
      */
     public function setSex($sex)
     {
-        $this->sex = $sex;
+        $this->sex = is_null($sex) ? '' : $sex;
 
         return $this;
     }
@@ -528,5 +528,35 @@ class SysUser
     public function getHospital()
     {
         return $this->hospital;
+    }
+
+    
+    public function iterateVisible() {
+        $return = array();
+        
+        foreach($this as $key => $value) {
+            if ($value instanceof PersistentCollection || $value instanceof ArrayCollection) {
+                continue;
+            }
+
+            if ($value instanceof \DateTime) {
+                $return[$key] = (string)$value->format("d.m.Y H:i:s");
+                continue;
+            }
+            
+            $return[$key] = (string)$value;
+        }
+
+        return $return;
+    }
+
+    public function __toString() {
+        try {
+            return (string)$this->getFirstName().' '.(string)$this->getLastName().' (id = '.(string)$this->getId().')';
+        } catch (Exception $e) {
+           return get_class($this).'@'.spl_object_hash($this); // If it is not possible, return a preset string to identify instance of object, e.g.
+        }
+        
+    
     }
 }

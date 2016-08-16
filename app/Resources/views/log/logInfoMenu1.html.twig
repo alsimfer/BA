@@ -1,0 +1,52 @@
+<dl class="container-fluid">
+
+	<dt>Benutzer Vorname</dt>
+	{% if log.userFirstName is not empty and log.userFirstName|length > 0 %}
+    	<dd class="bg-success">- {{ log.userFirstName }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Benutzer Nachname</dt>
+	{% if log.userLastName is not empty and log.userLastName|length > 0 %}
+    	<dd class="bg-success">- {{ log.userLastName }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Bereich</dt>
+	{% if log.field is not empty and log.field|length > 0 %}
+    	<dd class="bg-success">- {{ log.field }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Aktion</dt>
+	{% if log.action is not empty and log.action|length > 0 %}
+    	<dd class="bg-success">- {{ log.action }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Object Id</dt>
+	{% if log.objectId is not empty and log.objectId|length > 0 %}
+    	<dd class="bg-success">- {{ log.objectId }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Datum und Uhrzeit</dt>
+	{% if log.dateTime is not empty %}
+    	<dd class="bg-success">- {{ log.dateTime | date('d.m.Y H:i') }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+	
+	<dt>Änderungen</dt>
+	{% if log.log is not empty and log.log|length > 0 %}
+    	<dd class="bg-success"> {{ log.log|nl2br }}</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+</dl>		

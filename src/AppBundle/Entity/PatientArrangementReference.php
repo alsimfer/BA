@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Doctrine\ORM\PersistentCollection;
 
 /**
  * @ORM\Entity
@@ -46,12 +47,6 @@ class PatientArrangementReference
     * ) 
     */
     private $arrangement;
-
-    public function __construct() 
-    {
-        $this->patient = new ArrayCollection();
-        $this->arrangement = new ArrayCollection();
-    }
 
 
     /**
@@ -174,5 +169,35 @@ class PatientArrangementReference
     public function getArrangement()
     {
         return $this->arrangement;
+    }
+
+    
+    public function iterateVisible() {
+        $return = array();
+        
+        foreach($this as $key => $value) {
+            if ($value instanceof PersistentCollection || $value instanceof ArrayCollection) {
+                continue;
+            }
+
+            if ($value instanceof \DateTime) {
+                $return[$key] = (string)$value->format("d.m.Y H:i:s");
+                continue;
+            }
+            
+            $return[$key] = (string)$value;
+        }
+
+        return $return;
+    }
+
+    public function __toString() {
+        try {
+            return (string)$this->getId();
+        } catch (Exception $e) {
+           return get_class($this).'@'.spl_object_hash($this); // If it is not possible, return a preset string to identify instance of object, e.g.
+        }
+        
+    
     }
 }

@@ -40,7 +40,7 @@ class LogController extends Controller
             return $this->redirectToRoute('loginPage');
         }
 
-        $logs = $this->getDoctrine()->getRepository('AppBundle:Log')->findAll();
+        $logs = $this->getDoctrine()->getRepository('AppBundle:Log')->findBy(array(), array('id' => 'DESC'), 1000, 0);
         return $this->render('log/logsPage.html.twig', 
             array(
                 'title' => 'AOK | Änderungsprotokolle',
@@ -51,5 +51,27 @@ class LogController extends Controller
         );
     }
     
+    /**
+     * @Route("/logs/info/{id}", name="logInfoPage")
+     */
+    public function logInfoAction(Request $request, $id)
+    {
+        $util = $this->get('util');
+        $sysUser = $util->checkLoggedUser($request);
+
+        if (!$sysUser) {
+            return $this->redirectToRoute('loginPage');
+        }
+
+        $log = $this->getDoctrine()->getRepository('AppBundle:Log')->findOneById($id);
+        
+        return $this->render('log/logInfoPage.html.twig', 
+            array(
+                'title' => 'AOK | Änderungsprotokoll',
+                'user' => $sysUser,
+                'log' => $log,
+            )
+        );
+    }
     
 }

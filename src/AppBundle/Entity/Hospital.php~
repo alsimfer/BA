@@ -181,4 +181,34 @@ class Hospital
     {
         return $this->sysUsers;
     }
+
+    public function iterateVisible() {
+        $return = array();
+        
+        foreach($this as $key => $value) {
+            if ($value instanceof PersistentCollection || $value instanceof ArrayCollection) {
+                continue;
+            }
+
+            if ($value instanceof \DateTime) {
+                $return[$key] = (string)$value->format("d.m.Y H:i:s");
+                continue;
+            }
+            
+            $return[$key] = (string)$value;
+        }
+
+        return $return;
+    }
+
+
+    public function __toString() {
+        try {
+            return (string)$this->getName().' (id = '.(string)$this->getId().')';
+        } catch (Exception $e) {
+           return get_class($this).'@'.spl_object_hash($this); // If it is not possible, return a preset string to identify instance of object, e.g.
+        }
+        
+    
+    }
 }

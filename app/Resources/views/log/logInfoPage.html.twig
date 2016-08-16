@@ -5,23 +5,17 @@
     <div class="col-md-8 col-md-offset-2">
 	    <ul class="nav nav-tabs">
 		    <li class="active"><a data-toggle="tab" href="#menu1">Stammdaten</a></li>
-		    <li><a data-toggle="tab" href="#menu2">Patienten</a></li>
 		    
 		</ul>
 
 		<div class="tab-content">
 		    <div id="menu1" class="tab-pane fade in active">
 		    	<p style="margin-top: 15px"></p>
-	      		{{ include('arrangement/arrangementInfoMenu1.html.twig') }}
+	      		{{ include('log/logInfoMenu1.html.twig') }}
 		    					       
 		    </div>
 
-		    <div id="menu2" class="tab-pane fade col_md_2">
-		    	<p style="margin-top: 15px"></p>
-		    	{{ include('patient/patientsTable.html.twig') }}
-		    </div>
 		    
-
 		</div>
         
     </div>

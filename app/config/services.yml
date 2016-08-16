@@ -26,10 +26,10 @@ services:
             em: "@doctrine.orm.entity_manager"
         tags:           
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-    user_logger:
-        class: AppBundle\EventListener\UserLogger
-        arguments:
-            em: "@doctrine.orm.entity_manager"
-        tags:           
-            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+    # user_logger:
+    #     class: AppBundle\EventListener\UserLogger
+    #     arguments:
+    #         em: "@doctrine.orm.entity_manager"
+    #     tags:           
+    #         - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
    

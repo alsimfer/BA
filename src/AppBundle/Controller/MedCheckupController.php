@@ -41,7 +41,7 @@ class MedCheckupController extends Controller
             return $this->redirectToRoute('loginPage');
         }
 
-        $medCheckups = $this->getDoctrine()->getRepository('AppBundle:medCheckup')->findAll();
+        $medCheckups = $this->getDoctrine()->getRepository('AppBundle:medCheckup')->findBy(array(), array('id' => 'DESC'), 1000, 0);
 
         return $this->render('medCheckup/medCheckupsPage.html.twig', 
             array(
@@ -66,6 +66,8 @@ class MedCheckupController extends Controller
         }
 
         $medCheckup = new MedCheckup();
+        $before = clone($medCheckup);
+
         $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findAll();
         $sysUsers = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findBy(array('userGroup' => 4));
         
@@ -366,6 +368,8 @@ class MedCheckupController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($medCheckup);
             $em->flush();
+
+            $util->logAction($request, $medCheckup->getId(), $before, $medCheckup);
 
             $this->addFlash('notice', 'Eine Untersuchung erfolgreich hinzugefügt');
             
@@ -393,7 +397,9 @@ class MedCheckupController extends Controller
             return $this->redirectToRoute('loginPage');
         }
 
-        $medCheckup = $this->getDoctrine()->getRepository('AppBundle:MedCheckup')->findOneById($id);        
+        $medCheckup = $this->getDoctrine()->getRepository('AppBundle:MedCheckup')->findOneById($id); 
+        $before = clone($medCheckup);
+
         $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findAll();
         $sysUsers = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findBy(array('userGroup' => 4));
         
@@ -676,6 +682,8 @@ class MedCheckupController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($medCheckup);
             $em->flush();
+
+            $util->logAction($request, $id, $before, $medCheckup);
 
             $this->addFlash('notice', 'Eine Untersuchung erfolgreich gespeichert');
             
@@ -728,11 +736,14 @@ class MedCheckupController extends Controller
         }
 
         $medCheckup = $this->getDoctrine()->getRepository('AppBundle:MedCheckup')->findOneById($id);
-        
+        $before = clone($medCheckup);
+
         $em = $this->getDoctrine()->getManager();
         $em->remove($medCheckup);
         $em->flush();
 
+        $util->logAction($request, $id, $before, $medCheckup);
+        
         $this->addFlash('notice', 'Untersuchung erfolgreich gelöscht');
         
         return $this->redirectToRoute('medCheckupsPage');

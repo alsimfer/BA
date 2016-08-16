@@ -42,7 +42,7 @@ class PatientController extends Controller implements AuthenticationController
             return $this->redirectToRoute('loginPage');
         }
 
-        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findAll();
+        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findBy(array(), array('id' => 'DESC'), 1000, 0);
 
         return $this->render('patient/patientsPage.html.twig', 
             array(
@@ -66,6 +66,9 @@ class PatientController extends Controller implements AuthenticationController
         }
 
         $patient = new Patient();
+        // Snapshot for logging
+        $before = clone($patient);
+
         $hospitals = $this->getDoctrine()->getRepository('AppBundle:Hospital')->findAll();
         $sysUsers = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findBy(array('userGroup' => 5));
 
@@ -268,6 +271,8 @@ class PatientController extends Controller implements AuthenticationController
             $em->persist($patient);
             $em->flush();
 
+            $util->logAction($request, $patient->getId(), $before, $patient);
+            
             $this->addFlash('notice', 'Ein neuer Patient erfolgreich hinzugefügt');
             
             return $this->redirectToRoute('patientsPage');
@@ -295,7 +300,8 @@ class PatientController extends Controller implements AuthenticationController
             return $this->redirectToRoute('loginPage');
         }
 
-        $patient = $this->getDoctrine()->getRepository('AppBundle:Patient')->findOneById($id);
+        $patient = $this->getDoctrine()->getRepository('AppBundle:Patient')->findOneById($id);        
+
         $patArrRefs = $this->getDoctrine()->getRepository('AppBundle:PatientArrangementReference')->findByPatient($id);
         $arrangements = array();
         foreach ($patArrRefs as $key => $value) {
@@ -326,6 +332,9 @@ class PatientController extends Controller implements AuthenticationController
         }
 
         $patient = $this->getDoctrine()->getRepository('AppBundle:Patient')->findOneById($id);
+        // Snapshot for logging
+        $before = clone($patient);
+        
         $hospitals = $this->getDoctrine()->getRepository('AppBundle:Hospital')->findAll();
         $sysUsers = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findBy(array('userGroup' => 5));   
 
@@ -525,9 +534,12 @@ class PatientController extends Controller implements AuthenticationController
             $patient->setNachsorge($form['nachsorge']->getData());
             
             $em = $this->getDoctrine()->getManager();
-            $em->persist($patient);
+            $em->persist($patient);            
             $em->flush();
 
+            // Log differences.
+            $util->logAction($request, $patient->getId(), $before, $patient);
+            
             $this->addFlash('notice', 'Patient erfolgreich gespeichert');
             
             return $this->redirectToRoute('patientsPage');
@@ -556,11 +568,16 @@ class PatientController extends Controller implements AuthenticationController
         }
 
         $patient = $this->getDoctrine()->getRepository('AppBundle:Patient')->findOneById($id);
+        // Snapshot for logging
+        $before = clone($patient);
         
         $em = $this->getDoctrine()->getManager();
         $em->remove($patient);
         $em->flush();
 
+        // Log differences.
+        $util->logAction($request, $id, $before, $patient);
+        
         $this->addFlash('notice', 'Patient erfolgreich gelöscht');
         
         return $this->redirectToRoute('patientsPage');

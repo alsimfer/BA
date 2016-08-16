@@ -42,7 +42,7 @@ class CoachingController extends Controller
             return $this->redirectToRoute('loginPage');
         }
 
-        $coachings = $this->getDoctrine()->getRepository('AppBundle:Coaching')->findAll();
+        $coachings = $this->getDoctrine()->getRepository('AppBundle:Coaching')->findBy(array(), array('id' => 'DESC'), 1000, 0);
 
         return $this->render('coaching/coachingsPage.html.twig', 
             array(
@@ -67,6 +67,8 @@ class CoachingController extends Controller
         }
 
         $coaching = new Coaching();
+        $before = clone($coaching);
+
         $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findAll();
         $sysUsers = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findBy(array('userGroup' => 5));
         
@@ -118,11 +120,12 @@ class CoachingController extends Controller
             $coaching->setSysUser($form['sysUser']->getData());
             $coaching->setDateAndTime($form['dateAndTime']->getData());
             $coaching->setWeekGoal($form['weekGoal']->getData());
-            
-            
+                        
             $em = $this->getDoctrine()->getManager();
             $em->persist($coaching);
             $em->flush();
+
+            $util->logAction($request, $coaching->getId(), $before, $coaching);
 
             $this->addFlash('notice', 'Ein Coaching erfolgreich hinzugefügt');
             
@@ -150,7 +153,9 @@ class CoachingController extends Controller
             return $this->redirectToRoute('loginPage');
         }
 
-        $coaching = $this->getDoctrine()->getRepository('AppBundle:Coaching')->findOneById($id);        
+        $coaching = $this->getDoctrine()->getRepository('AppBundle:Coaching')->findOneById($id);      
+        $before = clone($coaching);
+
         $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findAll();
         $sysUsers = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findBy(array('userGroup' => 5));
         
@@ -207,6 +212,8 @@ class CoachingController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($coaching);
             $em->flush();
+
+            $util->logAction($request, $id, $before, $coaching);
 
             $this->addFlash('notice', 'Das Coaching erfolgreich gespeichert');
             
@@ -259,10 +266,13 @@ class CoachingController extends Controller
         }
 
         $coaching = $this->getDoctrine()->getRepository('AppBundle:Coaching')->findOneById($id);
-        
+        $before = clone($coaching);
+
         $em = $this->getDoctrine()->getManager();
         $em->remove($coaching);
         $em->flush();
+
+        $util->logAction($request, $id, $before, $coaching);
 
         $this->addFlash('notice', 'Coaching erfolgreich gelöscht');
         

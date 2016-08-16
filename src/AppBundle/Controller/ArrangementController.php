@@ -40,7 +40,7 @@ class ArrangementController extends Controller
             return $this->redirectToRoute('loginPage');
         }
 
-        $arrangements = $this->getDoctrine()->getRepository('AppBundle:Arrangement')->findAll();
+        $arrangements = $this->getDoctrine()->getRepository('AppBundle:Arrangement')->findBy(array(), array('id' => 'DESC'), 1000, 0);
 
         return $this->render('arrangement/arrangementsPage.html.twig', 
             array(
@@ -65,6 +65,8 @@ class ArrangementController extends Controller
         }
 
         $arrangement = new Arrangement();
+        $before = clone($arrangement);
+
         $sysUsers = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findBy(array('userGroup' => 6));
 
         $form = $this->createFormBuilder($arrangement)
@@ -116,6 +118,8 @@ class ArrangementController extends Controller
             $em->persist($arrangement);
             $em->flush();
 
+            $util->logAction($request, $arrangement->getId(), $before, $arrangement);
+
             $this->addFlash('notice', 'Ein neuer Kurs erfolgreich hinzugefügt');
             
             return $this->redirectToRoute('arrangementsPage');
@@ -143,6 +147,8 @@ class ArrangementController extends Controller
         }
 
         $arrangement = $this->getDoctrine()->getRepository('AppBundle:Arrangement')->findOneById($id);
+        $before = clone($arrangement);
+
         $sysUsers = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findBy(array('userGroup' => 6));
 
         $form = $this->createFormBuilder($arrangement)
@@ -192,6 +198,8 @@ class ArrangementController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($arrangement);
             $em->flush();
+
+            $util->logAction($request, $id, $before, $arrangement);
 
             $this->addFlash('notice', 'Kurs erfolgreich gespeichert');
 
@@ -248,11 +256,14 @@ class ArrangementController extends Controller
         }
 
         $arrangement = $this->getDoctrine()->getRepository('AppBundle:Arrangement')->findOneById($id);
-        
+        $before = clone($arrangement);
+
         $em = $this->getDoctrine()->getManager();
         $em->remove($arrangement);
         $em->flush();
 
+        $util->logAction($request, $id, $before, $arrangement);
+        
         $this->addFlash('notice', 'Kurs erfolgreich gelöscht');
         
         return $this->redirectToRoute('arrangementsPage');

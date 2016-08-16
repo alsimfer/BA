@@ -37,6 +37,9 @@ $(function() {
         "columnDefs": [
             // { "visible": false, "targets": 0 }
         ],
+        "aaSorting": [],
+        "iDisplayLength": 25,
+
         responsive: true
 
     });
@@ -114,11 +117,13 @@ function adjustActiveListItem() {
     } else if (jQuery.inArray("med-checkups", arr) !== -1) {
         $("#med_checkups_li").addClass("active");
     } else if (jQuery.inArray("arrangements", arr) !== -1) {
-        $("#arrangements_li").addClass("active");
-    } else if (jQuery.inArray("log", arr) !== -1) {
-        $("#log_li").addClass("active");
-    } else if (jQuery.inArray("patient-arrangement", arr) !== -1) {
-        $("#patient_arrangement_li").addClass("active");
+        $("#arrangements_li").addClass("active");    
+    } else if (jQuery.inArray("patient-arrangements", arr) !== -1) {
+        $("#patient_arrangements_li").addClass("active");
+    } else if (jQuery.inArray("logs", arr) !== -1) {
+        $("#logs_li").addClass("active");
+    } else if (jQuery.inArray("users", arr) !== -1) {
+        $("#users_li").addClass("active");
     }
 }
 

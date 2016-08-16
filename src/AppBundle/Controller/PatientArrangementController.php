@@ -40,7 +40,7 @@ class PatientArrangementController extends Controller
             return $this->redirectToRoute('loginPage');
         }
 
-        $patArrRefs = $this->getDoctrine()->getRepository('AppBundle:PatientArrangementReference')->findAll();
+        $patArrRefs = $this->getDoctrine()->getRepository('AppBundle:PatientArrangementReference')->findBy(array(), array('id' => 'DESC'), 1000, 0);
     
         return $this->render('patientArrangement/patientArrangementPage.html.twig', 
             array(
@@ -65,6 +65,8 @@ class PatientArrangementController extends Controller
         }
 
         $patArrRef = new PatientArrangementReference();
+        $before = clone($patArrRef);
+
         $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findAll();
         $arrangements = $this->getDoctrine()->getRepository('AppBundle:Arrangement')->findAll();
         
@@ -124,6 +126,8 @@ class PatientArrangementController extends Controller
             $em->persist($patArrRef);
             $em->flush();
 
+            $util->logAction($request, $patArrRef->getId(), $before, $patArrRef);
+
             $this->addFlash('notice', 'Ein neuer Kursverlauf erfolgreich gespeichert');
 
             return $this->redirectToRoute('patientArrangementPage');
@@ -150,6 +154,8 @@ class PatientArrangementController extends Controller
         }
 
         $patArrRef = $this->getDoctrine()->getRepository('AppBundle:PatientArrangementReference')->findOneById($id);
+        $before = clone($patArrRef);
+
         $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findAll();
         $arrangements = $this->getDoctrine()->getRepository('AppBundle:Arrangement')->findAll();
         
@@ -208,6 +214,8 @@ class PatientArrangementController extends Controller
             $em->persist($patArrRef);
             $em->flush();
 
+            $util->logAction($request, $id, $before, $patArrRef);
+
             $this->addFlash('notice', 'Der Kursverlauf erfolgreich gespeichert');
 
             return $this->redirectToRoute('patientArrangementPage');
@@ -260,11 +268,14 @@ class PatientArrangementController extends Controller
         }
 
         $patArrRef = $this->getDoctrine()->getRepository('AppBundle:PatientArrangementReference')->findOneById($id);
-
+        $before = clone($patArrRef);
+        
         $em = $this->getDoctrine()->getManager();
         $em->remove($patArrRef);
         $em->flush();
 
+        $util->logAction($request, $id, $before, $patArrRef);
+        
         $this->addFlash('notice', 'Kursverlauf erfolgreich gelöscht');
         
         return $this->redirectToRoute('patientArrangementPage');        

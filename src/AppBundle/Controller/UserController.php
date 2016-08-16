@@ -40,7 +40,7 @@ class UserController extends Controller
             return $this->redirectToRoute('loginPage');
         }
 
-        $users = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findAll();
+        $users = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findBy(array(), array('id' => 'DESC'), 1000, 0);
         return $this->render('user/usersPage.html.twig', 
             array(
                 'title' => 'AOK | Benutzer',
@@ -53,7 +53,7 @@ class UserController extends Controller
     /**
      * @Route("/users/create", name="createUserPage")
      */
-    public function createUserAction(Request $request)
+    public function userCreateAction(Request $request)
     {
         $util = $this->get('util');
         $sysUser = $util->checkLoggedUser($request);
@@ -61,7 +61,9 @@ class UserController extends Controller
         if (!$sysUser) {
             return $this->redirectToRoute('loginPage');
         }
+
         $user = new SysUser();
+        $before = clone($user);
 
         // Prepare selectField with userGroups for the form.
         $em = $this->getDoctrine()->getManager();
@@ -104,6 +106,7 @@ class UserController extends Controller
                     'weiblich' => 'weiblich',
                 ),
                 'placeholder' => 'Wählen Sie ein Geschlecht aus',
+                'empty_data' => '',
             ))
             ->add('password', PasswordType::class, array(
                 'label' => 'Kennwort', 
@@ -137,7 +140,9 @@ class UserController extends Controller
             $user->setLastName($form['lastName']->getData());
             $user->setEmail($form['email']->getData());
             $user->setPhoneNumber($form['phoneNumber']->getData());
+
             $user->setSex($form['sex']->getData());
+
             $user->setAddress($form['address']->getData());
             $user->setUserGroup($form['userGroup']->getData());
             $user->setHospital($form['hospital']->getData());
@@ -145,6 +150,9 @@ class UserController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
+
+            $util->logAction($request, $user->getId(), $before, $user);
+
             $this->addFlash('notice', 'Benutzer erfolgreich hinzugefügt');
 
 #            $this->sendEmail('Registrierung erfolgreich abgeschlossen', $user, 'email/registration');
@@ -196,7 +204,8 @@ class UserController extends Controller
             return $this->redirectToRoute('loginPage');
         }
         $user = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findOneById($id);
-        
+        $before = clone($user);
+
         // Prepare selectField with userGroups for the form.
         $em = $this->getDoctrine()->getManager();
         $q = $em->createQuery('select u from AppBundle\Entity\UserGroup u where u.id >= 2');        
@@ -271,6 +280,9 @@ class UserController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
+
+            $util->logAction($request, $id, $before, $user);
+
             $this->addFlash('notice', 'Benutzer erfolgreich gespeichert');
             return $this->redirectToRoute('usersPage');
         }
@@ -293,10 +305,14 @@ class UserController extends Controller
             return $this->redirectToRoute('loginPage');
         }
         $user = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findOneById($id);
+        $before = clone($user);
         
         $em = $this->getDoctrine()->getManager();
         $em->remove($user);
         $em->flush();
+
+        $util->logAction($request, $id, $before, $user);
+
         $this->addFlash('notice', 'Benutzer erfolgreich gelöscht');
         
         return $this->redirectToRoute('usersPage');
@@ -310,6 +326,7 @@ class UserController extends Controller
     {
         $util = $this->get('util');
         $sysUser = $util->checkLoggedUser($request);
+        $before = clone($sysUser);
 
         if (!$sysUser) {
             return $this->redirectToRoute('loginPage');
@@ -366,6 +383,9 @@ class UserController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($sysUser);
             $em->flush();
+
+            $util->logAction($request, $sysUser->getId(), $before, $sysUser);
+
             $this->addFlash('notice', 'Einstellungen erfolgreich gespeichert');
         }
         
