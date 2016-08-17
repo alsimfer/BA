@@ -62,7 +62,6 @@ class ActionAuthenticator
         $urlsPermittedArray[] = "/logout";
         $urlsPermittedArray[] = "/user/settings";
 
-
         foreach ($navRules as $rule) {
             $buffer = explode(',', $rule->getUrlsPermitted());
             foreach ($buffer as $key => $value) {
@@ -92,7 +91,11 @@ class ActionAuthenticator
             }
         }        
 
-        if (!in_array($requestUri, $urlsPermittedArray) || $idPermitted === FALSE) {
+        // Under /_wdt symfony call Web Toolbar. Such requests should be always permitted.
+        if (
+            (!in_array($requestUri, $urlsPermittedArray) || $idPermitted === FALSE) 
+            && (strpos($requestUri, '_wdt') === FALSE) 
+        ) {
             $route = 'accessDeniedPage';
 
             if ($route === $event->getRequest()->get('_route')) {
