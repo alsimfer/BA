@@ -17,10 +17,7 @@ class ActionAuthenticator
 {
     protected $router;
     protected $em;     
-
-    /**
-     * @param Router
-     */
+    
     public function __construct(Router $router, EntityManager $em)
     {
         $this->router = $router;
@@ -30,15 +27,29 @@ class ActionAuthenticator
 
     public function onKernelRequest(GetResponseEvent $event)
     {        
+        // Check if user is logged in
         $request = $event->getRequest();
         $session = $request->getSession();
         $userId = $session->get('user_id');
 
         $user = $this->em->getRepository('AppBundle:SysUser')->findOneById($userId);    
-        if (!$user) {
-            return;
-        }   
+        if (is_null($user)) {
+            $route = 'loginPage';
+            $route2 = 'passwordPage';
 
+            if ($route === $event->getRequest()->get('_route') || $route2 === $event->getRequest()->get('_route')) {
+                return;
+            }
+
+            $url = $this->router->generate($route);
+            $response = new RedirectResponse($url);
+            $event->setResponse($response);
+            return;            
+        } else {
+            $event->getRequest()->attributes->set('user', $user);    
+        }        
+
+        // Get authenticated navigation for the logged in user
         $navRules = $this->em->getRepository('AppBundle:NavigationRules')->findByUserGroup($user->getUserGroup());        
 
         $urlsPermittedArray = array();
@@ -63,16 +74,25 @@ class ActionAuthenticator
         
         $requestUri = $request->getRequestURI();    
 
-        // If there is a digit on the end remove it
+        // Check edit, info, delete urls.
+        $idPermitted = true;
+        // If there is a digit on the end remove it.
         $pattern = '/(\d+)\D*\z/';
-        preg_match($pattern, $requestUri, $matches);
-
-        // TODO: Check if we are allowed to see item in matches[0]. E.g. /patients/info/3 -> matches[0] = 3
+        preg_match($pattern, $requestUri, $matches);            
         if (empty($matches) === FALSE) {
-            $requestUri = str_replace("/".$matches[0], "", $requestUri);        
-        }
+            $requestUri = str_replace("/".$matches[0], "", $requestUri);    
+            // Collect ids of all relevant to this user patients.
+            $patientIdsPermittedArray = array();
+            $patientIdsPermitted = $this->em->getRepository('AppBundle:Patient')->findIdsRelevantToUser($user);
+            foreach($patientIdsPermitted as $key => $value) {
+                $patientIdsPermittedArray[] = $value['id'];
+            }    
+            if (strpos($requestUri, 'patients') !== FALSE && !in_array($matches[0], $patientIdsPermittedArray)) {
+                $idPermitted = FALSE;
+            }
+        }        
 
-        if (!in_array($requestUri, $urlsPermittedArray)) {
+        if (!in_array($requestUri, $urlsPermittedArray) || $idPermitted === FALSE) {
             $route = 'accessDeniedPage';
 
             if ($route === $event->getRequest()->get('_route')) {

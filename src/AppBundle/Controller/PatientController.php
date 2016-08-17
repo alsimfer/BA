@@ -27,27 +27,20 @@ use AppBundle\Controller\Util;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-class PatientController extends Controller implements AuthenticationController
+class PatientController extends Controller
 {
     
     /**
      * @Route("/patients", name="patientsPage")
      */
-    public function patientsAction(Request $request, array $options=null)
-    {
-        $util = $this->get('util');
-        $sysUser = $util->checkLoggedUser($request);
-
-        if (!$sysUser) {
-            return $this->redirectToRoute('loginPage');
-        }
-
-        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findBy(array(), array('id' => 'DESC'), 1000, 0);
+    public function patientsAction(Request $request)
+    {        
+        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findRelevantToUser($request->attributes->get('user'));
 
         return $this->render('patient/patientsPage.html.twig', 
             array(
                 'title' => 'AOK | Patienten',
-                'user' => $sysUser,
+                'user' => $request->attributes->get('user'),
                 'patients' => $patients,
             )
         );
@@ -57,14 +50,7 @@ class PatientController extends Controller implements AuthenticationController
      * @Route("/patients/create", name="patientCreatePage")
      */
     public function patientCreateAction(Request $request)
-    {
-        $util = $this->get('util');
-        $sysUser = $util->checkLoggedUser($request);
-        
-        if (!$sysUser) {
-            return $this->redirectToRoute('loginPage');
-        }
-
+    {        
         $patient = new Patient();
         // Snapshot for logging
         $before = clone($patient);
@@ -278,13 +264,14 @@ class PatientController extends Controller implements AuthenticationController
             return $this->redirectToRoute('patientsPage');
         }
         
-        return $this->render('patient/patientCreatePage.html.twig', array(
+        $return = $this->render('patient/patientCreatePage.html.twig', array(
             'title' => 'AOK | Patienten | Erstellen',
             'form' => $form->createView(),
-            'user' => $sysUser,
+            'user' => $request->attributes->get('user'),
             'validation_groups' => array('registration')
         ));
-        
+
+        return $return;
     }
     
 
@@ -293,13 +280,6 @@ class PatientController extends Controller implements AuthenticationController
      */
     public function patientInfoAction(Request $request, $id)
     {
-        $util = $this->get('util');
-        $sysUser = $util->checkLoggedUser($request);
-        
-        if (!$sysUser) {
-            return $this->redirectToRoute('loginPage');
-        }
-
         $patient = $this->getDoctrine()->getRepository('AppBundle:Patient')->findOneById($id);        
 
         $patArrRefs = $this->getDoctrine()->getRepository('AppBundle:PatientArrangementReference')->findByPatient($id);
@@ -311,7 +291,7 @@ class PatientController extends Controller implements AuthenticationController
         return $this->render('patient/patientInfoPage.html.twig', 
             array(
                 'title' => 'AOK | Patienten | Info',
-                'user' => $sysUser,
+                'user' => $request->attributes->get('user'),
                 'arrangements' => $arrangements,
                 'patient' => $patient,
             )
@@ -323,14 +303,7 @@ class PatientController extends Controller implements AuthenticationController
      * @Route("/patients/edit/{id}", name="patientEditPage")
      */
     public function patientEditAction(Request $request, $id)
-    {
-        $util = $this->get('util');
-        $sysUser = $util->checkLoggedUser($request);
-        
-        if (!$sysUser) {
-            return $this->redirectToRoute('loginPage');
-        }
-
+    {        
         $patient = $this->getDoctrine()->getRepository('AppBundle:Patient')->findOneById($id);
         // Snapshot for logging
         $before = clone($patient);
@@ -538,7 +511,7 @@ class PatientController extends Controller implements AuthenticationController
             $em->flush();
 
             // Log differences.
-            $util->logAction($request, $patient->getId(), $before, $patient);
+            $util->logAction($request, $id, $before, $patient);
             
             $this->addFlash('notice', 'Patient erfolgreich gespeichert');
             
@@ -548,7 +521,7 @@ class PatientController extends Controller implements AuthenticationController
         return $this->render('patient/patientEditPage.html.twig', array(
             'title' => 'AOK | Patienten | Bearbeiten',
             'form' => $form->createView(),
-            'user' => $sysUser,
+            'user' => $request->attributes->get('user'),
             'validation_groups' => array('registration')
         ));
         
@@ -560,13 +533,6 @@ class PatientController extends Controller implements AuthenticationController
      */
     public function patientDeleteAction(Request $request, $id)
     {
-        $util = $this->get('util');
-        $sysUser = $util->checkLoggedUser($request);
-        
-        if (!$sysUser) {
-            return $this->redirectToRoute('loginPage');
-        }
-
         $patient = $this->getDoctrine()->getRepository('AppBundle:Patient')->findOneById($id);
         // Snapshot for logging
         $before = clone($patient);

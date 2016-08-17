@@ -33,7 +33,7 @@ class Util extends Controller
 
     protected $em;
 
-    protected $mappingActions = array(
+    protected $actionsMap = array(
         'patientCreate' => array('Patienten', 'erstellen'),
         'patientEdit' => array('Patienten', 'bearbeiten'),
         'patientDelete' => array('Patienten', 'löschen'),
@@ -109,13 +109,13 @@ class Util extends Controller
             return;
         }
         
-        if (array_key_exists($actionName, $this->mappingActions) === FALSE) {
+        if (array_key_exists($actionName, $this->actionsMap) === FALSE) {
             return;
         } else {
             $changes = $this->getChanges($objectBefore, $objectAfter);
             
-            $field = $this->mappingActions[$actionName][0];
-            $action = $this->mappingActions[$actionName][1];
+            $field = $this->actionsMap[$actionName][0];
+            $action = $this->actionsMap[$actionName][1];
             $dateTime = new \DateTime(date("Y-m-d H:i:s"));
 
             $log = new Log();

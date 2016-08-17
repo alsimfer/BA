@@ -67,7 +67,7 @@ class PatientArrangementController extends Controller
         $patArrRef = new PatientArrangementReference();
         $before = clone($patArrRef);
 
-        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findAll();
+        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findRelevantToUser($request->attributes->get('user'));
         $arrangements = $this->getDoctrine()->getRepository('AppBundle:Arrangement')->findAll();
         
         $form = $this->createFormBuilder($patArrRef, array('validation_groups' => array('registration', 'definedRef'),))
@@ -156,7 +156,7 @@ class PatientArrangementController extends Controller
         $patArrRef = $this->getDoctrine()->getRepository('AppBundle:PatientArrangementReference')->findOneById($id);
         $before = clone($patArrRef);
 
-        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findAll();
+        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findRelevantToUser($request->attributes->get('user'));
         $arrangements = $this->getDoctrine()->getRepository('AppBundle:Arrangement')->findAll();
         
         $form = $this->createFormBuilder($patArrRef, array('validation_groups' => array('registration'),))

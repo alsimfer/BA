@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Doctrine\ORM\PersistentCollection;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\PatientArrangementReferenceRepository")
  * @ORM\Table(name="patient_arrangement_reference") 
  * @UniqueEntity(
  *     fields={"patient", "arrangement"}, 

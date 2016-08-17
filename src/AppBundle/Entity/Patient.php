@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\PersistentCollection;
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\PatientRepository")
  * @ORM\Table(name="patient") 
  * @UniqueEntity(
  *     fields={"email"}, 

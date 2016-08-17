@@ -1,0 +1,203 @@
+<dl class="container-fluid">
+	<h4>Somatische Komorbititäten</h4>
+	<dt>Arterielle Hypertonie</dt>
+	{% if medCheckup.arterielleHypertonie is defined and medCheckup.arterielleHypertonie == 1 %}
+    	<dd class="bg-success"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+    	{% if medCheckup.arterielleHypertonieText is defined and medCheckup.arterielleHypertonieText|length > 0 %}
+    		{{ medCheckup.arterielleHypertonieText }}
+		{% endif %}
+    	</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Andere kardiale Komorbiditäten</dt>
+	{% if medCheckup.andereKardialeKomorbiditaeten is defined and medCheckup.andereKardialeKomorbiditaeten == 1 %}
+    	<dd class="bg-success"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+    	{% if medCheckup.andereKardialeKomorbiditaetenText is defined and medCheckup.andereKardialeKomorbiditaetenText|length > 0 %}
+    		{{ medCheckup.andereKardialeKomorbiditaetenText }}
+		{% endif %}
+    	</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Insulinpflichtiger Diabetes mellitus Typ 2 (IDDM)</dt>
+	{% if medCheckup.insulinpflichtigerDiabetes is defined and medCheckup.insulinpflichtigerDiabetes == 1 %}
+    	<dd class="bg-success"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+    	{% if medCheckup.insulinpflichtigerDiabetesText is defined and medCheckup.insulinpflichtigerDiabetesText|length > 0 %}
+    		{{ medCheckup.insulinpflichtigerDiabetesText }}
+		{% endif %}
+    	</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Nicht insulinpflichtiger Diabetes mellitus Typ 2 (IDDM)</dt>
+	{% if medCheckup.nichtInsulinpflichtigerDiabetes is defined and medCheckup.nichtInsulinpflichtigerDiabetes == 1 %}
+    	<dd class="bg-success"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+    	{% if medCheckup.nichtInsulinpflichtigerDiabetesText is defined and medCheckup.nichtInsulinpflichtigerDiabetesText|length > 0 %}
+    		{{ medCheckup.nichtInsulinpflichtigerDiabetesText }}
+		{% endif %}
+    	</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Pulmonale Komorbiditäten</dt>
+	{% if medCheckup.pulmonaleKomorbiditaeten is defined and medCheckup.pulmonaleKomorbiditaeten == 1 %}
+    	<dd class="bg-success"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+    	{% if medCheckup.pulmonaleKomorbiditaetenText is defined and medCheckup.pulmonaleKomorbiditaetenText|length > 0 %}
+    		{{ medCheckup.pulmonaleKomorbiditaetenText }}
+		{% endif %}
+    	</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Fettstoffwechselstörungen</dt>
+	{% if medCheckup.fettstoffwechselstoerungen is defined and medCheckup.fettstoffwechselstoerungen == 1 %}
+    	<dd class="bg-success"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+    	{% if medCheckup.fettstoffwechselstoerungenText is defined and medCheckup.fettstoffwechselstoerungenText|length > 0 %}
+    		{{ medCheckup.fettstoffwechselstoerungenText }}
+		{% endif %}
+    	</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Endokrine Komorbiditäten</dt>
+	{% if medCheckup.endokrineKomorbiditaeten is defined and medCheckup.endokrineKomorbiditaeten == 1 %}
+    	<dd class="bg-success"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+    	{% if medCheckup.endokrineKomorbiditaetenText is defined and medCheckup.endokrineKomorbiditaetenText|length > 0 %}
+    		{{ medCheckup.endokrineKomorbiditaetenText }}
+		{% endif %}
+    	</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Gastroenterologische Komorbiditäten</dt>
+	{% if medCheckup.gastroenterologischeKomorbiditaeten is defined and medCheckup.gastroenterologischeKomorbiditaeten == 1 %}
+    	<dd class="bg-success"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+    	{% if medCheckup.gastroenterologischeKomorbiditaetenText is defined and medCheckup.gastroenterologischeKomorbiditaetenText|length > 0 %}
+    		{{ medCheckup.gastroenterologischeKomorbiditaetenText }}
+		{% endif %}
+    	</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Varikosis</dt>
+	{% if medCheckup.varikosis is defined and medCheckup.varikosis == 1 %}
+    	<dd class="bg-success"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+    	{% if medCheckup.varikosisText is defined and medCheckup.varikosisText|length > 0 %}
+    		{{ medCheckup.varikosisText }}
+		{% endif %}
+    	</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Orthopädische Komorbiditäten</dt>
+	{% if medCheckup.orthopaedischeKomorbiditaeten is defined and medCheckup.orthopaedischeKomorbiditaeten == 1 %}
+    	<dd class="bg-success"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+    	{% if medCheckup.orthopaedischeKomorbiditaetenText is defined and medCheckup.orthopaedischeKomorbiditaetenText|length > 0 %}
+    		{{ medCheckup.orthopaedischeKomorbiditaetenText }}
+		{% endif %}
+    	</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Neurologische Komorbiditäten</dt>
+	{% if medCheckup.neurologischeKomorbiditaeten is defined and medCheckup.neurologischeKomorbiditaeten == 1 %}
+    	<dd class="bg-success"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+    	{% if medCheckup.neurologischeKomorbiditaetenText is defined and medCheckup.neurologischeKomorbiditaetenText|length > 0 %}
+    		{{ medCheckup.neurologischeKomorbiditaetenText }}
+		{% endif %}
+    	</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Renale Komorbiditäten</dt>
+	{% if medCheckup.renaleKomorbiditaeten is defined and medCheckup.renaleKomorbiditaeten == 1 %}
+    	<dd class="bg-success"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+    	{% if medCheckup.renaleKomorbiditaetenText is defined and medCheckup.renaleKomorbiditaetenText|length > 0 %}
+    		{{ medCheckup.renaleKomorbiditaetenText }}
+		{% endif %}
+    	</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Ödeme</dt>
+	{% if medCheckup.oedeme is defined and medCheckup.oedeme == 1 %}
+    	<dd class="bg-success"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+    	{% if medCheckup.oedemeText is defined and medCheckup.oedemeText|length > 0 %}
+    		{{ medCheckup.oedemeText }}
+		{% endif %}
+    	</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Z. n. Organtransplantation</dt>
+	{% if medCheckup.organtransplantation is defined and medCheckup.organtransplantation == 1 %}
+    	<dd class="bg-success"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+    	{% if medCheckup.organtransplantationText is defined and medCheckup.organtransplantationText|length > 0 %}
+    		{{ medCheckup.organtransplantationText }}
+		{% endif %}
+    	</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>PRADER-WILLI-Syndrom</dt>
+	{% if medCheckup.praderWilliSyndrom is defined and medCheckup.praderWilliSyndrom == 1 %}
+    	<dd class="bg-success"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+    	{% if medCheckup.praderWilliSyndromText is defined and medCheckup.praderWilliSyndromText|length > 0 %}
+    		{{ medCheckup.praderWilliSyndromText }}
+		{% endif %}
+    	</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Nikotinabusus</dt>
+	{% if medCheckup.nikotinabusus is defined and medCheckup.nikotinabusus == 1 %}
+    	<dd class="bg-success"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+    	{% if medCheckup.nikotinabususText is defined and medCheckup.nikotinabususText|length > 0 %}
+    		{{ medCheckup.nikotinabususText }}
+		{% endif %}
+    	</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Alkoholabusus</dt>
+	{% if medCheckup.alkoholabusus is defined and medCheckup.alkoholabusus == 1 %}
+    	<dd class="bg-success"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+    	{% if medCheckup.alkoholabususText is defined and medCheckup.alkoholabususText|length > 0 %}
+    		{{ medCheckup.alkoholabususText }}
+		{% endif %}
+    	</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+	<dt>Weiteres</dt>
+	{% if medCheckup.weiteres is defined and medCheckup.weiteres == 1 %}
+    	<dd class="bg-success"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+    	{% if medCheckup.weiteresText is defined and medCheckup.weiteresText|length > 0 %}
+    		{{ medCheckup.weiteresText }}
+		{% endif %}
+    	</dd>
+	{% else %}
+		<dd class="bg-warning">- Nicht eingegeben</dd>
+    {% endif %}
+
+		
+
+</dl>		

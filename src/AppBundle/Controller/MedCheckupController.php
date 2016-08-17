@@ -68,7 +68,7 @@ class MedCheckupController extends Controller
         $medCheckup = new MedCheckup();
         $before = clone($medCheckup);
 
-        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findAll();
+        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findRelevantToUser($request->attributes->get('user'));
         $sysUsers = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findBy(array('userGroup' => 4));
         
         $form = $this->createFormBuilder($medCheckup)
@@ -400,7 +400,7 @@ class MedCheckupController extends Controller
         $medCheckup = $this->getDoctrine()->getRepository('AppBundle:MedCheckup')->findOneById($id); 
         $before = clone($medCheckup);
 
-        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findAll();
+        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findRelevantToUser($request->attributes->get('user'));
         $sysUsers = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findBy(array('userGroup' => 4));
         
         $form = $this->createFormBuilder($medCheckup)

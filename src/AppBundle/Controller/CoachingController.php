@@ -69,7 +69,7 @@ class CoachingController extends Controller
         $coaching = new Coaching();
         $before = clone($coaching);
 
-        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findAll();
+        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findRelevantToUser($request->attributes->get('user'));
         $sysUsers = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findBy(array('userGroup' => 5));
         
         $form = $this->createFormBuilder($coaching)
@@ -156,7 +156,7 @@ class CoachingController extends Controller
         $coaching = $this->getDoctrine()->getRepository('AppBundle:Coaching')->findOneById($id);      
         $before = clone($coaching);
 
-        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findAll();
+        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findRelevantToUser($request->attributes->get('user'));
         $sysUsers = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findBy(array('userGroup' => 5));
         
         $form = $this->createFormBuilder($coaching)
