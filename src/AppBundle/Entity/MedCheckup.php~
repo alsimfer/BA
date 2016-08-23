@@ -12,7 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\PersistentCollection;
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\MedCheckupRepository")
  * @ORM\Table(name="med_checkup") 
  */
 class MedCheckup
@@ -27,14 +27,18 @@ class MedCheckup
     /**
     * @ORM\ManyToOne(targetEntity="Patient", inversedBy="medCheckups") 
     * @ORM\JoinColumn(name="patient_id", referencedColumnName="id") 
-    * @Assert\NotBlank()
+    * @Assert\NotBlank(
+    *    message="Dieses Feld muss ausgefüllt werden."
+    * )
     */
     private $patient;
 
     /**
     * @ORM\ManyToOne(targetEntity="SysUser", inversedBy="medCheckups") 
     * @ORM\JoinColumn(name="sys_user_id", referencedColumnName="id") 
-    * @Assert\NotBlank()
+    * @Assert\NotBlank(
+    *    message="Dieses Feld muss ausgefüllt werden."
+    * )
     */
     private $sysUser;
 
@@ -44,14 +48,20 @@ class MedCheckup
      *      max = 50,
      *      maxMessage = "Der Name darf nicht laenger als {{ limit }} Zeichen sein."
      * )
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(
+     *    message="Dieses Feld muss ausgefüllt werden."
+     * )
      */
     private $type;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\DateTime()
-     * @Assert\NotBlank()
+     * @Assert\DateTime(
+     *     message="Der Wert {{ value }} ist kein gültiges Datum"
+     * )
+     * @Assert\NotBlank(
+     *    message="Dieses Feld muss ausgefüllt werden."
+     * )
      */
     private $dateAndTime;
 

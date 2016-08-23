@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\PersistentCollection;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\ArrangementRepository")
  * @ORM\Table(name="arrangement") 
  */
 class Arrangement
@@ -32,6 +32,7 @@ class Arrangement
      *      max = 255,
      *      maxMessage = "Der Name darf nicht länger als {{ limit }} Zeichen sein."
      * )
+     * @Assert\NotBlank()
      */
     private $name;
     
@@ -46,7 +47,10 @@ class Arrangement
 
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\DateTime()
+     * @Assert\DateTime(
+     *    message="Der Wert {{ value }} ist kein gültiges Datum"
+     * )
+     * @Assert\NotBlank()
      */
     private $dateTime;
 

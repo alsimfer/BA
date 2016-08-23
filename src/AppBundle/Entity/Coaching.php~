@@ -12,7 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\PersistentCollection;
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\CoachingRepository")
  * @ORM\Table(name="coaching") 
  */
 class Coaching
@@ -27,14 +27,18 @@ class Coaching
     /**
     * @ORM\ManyToOne(targetEntity="Patient", inversedBy="coachings") 
     * @ORM\JoinColumn(name="patient_id", referencedColumnName="id") 
-    * @Assert\NotBlank()
+    * @Assert\NotBlank(
+    *    message="Dieses Feld muss ausgefüllt werden."
+    * )
     */
     private $patient;
 
     /**
     * @ORM\ManyToOne(targetEntity="SysUser", inversedBy="coachings") 
     * @ORM\JoinColumn(name="sys_user_id", referencedColumnName="id") 
-    * @Assert\NotBlank()
+    * @Assert\NotBlank(
+    *    message="Dieses Feld muss ausgefüllt werden."
+    * )
     */
     private $sysUser;
 
@@ -44,14 +48,18 @@ class Coaching
      *      max = 500,
      *      maxMessage = "Die Zielbeschreibung darf nicht laenger als {{ limit }} Zeichen sein."
      * )
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(
+     *    message="Dieses Feld muss ausgefüllt werden."
+     * )
      */
     private $weekGoal;
 
     /**
      * @ORM\Column(type="datetime")
      * @Assert\DateTime()
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(
+     *    message="Dieses Feld muss ausgefüllt werden."
+     * )
      */
     private $dateAndTime;
 

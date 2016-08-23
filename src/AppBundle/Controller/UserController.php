@@ -6,16 +6,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-use Symfony\Component\Form\Extension\Core\Type\TextType; 
-use Symfony\Component\Form\Extension\Core\Type\TextareaType; 
-use Symfony\Component\Form\Extension\Core\Type\PasswordType; 
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use AppBundle\Form\Type\SysUserCreateType;
+use AppBundle\Form\Type\SysUserEditType;
+use AppBundle\Form\Type\SysUserSelfType;
 
 use AppBundle\Entity\SysUser;
 use AppBundle\Entity\Patient;
@@ -32,19 +25,11 @@ class UserController extends Controller
      * @Route("/users", name="usersPage")
      */
     public function usersAction(Request $request)
-    {
-        $util = $this->get('util');
-        $sysUser = $util->checkLoggedUser($request);
-        
-        if (!$sysUser) {
-            return $this->redirectToRoute('loginPage');
-        }
-
+    {        
         $users = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findBy(array(), array('id' => 'DESC'), 1000, 0);
         return $this->render('user/usersPage.html.twig', 
             array(
                 'title' => 'AOK | Benutzer',
-                'user' => $sysUser,
                 'users' => $users,
                 
             )
@@ -54,14 +39,7 @@ class UserController extends Controller
      * @Route("/users/create", name="createUserPage")
      */
     public function userCreateAction(Request $request)
-    {
-        $util = $this->get('util');
-        $sysUser = $util->checkLoggedUser($request);
-        
-        if (!$sysUser) {
-            return $this->redirectToRoute('loginPage');
-        }
-
+    {        
         $user = new SysUser();
         $before = clone($user);
 
@@ -72,67 +50,13 @@ class UserController extends Controller
 
         $hospitals = $this->getDoctrine()->getRepository('AppBundle:Hospital')->findAll();
 
-        $form = $this->createFormBuilder($user, array('validation_groups' => array('createUserAction'),))
-            ->add('firstName', TextType::class, array(
-                'label' => 'Vorname', 
-                'label_attr' => array('class' => 'col-sm-2 col-form-label'),
-                'empty_data' => '',
-                'attr' => array('class' => 'form-control')))
-            ->add('lastName', TextType::class, array(
-                'label' => 'Nachname', 
-                'label_attr' => array('class' => 'col-sm-2 col-form-label'),
-                'empty_data' => '',
-                'attr' => array('class' => 'form-control')))
-            ->add('email', EmailType::class, array(
-                'label' => 'E-Mail', 
-                'label_attr' => array('class' => 'col-sm-2 col-form-label'),
-                'attr' => array('class' => 'form-control')))
-            ->add('phoneNumber', TextType::class, array(
-                'label' => 'Tel. Nummer', 
-                'label_attr' => array('class' => 'col-sm-2 col-form-label'),
-                'empty_data' => '',
-                'attr' => array('class' => 'form-control')))
-            ->add('address', TextType::class, array(
-                'label' => 'Adresse', 
-                'label_attr' => array('class' => 'col-sm-2 col-form-label'),
-                'empty_data' => '',
-                'attr' => array('class' => 'form-control')))
-            ->add('sex', ChoiceType::class, array(
-                'label' => 'Geschlecht', 
-                'label_attr' => array('class' => 'col-sm-2 col-form-label'),
-                'attr' => array('class' => 'form-control'),                
-                'choices'  => array(
-                    'männlich' => 'männlich',
-                    'weiblich' => 'weiblich',
-                ),
-                'placeholder' => 'Wählen Sie ein Geschlecht aus',
-                'empty_data' => '',
-            ))
-            ->add('password', PasswordType::class, array(
-                'label' => 'Kennwort', 
-                'label_attr' => array('class' => 'col-sm-2 col-form-label'),
-                'attr' => array('class' => 'form-control')))
-            ->add('userGroup', ChoiceType::class, array(
-                'label' => 'Benutzergruppe', 
-                'label_attr' => array('class' => 'col-sm-2 col-form-label'),
-                'attr' => array('class' => 'form-control'),
-                'choices' => $userGroups,
-                'choice_label' => function($userGroup, $key, $index) {
-                    return $userGroup->getName().': '.$userGroup->getDescription();
-                },                
-            ))
-            ->add('hospital', ChoiceType::class, array(
-                'label' => 'Krankenhaus', 
-                'label_attr' => array('class' => 'col-sm-2 col-form-label'),
-                'attr' => array('class' => 'form-control'),
-                'choices' => $hospitals,
-                'choice_label' => function($hospital, $key, $index) {
-                    return $hospital->getName().': '.$hospital->getDescription();
-                },                
-                'placeholder' => 'Keine Zuweisung: Alle Patienten sehbar',
-            ))
-            ->add('save', SubmitType::class, array('label' => 'Ok', 'attr' => array('class' => 'btn btn-primary'))) 
-            ->getForm();
+        $form = $this->createForm(SysUserCreateType::class, $user, array(
+                'validation_groups' => array("create"),
+                'hospitals' => $hospitals,
+                'userGroups' => $userGroups
+            )
+        );
+
         $form->handleRequest($request);
   
         if ($form->isSubmitted() && $form->isValid()) {
@@ -151,6 +75,7 @@ class UserController extends Controller
             $em->persist($user);
             $em->flush();
 
+            $util = $this->get('util');
             $util->logAction($request, $user->getId(), $before, $user);
 
             $this->addFlash('notice', 'Benutzer erfolgreich hinzugefügt');
@@ -161,48 +86,16 @@ class UserController extends Controller
         
         return $this->render('user/userCreatePage.html.twig', array(
             'title' => 'AOK | Benutzer',
-            'user' => $sysUser,
             'form' => $form->createView(),
             
         ));
     }
-
-    
-    /**
-     * @Route("/users/info/{id}", name="userInfoPage")
-     */
-    public function userInfoAction(Request $request, $id)
-    {
-        $util = $this->get('util');
-        $sysUser = $util->checkLoggedUser($request);
-        
-        if (!$sysUser) {
-            return $this->redirectToRoute('loginPage');
-        }
-
-        $sysUsers = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findOneById($id);
-        
-        return $this->render('user/userInfoPage.html.twig', 
-            array(
-                'title' => 'AOK | Benutzer | Info',
-                'user' => $sysUser,
-                'sysUsers' => $sysUsers
-            )
-        );
-    }
-
 
     /**
      * @Route("/users/edit/{id}", name="userEditPage")
      */
     public function userEditAction(Request $request, $id)
     {
-        $util = $this->get('util');
-        $sysUser = $util->checkLoggedUser($request);
-
-        if (!$sysUser) {
-            return $this->redirectToRoute('loginPage');
-        }
         $user = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findOneById($id);
         $before = clone($user);
 
@@ -213,59 +106,13 @@ class UserController extends Controller
         
         $hospitals = $this->getDoctrine()->getRepository('AppBundle:Hospital')->findAll();
 
-        $form = $this->createFormBuilder($user, array('validation_groups' => array('registration'),))
-            ->add('firstName', TextType::class, array(
-                'label' => 'Vorname', 
-                'label_attr' => array('class' => 'col-sm-2 col-form-label'),
-                'attr' => array('class' => 'form-control')))
-            ->add('lastName', TextType::class, array(
-                'label' => 'Nachname', 
-                'label_attr' => array('class' => 'col-sm-2 col-form-label'),
-                'attr' => array('class' => 'form-control')))
-            ->add('email', EmailType::class, array(
-                'label' => 'E-Mail', 
-                'label_attr' => array('class' => 'col-sm-2 col-form-label'),
-                'attr' => array('class' => 'form-control')))
-            ->add('phoneNumber', TextType::class, array(
-                'label' => 'Tel. Nummer', 
-                'label_attr' => array('class' => 'col-sm-2 col-form-label'),
-                'attr' => array('class' => 'form-control')))
-            ->add('address', TextType::class, array(
-                'label' => 'Adresse', 
-                'label_attr' => array('class' => 'col-sm-2 col-form-label'),
-                'empty_data' => '',
-                'attr' => array('class' => 'form-control')))
-            ->add('sex', ChoiceType::class, array(
-                'label' => 'Geschlecht', 
-                'label_attr' => array('class' => 'col-sm-2 col-form-label'),
-                'attr' => array('class' => 'form-control'),                
-                'choices'  => array(
-                    'männlich' => 'männlich',
-                    'weiblich' => 'weiblich',
-                ),
-                'placeholder' => 'Wählen Sie ein Geschlecht aus',
-            ))
-            ->add('userGroup', ChoiceType::class, array(
-                'label' => 'Benutzergruppe', 
-                'label_attr' => array('class' => 'col-sm-2 col-form-label'),
-                'attr' => array('class' => 'form-control'),
-                'choices' => $userGroups,
-                'choice_label' => function($userGroup, $key, $index) {
-                    return $userGroup->getName().': '.$userGroup->getDescription();
-                },                
-            ))
-            ->add('hospital', ChoiceType::class, array(
-                'label' => 'Krankenhaus', 
-                'label_attr' => array('class' => 'col-sm-2 col-form-label'),
-                'attr' => array('class' => 'form-control'),
-                'choices' => $hospitals,
-                'choice_label' => function($hospital, $key, $index) {
-                    return $hospital->getName().': '.$hospital->getDescription();
-                },                
-                'placeholder' => 'Keine Zuweisung: Alle Patienten sehbar',
-            ))
-            ->add('save', SubmitType::class, array('label' => 'Ok', 'attr' => array('class' => 'btn btn-primary'))) 
-            ->getForm();
+        $form = $this->createForm(SysUserEditType::class, $user, array(
+                'validation_groups' => array('edit'),
+                'hospitals' => $hospitals,
+                'userGroups' => $userGroups
+            )
+        );
+                
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
@@ -281,6 +128,7 @@ class UserController extends Controller
             $em->persist($user);
             $em->flush();
 
+            $util = $this->get('util');
             $util->logAction($request, $id, $before, $user);
 
             $this->addFlash('notice', 'Benutzer erfolgreich gespeichert');
@@ -289,21 +137,32 @@ class UserController extends Controller
         
         return $this->render('user/userEditPage.html.twig', array(
             'title' => 'AOK | Benutzer',
-            'user' => $sysUser,
             'form' => $form->createView(),
         ));
     }
+
+    /**
+     * @Route("/users/info/{id}", name="userInfoPage")
+     */
+    public function userInfoAction(Request $request, $id)
+    {        
+        $sysUsers = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findOneById($id);
+        
+        return $this->render('user/userInfoPage.html.twig', 
+            array(
+                'title' => 'AOK | Benutzer | Info',
+                'sysUsers' => $sysUsers
+            )
+        );
+    }
+
+
+
     /**
      * @Route("/users/delete/{id}", name="userDeletePage")
      */
     public function userDeleteAction(Request $request, $id)
-    {
-        $util = $this->get('util');
-        $sysUser = $util->checkLoggedUser($request);
-
-        if (!$sysUser) {
-            return $this->redirectToRoute('loginPage');
-        }
+    {        
         $user = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findOneById($id);
         $before = clone($user);
         
@@ -311,6 +170,7 @@ class UserController extends Controller
         $em->remove($user);
         $em->flush();
 
+        $util = $this->get('util');
         $util->logAction($request, $id, $before, $user);
 
         $this->addFlash('notice', 'Benutzer erfolgreich gelöscht');
@@ -324,52 +184,11 @@ class UserController extends Controller
      */
     public function userSettingsAction(Request $request)
     {
-        $util = $this->get('util');
-        $sysUser = $util->checkLoggedUser($request);
+        $sysUser = $request->attributes->get('user');
         $before = clone($sysUser);
 
-        if (!$sysUser) {
-            return $this->redirectToRoute('loginPage');
-        }
+        $form = $this->createForm(SysUserSelfType::class, $sysUser);
 
-        $form = $this->createFormBuilder($sysUser)
-            ->add('firstName', TextType::class, array(
-                'label' => 'Vorname', 
-                'label_attr' => array('class' => 'col-sm-2 col-form-label'),
-                'attr' => array('class' => 'form-control')))
-            ->add('lastName', TextType::class, array(
-                'label' => 'Nachname', 
-                'label_attr' => array('class' => 'col-sm-2 col-form-label'),
-                'attr' => array('class' => 'form-control')))
-            ->add('email', EmailType::class, array(
-                'label' => 'E-Mail', 
-                'label_attr' => array('class' => 'col-sm-2 col-form-label'),
-                'attr' => array('class' => 'form-control')))
-            ->add('phoneNumber', TextType::class, array(
-                'label' => 'Tel. Nummer', 
-                'label_attr' => array('class' => 'col-sm-2 col-form-label'),
-                'attr' => array('class' => 'form-control')))
-            ->add('address', TextType::class, array(
-                'label' => 'Adresse', 
-                'label_attr' => array('class' => 'col-sm-2 col-form-label'),
-                'empty_data' => '',
-                'attr' => array('class' => 'form-control')))
-            ->add('sex', ChoiceType::class, array(
-                'label' => 'Geschlecht', 
-                'label_attr' => array('class' => 'col-sm-2 col-form-label'),
-                'attr' => array('class' => 'form-control'),                
-                'choices'  => array(
-                    'männlich' => 'männlich',
-                    'weiblich' => 'weiblich',
-                ),
-                'placeholder' => 'Wählen Sie ein Geschlecht aus',
-            ))
-            ->add('password', PasswordType::class, array(
-                'label' => 'Kennwort', 
-                'label_attr' => array('class' => 'col-sm-2 col-form-label'),
-                'attr' => array('class' => 'form-control')))                    
-            ->add('save', SubmitType::class, array('label' => 'Ok', 'attr' => array('class' => 'btn btn-primary'))) 
-            ->getForm();
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
@@ -384,15 +203,16 @@ class UserController extends Controller
             $em->persist($sysUser);
             $em->flush();
 
+            $util = $this->get('util');
             $util->logAction($request, $sysUser->getId(), $before, $sysUser);
 
             $this->addFlash('notice', 'Einstellungen erfolgreich gespeichert');
+            return $this->redirectToRoute('usersPage');
         }
         
         // same page as new User.
         return $this->render('user/userSettingsPage.html.twig', array(
             'title' => 'AOK | Einstellungen',
-            'user' => $sysUser,
             'form' => $form->createView(),
         ));
     }

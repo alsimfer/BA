@@ -1,8 +1,11 @@
-{% extends '::base.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}
     {{title}}
 {% endblock %}
+
+{# ActionAuthenticator sets user to each request #}
+{% set user = app.request.attributes.get("user") %}
 
 {% block body %}
 <div id="header">

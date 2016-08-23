@@ -34,17 +34,10 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $util = $this->get('util');
-        $sysUser = $util->checkLoggedUser($request);
-
-        if (!$sysUser) {
-            return $this->redirectToRoute('loginPage');
-        }
-
         return $this->render('default/indexPage.html.twig', 
             array(
                 'title' => 'AOK | Index',
-                'user' => $sysUser,
+                
                 'pageHeader' => 'DB Schema'
             )
         );       
@@ -55,13 +48,6 @@ class DefaultController extends Controller
      */
     public function pageNotFoundAction(Request $request)
     {
-        $util = $this->get('util');
-        $sysUser = $util->checkLoggedUser($request);
-        
-        if (!$sysUser) {
-            return $this->redirectToRoute('loginPage');
-        }
-
         return $this->render('404Page.html.twig', 
             array(
                 'title' => 'AOK | Seite 404'                
@@ -74,13 +60,6 @@ class DefaultController extends Controller
      */
     public function accessDeniedAction(Request $request)
     {
-        $util = $this->get('util');
-        $sysUser = $util->checkLoggedUser($request);
-        
-        if (!$sysUser) {
-            return $this->redirectToRoute('loginPage');
-        }
-
         return $this->render('AccessDeniedPage.html.twig', 
             array(
                 'title' => 'AOK | Zugang verboten'                

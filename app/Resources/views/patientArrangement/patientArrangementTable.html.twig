@@ -4,7 +4,8 @@
         <tr>
         	<th>Id</th>
         	<th>Patient</th>
-        	<th>Kurs</th>
+            <th>Kurs</th>
+        	<th>Datum</th>
         	<th>Besucht</th>
         	<th>Commentare</th>
         	
@@ -27,6 +28,12 @@
                 <td></td>
             {% endif %}
         	
+            {% if par.arrangement is not empty and par.arrangement.dateTime is not empty %}
+                <td>{{ par.arrangement.dateTime | date('d.m.Y H:i') }}</td>
+            {% else %}
+                <td></td>
+            {% endif %}
+
             {% if par.attended == 1 %}
                 <td><span class="glyphicon glyphicon-exclamation-sign" style="color: red;" aria-hidden="true"></span></td>
             {% elseif par.attended == 2 %}

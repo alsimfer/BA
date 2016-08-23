@@ -14,7 +14,7 @@ use Doctrine\ORM\PersistentCollection;
  * @ORM\Table(name="patient_arrangement_reference") 
  * @UniqueEntity(
  *     fields={"patient", "arrangement"}, 
- *     groups={"registration"},
+ *     groups={"create", "edit"},
  *     message="Diese Patient-Kurs Paar existiert bereits"
  * )
  */
@@ -32,7 +32,7 @@ class PatientArrangementReference
     * @ORM\JoinColumn(name="patient_id", referencedColumnName="id") 
     * @Assert\NotBlank(
     *   message="Dieser Wert darf nicht leer sein.",
-    *   groups={"definedRef"}  
+    *   groups={"create", "edit"}  
     * )
     */
     private $patient;
@@ -43,7 +43,7 @@ class PatientArrangementReference
     * @ORM\JoinColumn(name="arrangement_id", referencedColumnName="id") 
     * @Assert\NotBlank(
     *   message="Dieser Wert darf nicht leer sein.",
-    *   groups={"definedRef"}  
+    *   groups={"create", "edit"}  
     * ) 
     */
     private $arrangement;
@@ -59,7 +59,8 @@ class PatientArrangementReference
      * @ORM\Column(type="string", length=1023, options={"default" : ""})
      * @Assert\Length(
      *      max = 1023,
-     *      maxMessage = "Die Kommentare dürfen nicht länger als {{ limit }} Zeichen sein."
+     *      maxMessage = "Die Kommentare dürfen nicht länger als {{ limit }} Zeichen sein.",
+     *      groups={"create", "edit"}  
      * )
      */
     private $comments;    

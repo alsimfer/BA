@@ -48,7 +48,7 @@ class ActionAuthenticator
         } else {
             $event->getRequest()->attributes->set('user', $user);    
         }        
-
+        
         // Get authenticated navigation for the logged in user
         $navRules = $this->em->getRepository('AppBundle:NavigationRules')->findByUserGroup($user->getUserGroup());        
 
@@ -75,20 +75,14 @@ class ActionAuthenticator
 
         // Check edit, info, delete urls.
         $idPermitted = true;
-        // If there is a digit on the end remove it.
         $pattern = '/(\d+)\D*\z/';
-        preg_match($pattern, $requestUri, $matches);            
+        preg_match($pattern, $requestUri, $matches);    
+
+        // If URL is ending with a digit (id), check if user is allowed to see it.
         if (empty($matches) === FALSE) {
-            $requestUri = str_replace("/".$matches[0], "", $requestUri);    
-            // Collect ids of all relevant to this user patients.
-            $patientIdsPermittedArray = array();
-            $patientIdsPermitted = $this->em->getRepository('AppBundle:Patient')->findIdsRelevantToUser($user);
-            foreach($patientIdsPermitted as $key => $value) {
-                $patientIdsPermittedArray[] = $value['id'];
-            }    
-            if (strpos($requestUri, 'patients') !== FALSE && !in_array($matches[0], $patientIdsPermittedArray)) {
-                $idPermitted = FALSE;
-            }
+            // If there is a digit on the end remove it.
+            $requestUri = str_replace("/".$matches[0], "", $requestUri); 
+            $idPermitted = $this->checkId($user, $matches, $requestUri);            
         }        
 
         // Under /_wdt symfony call Web Toolbar. Such requests should be always permitted.
@@ -107,6 +101,46 @@ class ActionAuthenticator
             $event->setResponse($response);
         }    
     
+    }
+
+    // Check if the url ending with a digit is allowed for this user.
+    private function checkId($user, $matches, $requestUri) {                   
+        // Collect ids of all relevant to this user entities.        
+        $patientIdsPermittedArray = array();
+        $medCheckupIdsPermittedArray = array();
+        $coachingIdsPermittedArray = array();
+        $patArrRefIdsPermittedArray = array();
+
+        $patientIdsPermitted = $this->em->getRepository('AppBundle:Patient')->findIdsRelevantToUser($user);
+        $medCheckupIdsPermitted = $this->em->getRepository('AppBundle:MedCheckup')->findIdsRelevantToUser($user);
+        $coachingIdsPermitted = $this->em->getRepository('AppBundle:Coaching')->findIdsRelevantToUser($user);
+        $patArrRefIdsPermitted = $this->em->getRepository('AppBundle:PatientArrangementReference')->findIdsRelevantToUser($user);
+        foreach($patientIdsPermitted as $key => $value) {
+            $patientIdsPermittedArray[] = $value['id'];
+        }    
+        foreach($medCheckupIdsPermitted as $key => $value) {
+            $medCheckupIdsPermittedArray[] = $value['id'];
+        }    
+        foreach($coachingIdsPermitted as $key => $value) {
+            $coachingIdsPermittedArray[] = $value['id'];
+        }    
+        foreach($patArrRefIdsPermitted as $key => $value) {
+            $patArrRefIdsPermittedArray[] = $value['id'];
+        }    
+        if (strpos($requestUri, 'patients') !== FALSE && !in_array($matches[0], $patientIdsPermittedArray)) {
+            return FALSE;
+        }
+        if (strpos($requestUri, 'med-checkups') !== FALSE && !in_array($matches[0], $medCheckupIdsPermittedArray)) {
+            return FALSE;
+        }
+        if (strpos($requestUri, 'coachings') !== FALSE && !in_array($matches[0], $coachingIdsPermittedArray)) {
+            return FALSE;
+        }
+        if (strpos($requestUri, 'patient-arrangements') !== FALSE && !in_array($matches[0], $patArrRefIdsPermittedArray)) {
+            return FALSE;
+        }
+
+        return TRUE;
     }
 } 
 

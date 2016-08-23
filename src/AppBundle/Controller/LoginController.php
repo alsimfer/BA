@@ -37,7 +37,7 @@ class LoginController extends Controller
         $session->remove('user_id');
         
         $sysUser = new SysUser();
-        $form = $this->createFormBuilder($sysUser, array('validation_groups' => array('loginAction'),))
+        $form = $this->createFormBuilder($sysUser, array('validation_groups' => array('login'),))
             ->add('email', TextType::class, array(
                 'label' => 'E-Mail', 
                 'label_attr' => array('class' => 'col-sm-4 col-form-label'),

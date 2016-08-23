@@ -12,8 +12,8 @@ use Doctrine\ORM\PersistentCollection;
  * @ORM\Table(name="sys_user") 
  * @UniqueEntity(
  *     fields={"email"}, 
- *     groups={"createUserAction"},
- *     message="Diese E-Mail wird bereits verwendet"
+ *     groups={"create", "edit"},
+ *     message="Diese E-Mail wird bereits verwendet."
  * )
  */
 class SysUser
@@ -61,9 +61,13 @@ class SysUser
      * @ORM\Column(type="string", length=50, options={"default" : ""})
      * @Assert\Length(
      *      max = 50,
-     *      maxMessage = "Der Vorname darf nicht länger als {{ limit }} Zeichen sein."
+     *      maxMessage = "Der Vorname darf nicht länger als {{ limit }} Zeichen sein.",
+     *      groups = {"create", "edit"},
      * )
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(
+     *      groups = {"create", "edit"},
+     *      message = "Der Wert darf nicht leer sein."
+     * )
      */
     private $firstName;
     
@@ -71,9 +75,13 @@ class SysUser
      * @ORM\Column(type="string", length=50, options={"default" : ""})
      * @Assert\Length(
      *      max = 50,
-     *      maxMessage = "Der Nachname darf nicht länger als {{ limit }} Zeichen sein."
+     *      maxMessage = "Der Nachname darf nicht länger als {{ limit }} Zeichen sein.",
+     *      groups = {"create", "edit"},
      * )
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(
+     *      groups = {"create", "edit"},
+     *      message = "Der Wert darf nicht leer sein."
+     * )
      */
     private $lastName;
 
@@ -85,7 +93,10 @@ class SysUser
     
     /**
      * @ORM\Column(type="date", length=50, nullable=true)
-     * @Assert\Date()
+     * @Assert\Date(
+     *      groups = {"create", "edit"},
+     *      message = "Der Wert '{{ value }}' ist keine gültige E-Mail."
+     * )
      */
     private $birthDate;
 
@@ -99,16 +110,16 @@ class SysUser
      * @Assert\Email(
      *     message = "Der Wert '{{ value }}' ist keine gültige E-Mail.",
      *     checkMX = true,
-     *     groups={"createUserAction"}
+     *     groups={"create", "edit"}
      * )
      * @Assert\Length(
      *     max = 150,
      *     maxMessage = "Die E-Mail darf nicht länger als {{ limit }} Zeichen sein.",
-     *     groups={"createUserAction"}
+     *     groups={"create", "edit"}
      * )
      * @Assert\NotBlank(
      *     message="E-Mail muss vorhanden sein",
-     *     groups={"createUserAction", "loginAction"})
+     *     groups={"create", "edit", "login"})
      */
     private $email;
 
@@ -119,6 +130,7 @@ class SysUser
      *      max = 25,
      *      minMessage = "Die Nummer darf nicht kürzer als {{ limit }} Zeichen sein",
      *      maxMessage = "Die Nummer darf nicht länger als {{ limit }} Zeichen sein",
+     *      groups={"create", "edit"}
      * )
      */
     private $phoneNumber;

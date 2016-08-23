@@ -11,8 +11,8 @@ use Doctrine\ORM\PersistentCollection;
  * @ORM\Entity(repositoryClass="AppBundle\Entity\PatientRepository")
  * @ORM\Table(name="patient") 
  * @UniqueEntity(
- *     fields={"email"}, 
- *     groups={"registration"},
+ *     fields={"email"},
+ *     groups = {"create", "edit"},
  *     message="Diese E-Mail wird bereits verwendet"
  * )
  */
@@ -31,23 +31,33 @@ class Patient
      *      max = 50,
      *      maxMessage = "Der Vorname darf nicht länger als {{ limit }} Zeichen sein."
      * )     
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(
+     *      groups = {"create", "edit"},
+     *      message = "Der Vorname darf nicht leer sein."
+     * )
      */
     private $firstName;
     
     /**
      * @ORM\Column(type="string", length=50, options={"default" : ""})
      * @Assert\Length(
+     *      groups = {"create", "edit"},
      *      max = 50,
      *      maxMessage = "Der Nachname darf nicht länger als {{ limit }} Zeichen sein."
      * )
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(
+     *      groups = {"create", "edit"},
+     *      message = "Der Vorname darf nicht leer sein."
+     * )
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="date", length=50, nullable=true)
-     * @Assert\Date()
+     * @Assert\Date(
+     *      groups = {"create", "edit"},
+     *      message = "Dieser Wert '{{ value }}' ist kein gültiges Datum."
+     * )
      */
     private $birthDate;
 
@@ -56,30 +66,36 @@ class Patient
      */
     private $sex;
 
-
     /**
-     * @ORM\Column(type="string", length=500, options={"default" : ""})     
+     * @ORM\Column(type="string", length=500, options={"default" : ""})  
+     * @Assert\Length(
+     *      groups = {"create", "edit"},
+     *      max = 500,
+     *      maxMessage = "Die Adresse darf nicht länger als {{ limit }} Zeichen sein."
+     * )   
      */
     private $address;
 
 
     /**
-     * @ORM\Column(type="string", length=150, options={"default" : ""})
+     * @ORM\Column(type="string", length=150, nullable=true)
      * @Assert\Email(
-     *     message = "Dieser Wert '{{ value }}' ist keine gültige E-Mail.",
+     *     groups = {"create", "edit"},
+     *     message = "Der Wert '{{ value }}' ist keine gültige E-Mail.",
      *     checkMX = true,
-     *     groups={"registration"}
      * )
      * @Assert\Length(
      *     max = 150,
-     *     maxMessage = "Die E-Mail darf nicht länger als {{ limit }} Zeichen sein."
-     * )    
+     *     maxMessage = "Die E-Mail darf nicht länger als {{ limit }} Zeichen sein.",
+     *     groups={"create", "edit"}
+     * )  
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=25, options={"default" : ""})
      * @Assert\Length(
+     *      groups={"create", "edit"},
      *      min = 4,
      *      max = 25,
      *      minMessage = "Die Nummer darf nicht kürzer als {{ limit }} Zeichen sein",
@@ -426,7 +442,7 @@ class Patient
      */
     public function setEmail($email)
     {
-        $this->email = is_null($email) ? '' : $email;
+        $this->email = $email;
 
         return $this;
     }
