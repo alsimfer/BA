@@ -28,6 +28,10 @@
                         <div class="alert alert-danger">{{flash_message}}</div>
                     {% endfor %}
 
+                    {% if error %}
+                        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                    {% endif %}
+
                 	<div id="login_form">
 					    <div class="container">             
 					        <div class="row">
@@ -42,11 +46,11 @@
                                             {{ form_errors(form) }}
 
                                             <div class="form-group row">
-                                            {{ form_errors(form.email) }}
-                                                {{ form_label(form.email) }}
+                                            {{ form_errors(form.username) }}
+                                                {{ form_label(form.username) }}
                                                 
                                                 <div class="col-sm-8">
-                                                    {{ form_widget(form.email) }}
+                                                    {{ form_widget(form.username) }}
                                                 </div>
                                             </div>
 

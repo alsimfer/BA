@@ -25,12 +25,11 @@ class CoachingController extends Controller
      */
     public function coachingsAction(Request $request, array $options=null)
     {
-        $coachings = $this->getDoctrine()->getRepository('AppBundle:Coaching')->findRelevantToUser($request->attributes->get('user'));
+        $coachings = $this->getDoctrine()->getRepository('AppBundle:Coaching')->findRelevantToUser($this->getUser());
 
         return $this->render('coaching/coachingsPage.html.twig', 
             array(
-                'title' => 'AOK | Coachings',
-                
+                'title' => 'AOK | Coachings',                
                 'coachings' => $coachings,
             )
         );
@@ -44,7 +43,7 @@ class CoachingController extends Controller
     {
         $coaching = new Coaching();
         $before = clone($coaching);
-        $user = $request->attributes->get('user');
+        $user = $this->getUser();
 
         $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findRelevantToUser($user);
 
@@ -97,7 +96,7 @@ class CoachingController extends Controller
         $coaching = $this->getDoctrine()->getRepository('AppBundle:Coaching')->findOneById($id);      
         $before = clone($coaching);
 
-        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findRelevantToUser($request->attributes->get('user'));
+        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findRelevantToUser($this->getUser());
         $sysUsers = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findBy(array('userGroup' => 5));
         
         $form = $this->createForm(CoachingType::class, $coaching, array(

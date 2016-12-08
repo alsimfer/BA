@@ -27,54 +27,75 @@ use AppBundle\Controller\Util;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 class LoginController extends Controller
-{    
+{   
     /**
-     * @Route("/login", name="loginPage")
+     * @Route("/login_legacy", name="loginLegacyPage")
      */
-    public function loginAction(Request $request)
+    public function loginLegacyAction(Request $request)
     {
-        $session = $request->getSession();
-        $session->remove('user_id');
+        $authenticationUtils = $this->get('security.authentication_utils');
+
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
         
         $sysUser = new SysUser();
         $form = $this->createFormBuilder($sysUser, array('validation_groups' => array('login'),))
-            ->add('email', TextType::class, array(
+            ->add('username', TextType::class, array(
                 'label' => 'E-Mail', 
                 'label_attr' => array('class' => 'col-sm-4 col-form-label'),
-                'attr' => array('class' => 'form-control')))
+                'attr' => array(
+                    'id' => 'username',
+                    'name' => '_username',
+                    'class' => 'form-control',
+                    'value' => $lastUsername,
+                )
+            ))
             ->add('password', PasswordType::class, array(
                 'label' => 'Kennwort', 
                 'label_attr' => array('class' => 'col-sm-4 col-form-label'),
                 'required' => false,
-                'attr' => array('class' => 'form-control')))
+                'attr' => array(
+                    'id' => 'password',
+                    'name' => '_password',
+                    'class' => 'form-control',
+            )))
             ->add('save', SubmitType::class, array('label' => 'Ok', 'attr' => array('class' => 'btn btn-primary'))) 
             ->getForm();
         
         $form->handleRequest($request);
         
-        if ($form->isSubmitted() && $form->isValid()) {
-            $email = $form['email']->getData();
-            $password = sha1($form['password']->getData());            
-            
-            $sysUser = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findOneBy(
-                array('email' => $email, 'password' => $password)
-            );
-            
-            if (!$sysUser) {
-                $this->addFlash('notice', 'Kein Benutzer mit eingegebenen E-Mail und Kennwort gefunden');
-            } else {
-                $session = $request->getSession();
-                $session->set('user_id', $sysUser->getId());
-                return $this->redirectToRoute('indexPage');
-            }
-        }
-        
-        return $this->render('login/loginPage.html.twig', array( 
-            'form' => $form->createView(),
+        return $this->render('login/loginLegacyPage.html.twig', array( 
+            'form'  => $form->createView(),            
+            'error' => $error,
         ));
     }
+
+
     /**
-     * @Route("/password-issue", name="passwordPage")
+     * @Route("/login", name="loginPage")
+     */
+    public function loginAction(Request $request)
+    {
+        $authenticationUtils = $this->get('security.authentication_utils');
+
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError(); 
+        
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('login/login.html.twig', array(
+            'last_username' => $lastUsername,
+            'error'         => $error,
+        ));
+    }
+
+
+    /**
+     * @Route("/password", name="passwordPage")
      */
     public function passwordAction(Request $request)
     {
@@ -116,12 +137,10 @@ class LoginController extends Controller
         ));
     }
     /**
-     * @Route("/logout", name="logout")
+     * @Route("/logout", name="logoutPage")
      */
     public function logoutAction(Request $request)
     {
-        $session = $request->getSession();
-        $session->remove('user_id');
         $this->addFlash('notice', 'Benutzer hat sich erfolgreich abgemeldet');
         
         return $this->redirectToRoute('loginPage');

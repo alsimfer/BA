@@ -26,7 +26,9 @@ class ErrorRedirectListener
     public function onKernelException(GetResponseForExceptionEvent $event)
     {        
         $exception = $event->getException();
-
+        $request = $event->getRequest();     
+        $requestUri = $request->getRequestUri();
+        
         if ($exception instanceof NotFoundHttpException) {
 
             $route = '404Page';

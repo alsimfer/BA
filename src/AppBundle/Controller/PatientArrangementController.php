@@ -24,7 +24,7 @@ class PatientArrangementController extends Controller
      */
     public function patientArrangementAction(Request $request)
     {        
-        $patArrRefs = $this->getDoctrine()->getRepository('AppBundle:PatientArrangementReference')->findRelevantToUser($request->attributes->get('user'));
+        $patArrRefs = $this->getDoctrine()->getRepository('AppBundle:PatientArrangementReference')->findRelevantToUser($this->getUser());
     
         return $this->render('patientArrangement/patientArrangementPage.html.twig', 
             array(
@@ -44,7 +44,7 @@ class PatientArrangementController extends Controller
         $patArrRef = new PatientArrangementReference();
         $before = clone($patArrRef);
 
-        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findRelevantToUser($request->attributes->get('user'));
+        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findRelevantToUser($this->getUser());
         $arrangements = $this->getDoctrine()->getRepository('AppBundle:Arrangement')->findAll();
         
         $form = $this->createForm(PatArrRefType::class, $patArrRef, array(
@@ -90,7 +90,7 @@ class PatientArrangementController extends Controller
         $patArrRef = $this->getDoctrine()->getRepository('AppBundle:PatientArrangementReference')->findOneById($id);
         $before = clone($patArrRef);
 
-        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findRelevantToUser($request->attributes->get('user'));
+        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findRelevantToUser($this->getUser());
         $arrangements = $this->getDoctrine()->getRepository('AppBundle:Arrangement')->findAll();
         
 

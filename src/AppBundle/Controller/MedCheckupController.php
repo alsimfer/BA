@@ -35,7 +35,7 @@ class MedCheckupController extends Controller
      */
     public function medCheckupsAction(Request $request, array $options=null)
     {
-        $medCheckups = $this->getDoctrine()->getRepository('AppBundle:MedCheckup')->findRelevantToUser($request->attributes->get('user'));
+        $medCheckups = $this->getDoctrine()->getRepository('AppBundle:MedCheckup')->findRelevantToUser($this->getUser());
 
         return $this->render('medCheckup/medCheckupsPage.html.twig', 
             array(
@@ -54,7 +54,7 @@ class MedCheckupController extends Controller
     {
         $medCheckup = new MedCheckup();
         $before = clone($medCheckup);
-        $user = $request->attributes->get('user');
+        $user = $this->getUser();
 
         $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findRelevantToUser($user);
         // If we are logged in as a Doctor, we can not choose any other Doctor for the checkup.
@@ -149,7 +149,7 @@ class MedCheckupController extends Controller
         $medCheckup = $this->getDoctrine()->getRepository('AppBundle:MedCheckup')->findOneById($id); 
         $before = clone($medCheckup);
 
-        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findRelevantToUser($request->attributes->get('user'));
+        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findRelevantToUser($this->getUser());
         $sysUsers = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findBy(array('userGroup' => 4));
         
         $form = $this->createForm(MedCheckupType::class, $medCheckup, array(

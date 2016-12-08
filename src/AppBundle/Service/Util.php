@@ -159,4 +159,21 @@ class Util extends Controller
         $this->get('mailer')->send($message);
     }
 
+    public function sendTestEmail() 
+    {
+        $message = \Swift_Message::newInstance()
+            ->setSubject('Hello Email')
+            ->setFrom('adipositas.aok@gmail.com')
+            ->setTo('yasru@yandex.ru')
+            ->setBody(
+                $this->renderView(
+                    // app/Resources/views/email/registration.html.twig
+                    'email/registration.html.twig',
+                    array('name' => 'hallo')
+                ),
+                'text/html'
+            );
+        $this->get('mailer')->send($message);
+//dump();
+    }
 }

@@ -3,6 +3,8 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\EquatableInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -10,13 +12,14 @@ use Doctrine\ORM\PersistentCollection;
 /**
  * @ORM\Entity
  * @ORM\Table(name="sys_user") 
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\SysUserRepository")
  * @UniqueEntity(
  *     fields={"email"}, 
  *     groups={"create", "edit"},
  *     message="Diese E-Mail wird bereits verwendet."
  * )
  */
-class SysUser
+class SysUser implements UserInterface, EquatableInterface, \Serializable
 {
     /**
      * @ORM\Column(type="integer")
@@ -85,6 +88,10 @@ class SysUser
      */
     private $lastName;
 
+    /**
+     * @ORM\Column(type="string", length=500)     
+     */
+    private $username;
 
     /**
      * @ORM\Column(type="string", length=500, options={"default" : ""})     
@@ -138,8 +145,13 @@ class SysUser
     /**
      * @ORM\Column(type="string")
      */
-    private $password;
+    private $password;        
 
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Length(max=4096)
+     */
+    private $plainPassword;
 
    
     /**
@@ -570,5 +582,93 @@ class SysUser
         }
         
     
+    }
+
+    public function getSalt()
+    {
+        return null;
+    }
+
+    public function getRoles()
+    {
+        return array('ROLE_USER');
+    }
+
+    /** @see \Serializable::serialize() */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->email,
+            $this->password,
+            // see section on salt below
+            // $this->salt,
+        ));
+    }
+
+    /** @see \Serializable::unserialize() */
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->email,
+            $this->password,
+            // see section on salt below
+            // $this->salt
+        ) = unserialize($serialized);
+    }
+
+    public function getUsername()
+    {
+        return $this->email;
+    }
+
+    public function eraseCredentials()
+    {
+    }
+
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword($password)
+    {
+        $this->plainPassword = $password;
+    }
+
+    public function isEqualTo(UserInterface $user)
+    {
+        if (!$user instanceof WebserviceUser) {
+            return false;
+        }
+
+        if ($this->password !== $user->getPassword()) {
+            return false;
+        }
+
+        if ($this->salt !== $user->getSalt()) {
+            return false;
+        }
+
+        if ($this->email !== $user->getEmail()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Set username
+     *
+     * @param string $username
+     *
+     * @return SysUser
+     */
+    public function setUsername($username)
+    {
+        $this->username = is_null($username) ? '' : $username;;
+
+        return $this;
     }
 }

@@ -5,7 +5,7 @@
 {% endblock %}
 
 {# ActionAuthenticator sets user to each request #}
-{% set user = app.request.attributes.get("user") %}
+{% set user = app.user %}
 
 {% block body %}
 <div id="header">

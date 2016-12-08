@@ -2,8 +2,10 @@
 
 namespace AppBundle\EventListener;
 
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Controller\AuthenticationController;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -13,52 +15,48 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class ActionAuthenticator
+class ActionAuthenticator extends Controller
 {
     protected $router;
-    protected $em;     
+    protected $em;    
+    protected $tokenStorage; 
     
-    public function __construct(Router $router, EntityManager $em)
+    public function __construct(Router $router, EntityManager $em, TokenStorage $tokenStorage)
     {
         $this->router = $router;
         $this->em = $em;                         
+        $this->tokenStorage = $tokenStorage;
     }    
 
 
     public function onKernelRequest(GetResponseEvent $event)
-    {        
-        // Check if user is logged in
-        $request = $event->getRequest();
-        $session = $request->getSession();
-        $userId = $session->get('user_id');
+    {   
+        $request = $event->getRequest();     
+        $requestUri = $request->getRequestUri();
 
-        $user = $this->em->getRepository('AppBundle:SysUser')->findOneById($userId);    
-        if (is_null($user)) {
-            $route = 'loginPage';
-            $route2 = 'passwordPage';
-
-            if ($route === $event->getRequest()->get('_route') || $route2 === $event->getRequest()->get('_route')) {
-                return;
-            }
-
-            $url = $this->router->generate($route);
-            $response = new RedirectResponse($url);
-            $event->setResponse($response);
-            return;            
-        } else {
-            $event->getRequest()->attributes->set('user', $user);    
-        }        
-        
-        // Get authenticated navigation for the logged in user
+        // In profiler request there is no tokenStorage content. The both Uris are permitted for everyone.
+        if (
+            strpos($requestUri, '_profiler') !== FALSE
+            || strpos($requestUri, '_wdt') !== FALSE
+            || strpos($requestUri, 'login') !== FALSE
+            || strpos($requestUri, 'logout') !== FALSE
+        ) {
+            return;
+        }
+    
+        // Get logged user.
+        $user = $this->tokenStorage->getToken()->getUser();
+        // dump($user); die;
+        // Get authenticated navigation for the logged in user.
         $navRules = $this->em->getRepository('AppBundle:NavigationRules')->findByUserGroup($user->getUserGroup());        
 
         $urlsPermittedArray = array();
 
-        // Mainpage is always accessible
+        // Pages which are accessible for any logged user.
         $urlsPermittedArray[] = "/";
         $urlsPermittedArray[] = "/no-such-page";
         $urlsPermittedArray[] = "/login";
-        $urlsPermittedArray[] = "/password-issue";
+        $urlsPermittedArray[] = "/password";
         $urlsPermittedArray[] = "/logout";
         $urlsPermittedArray[] = "/user/settings";
 
@@ -69,9 +67,7 @@ class ActionAuthenticator
                     $urlsPermittedArray[] = $value;
                 }
             }            
-        }
-        
-        $requestUri = $request->getRequestURI();    
+        }        
 
         // Check edit, info, delete urls.
         $idPermitted = true;
@@ -86,10 +82,7 @@ class ActionAuthenticator
         }        
 
         // Under /_wdt symfony call Web Toolbar. Such requests should be always permitted.
-        if (
-            (!in_array($requestUri, $urlsPermittedArray) || $idPermitted === FALSE) 
-            && (strpos($requestUri, '_wdt') === FALSE) 
-        ) {
+        if (!in_array($requestUri, $urlsPermittedArray) || $idPermitted === FALSE) {
             $route = 'accessDeniedPage';
 
             if ($route === $event->getRequest()->get('_route')) {

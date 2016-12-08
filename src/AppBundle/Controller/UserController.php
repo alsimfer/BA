@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Form\Type\SysUserCreateType;
 use AppBundle\Form\Type\SysUserEditType;
 use AppBundle\Form\Type\SysUserSelfType;
+use AppBundle\Form\Type\RegisterType;
 
 use AppBundle\Entity\SysUser;
 use AppBundle\Entity\Patient;
@@ -27,6 +28,7 @@ class UserController extends Controller
     public function usersAction(Request $request)
     {        
         $users = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findBy(array(), array('id' => 'DESC'), 1000, 0);
+        
         return $this->render('user/usersPage.html.twig', 
             array(
                 'title' => 'AOK | Benutzer',
@@ -35,6 +37,67 @@ class UserController extends Controller
             )
         );
     }
+
+    public function sendTestEmail() 
+    {
+        $message = \Swift_Message::newInstance()
+            ->setSubject('Hello Email')
+            ->setFrom('adipositas.aok@gmail.com')
+            ->setTo('yasru@yandex.ru')
+            ->setBody(
+                $this->renderView(
+                    // app/Resources/views/email/registration.html.twig
+                    'email/registration.html.twig',
+                    array('name' => 'hallo')
+                ),
+                'text/html'
+            );
+        $this->get('mailer')->send($message);
+    }
+
+
+    /**
+     * @Route("/register", name="registerPage")
+     */
+    public function registerAction(Request $request)
+    {
+        $user = new SysUser();
+        $form = $this->createForm(RegisterType::class, $user);
+
+        // 2) handle the submit (will only happen on POST)
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $user->setFirstName('test');
+            $user->setLastName('test');
+            $user->setAddress('test');
+            $user->setSex('weiblich');
+            $user->setPhoneNumber('test');
+            // 3) Encode the password (you could also do this via Doctrine listener)
+            $password = $this->get('security.password_encoder')
+                ->encodePassword($user, $user->getPlainPassword());
+            $user->setPassword($password);
+
+            // 4) save the User!
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+
+            // ... do any other work - like sending them an email, etc
+            // maybe set a "flash" success message for the user
+
+            $users = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findBy(array(), array('id' => 'DESC'), 1000, 0);
+
+            return $this->redirectToRoute('indexPage');
+        }
+
+        return $this->render(
+            'security/register.html.twig',
+            array('form' => $form->createView())
+        );
+    }
+
+
     /**
      * @Route("/users/create", name="createUserPage")
      */
@@ -42,6 +105,9 @@ class UserController extends Controller
     {        
         $user = new SysUser();
         $before = clone($user);
+
+        $util = $this->get('util');
+        $this->sendTestEmail();
 
         // Prepare selectField with userGroups for the form.
         $em = $this->getDoctrine()->getManager();
@@ -64,13 +130,17 @@ class UserController extends Controller
             $user->setLastName($form['lastName']->getData());
             $user->setEmail($form['email']->getData());
             $user->setPhoneNumber($form['phoneNumber']->getData());
-
             $user->setSex($form['sex']->getData());
-
             $user->setAddress($form['address']->getData());
             $user->setUserGroup($form['userGroup']->getData());
             $user->setHospital($form['hospital']->getData());
-            $user->setPassword(sha1($form['password']->getData()));
+            $user->setUsername(NULL);
+
+            $plainPassword = $form['password']->getData();
+            $encoder = $this->container->get('security.password_encoder');
+            $encoded = $encoder->encodePassword($user, $plainPassword);
+            $user->setPassword($encoded);
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
@@ -81,6 +151,7 @@ class UserController extends Controller
             $this->addFlash('notice', 'Benutzer erfolgreich hinzugefügt');
 
 #            $this->sendEmail('Registrierung erfolgreich abgeschlossen', $user, 'email/registration');
+
             return $this->redirectToRoute('usersPage');
         }
         

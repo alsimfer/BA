@@ -67,7 +67,9 @@ doctrine:
 
 # Swiftmailer Configuration
 swiftmailer:
-    transport: gmail
-    username:  "%mailer_user%"
-    password:  "%mailer_password%"
-    spool:     { type: memory }
+    transport:  smtp
+    host:       email-smtp.eu-west-1.amazonaws.com
+    port:       25 # different ports are available, see SES console
+    encryption: tls # TLS encryption is required
+    username:   AKIAJTRF3VTY4OWYZE3Q
+    password:   AmwzcyYu5fUxj7XUr+2nZ0f7qwnr+HIMejZv1QXZQDJt    

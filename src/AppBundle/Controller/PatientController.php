@@ -26,7 +26,7 @@ class PatientController extends Controller
      */
     public function patientsAction(Request $request)
     {        
-        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findRelevantToUser($request->attributes->get('user'));
+        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findRelevantToUser($this->getUser());
 
         return $this->render('patient/patientsPage.html.twig', 
             array(

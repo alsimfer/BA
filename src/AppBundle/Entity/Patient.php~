@@ -131,6 +131,10 @@ class Patient
     /**
      * @ORM\ManyToOne(targetEntity="Hospital", inversedBy="patients") 
      * @ORM\JoinColumn(name="hospital_id", referencedColumnName="id") 
+     * @Assert\NotBlank(
+     *      groups = {"create", "edit"},
+     *      message = "Ein Krankenhaus muss definiert werden."
+     * )
      */
     private $hospital;
 
