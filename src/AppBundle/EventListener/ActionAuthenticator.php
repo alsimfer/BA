@@ -45,7 +45,17 @@ class ActionAuthenticator extends Controller
         }
     
         // Get logged user.
-        $user = $this->tokenStorage->getToken()->getUser();
+        $token = $this->tokenStorage->getToken();
+
+        if ($token == NULL) { 
+            $route = 'loginPage';
+            $url = $this->router->generate($route);
+            $response = new RedirectResponse($url);
+            $event->setResponse($response);
+            return;
+        }
+
+        $user = $token->getUser();
         // dump($user); die;
         // Get authenticated navigation for the logged in user.
         $navRules = $this->em->getRepository('AppBundle:NavigationRules')->findByUserGroup($user->getUserGroup());        
@@ -59,6 +69,7 @@ class ActionAuthenticator extends Controller
         $urlsPermittedArray[] = "/password";
         $urlsPermittedArray[] = "/logout";
         $urlsPermittedArray[] = "/user/settings";
+        $urlsPermittedArray[] = "/ajax";
 
         foreach ($navRules as $rule) {
             $buffer = explode(',', $rule->getUrlsPermitted());

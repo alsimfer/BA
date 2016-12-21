@@ -124,13 +124,19 @@ class Patient
 
     /**
      * @ORM\ManyToOne(targetEntity="SysUser", inversedBy="patients") 
-     * @ORM\JoinColumn(name="sys_user_id", referencedColumnName="id") 
+     * @ORM\JoinColumn(name="sys_user_id", referencedColumnName="id", onDelete="CASCADE") 
      */
     private $sysUser;
     
     /**
+    * @ORM\OneToMany(targetEntity="Progress", mappedBy="patient") 
+    */
+    private $progressItems;
+    
+
+    /**
      * @ORM\ManyToOne(targetEntity="Hospital", inversedBy="patients") 
-     * @ORM\JoinColumn(name="hospital_id", referencedColumnName="id") 
+     * @ORM\JoinColumn(name="hospital_id", referencedColumnName="id", onDelete="CASCADE") 
      * @Assert\NotBlank(
      *      groups = {"create", "edit"},
      *      message = "Ein Krankenhaus muss definiert werden."
@@ -1106,5 +1112,39 @@ class Patient
         }
         
     
+    }
+
+    /**
+     * Add progressItem
+     *
+     * @param \AppBundle\Entity\Progress $progressItem
+     *
+     * @return Patient
+     */
+    public function addProgressItem(\AppBundle\Entity\Progress $progressItem)
+    {
+        $this->progressItems[] = $progressItem;
+
+        return $this;
+    }
+
+    /**
+     * Remove progressItem
+     *
+     * @param \AppBundle\Entity\Progress $progressItem
+     */
+    public function removeProgressItem(\AppBundle\Entity\Progress $progressItem)
+    {
+        $this->progressItems->removeElement($progressItem);
+    }
+
+    /**
+     * Get progressItems
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProgressItems()
+    {
+        return $this->progressItems;
     }
 }

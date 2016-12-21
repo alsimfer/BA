@@ -15,7 +15,7 @@ use Doctrine\ORM\PersistentCollection;
  * @UniqueEntity(
  *     fields={"patient", "arrangement"}, 
  *     groups={"create", "edit"},
- *     message="Diese Patient-Kurs Paar existiert bereits"
+ *     message="Das Patient-Kurs Paar existiert bereits"
  * )
  */
 class PatientArrangementReference
@@ -29,7 +29,7 @@ class PatientArrangementReference
 
     /**
     * @ORM\ManyToOne(targetEntity="Patient", inversedBy="patArrRefs") 
-    * @ORM\JoinColumn(name="patient_id", referencedColumnName="id") 
+    * @ORM\JoinColumn(name="patient_id", referencedColumnName="id", onDelete="CASCADE") 
     * @Assert\NotBlank(
     *   message="Dieser Wert darf nicht leer sein.",
     *   groups={"create", "edit"}  
@@ -40,7 +40,7 @@ class PatientArrangementReference
 
     /**
     * @ORM\ManyToOne(targetEntity="Arrangement", inversedBy="patArrRefs")
-    * @ORM\JoinColumn(name="arrangement_id", referencedColumnName="id") 
+    * @ORM\JoinColumn(name="arrangement_id", referencedColumnName="id", onDelete="CASCADE") 
     * @Assert\NotBlank(
     *   message="Dieser Wert darf nicht leer sein.",
     *   groups={"create", "edit"}  

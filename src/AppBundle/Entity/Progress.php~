@@ -1,0 +1,160 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\PersistentCollection;
+
+/**
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\ProgressRepository")
+ * @ORM\Table(name="progress") 
+ */
+class Progress
+{
+    /**
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    
+    /**
+    * @ORM\ManyToOne(targetEntity="SysUser", inversedBy="arrangements") 
+    * @ORM\JoinColumn(name="sys_user_id", referencedColumnName="id") 
+    */
+    private $sysUser;
+    
+    /**
+    * @ORM\ManyToOne(targetEntity="Patient", inversedBy="progressItems") 
+    * @ORM\JoinColumn(name="patient_id", referencedColumnName="id", onDelete="CASCADE") 
+    */
+    private $patient;
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @Assert\DateTime(
+     *    message="Der Wert {{ value }} ist kein gültiges Datum"
+     * )
+     * @Assert\NotBlank()
+     */
+    private $dateTime;
+
+    /**
+     * @ORM\Column(type="integer")
+     * @Assert\Type(
+     *    type="integer",
+     *    message="Der Wert {{ value }} ist keine gültige Zahl"
+     * )
+     * @Assert\NotBlank()
+     */
+    private $weight;
+
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set dateTime
+     *
+     * @param \DateTime $dateTime
+     *
+     * @return Progress
+     */
+    public function setDateTime($dateTime)
+    {
+        $this->dateTime = $dateTime;
+
+        return $this;
+    }
+
+    /**
+     * Get dateTime
+     *
+     * @return \DateTime
+     */
+    public function getDateTime()
+    {
+        return $this->dateTime;
+    }
+
+    /**
+     * Set sysUser
+     *
+     * @param \AppBundle\Entity\SysUser $sysUser
+     *
+     * @return Progress
+     */
+    public function setSysUser(\AppBundle\Entity\SysUser $sysUser = null)
+    {
+        $this->sysUser = $sysUser;
+
+        return $this;
+    }
+
+    /**
+     * Get sysUser
+     *
+     * @return \AppBundle\Entity\SysUser
+     */
+    public function getSysUser()
+    {
+        return $this->sysUser;
+    }
+
+    /**
+     * Set patient
+     *
+     * @param \AppBundle\Entity\Patient $patient
+     *
+     * @return Progress
+     */
+    public function setPatient(\AppBundle\Entity\Patient $patient = null)
+    {
+        $this->patient = $patient;
+
+        return $this;
+    }
+
+    /**
+     * Get patient
+     *
+     * @return \AppBundle\Entity\Patient
+     */
+    public function getPatient()
+    {
+        return $this->patient;
+    }
+
+    /**
+     * Set weight
+     *
+     * @param integer $weight
+     *
+     * @return Progress
+     */
+    public function setWeight($weight)
+    {
+        $this->weight = $weight;
+
+        return $this;
+    }
+
+    /**
+     * Get weight
+     *
+     * @return integer
+     */
+    public function getWeight()
+    {
+        return $this->weight;
+    }
+}

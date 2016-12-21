@@ -30,13 +30,13 @@ class SysUser implements UserInterface, EquatableInterface, \Serializable
 
     /**
     * @ORM\ManyToOne(targetEntity="UserGroup", inversedBy="sysUsers") 
-    * @ORM\JoinColumn(name="user_group_id", referencedColumnName="id") 
+    * @ORM\JoinColumn(name="user_group_id", referencedColumnName="id", onDelete="CASCADE") 
     */
     private $userGroup;
 
     /**
     * @ORM\ManyToOne(targetEntity="Hospital", inversedBy="sysUsers") 
-    * @ORM\JoinColumn(name="hospital_id", referencedColumnName="id") 
+    * @ORM\JoinColumn(name="hospital_id", referencedColumnName="id", onDelete="CASCADE") 
     */
     private $hospital;
 

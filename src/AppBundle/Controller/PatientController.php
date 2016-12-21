@@ -195,6 +195,7 @@ class PatientController extends Controller
         );
     }
 
+    
     /**
      * @Route("/patients/delete/{id}", name="patientDeletePage")
      */

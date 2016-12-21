@@ -26,7 +26,7 @@ class MedCheckup
     
     /**
     * @ORM\ManyToOne(targetEntity="Patient", inversedBy="medCheckups") 
-    * @ORM\JoinColumn(name="patient_id", referencedColumnName="id") 
+    * @ORM\JoinColumn(name="patient_id", referencedColumnName="id", onDelete="CASCADE") 
     * @Assert\NotBlank(
     *    message="Dieses Feld muss ausgefüllt werden."
     * )
@@ -35,7 +35,7 @@ class MedCheckup
 
     /**
     * @ORM\ManyToOne(targetEntity="SysUser", inversedBy="medCheckups") 
-    * @ORM\JoinColumn(name="sys_user_id", referencedColumnName="id") 
+    * @ORM\JoinColumn(name="sys_user_id", referencedColumnName="id", onDelete="CASCADE") 
     * @Assert\NotBlank(
     *    message="Dieses Feld muss ausgefüllt werden."
     * )
