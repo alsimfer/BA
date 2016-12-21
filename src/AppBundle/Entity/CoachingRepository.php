@@ -71,4 +71,30 @@ class CoachingRepository extends \Doctrine\ORM\EntityRepository
 	    	return $qb->getQuery()->getResult();			
 		} catch (\Doctrine\ORM\NoResultException $e) { return null; } 
 	}
+
+	public function getForGraph($id) {
+		$qb = $this->getEntityManager()->createQueryBuilder();
+	    $qb
+	        ->select(
+	        	'c.weight', 
+	        	'c.mondayThisWeek', 	        	
+	        	'sum(c.weight) AS sum_weight', 
+	        	'count(c.weight) AS sum_people',
+	        	'sum(c.weight) / count(c.weight) AS mean'	        	
+	        )
+	        ->addSelect('(SELECT coaching.weight
+                FROM AppBundle:Coaching coaching
+                LEFT OUTER JOIN coaching.patient pat
+                WHERE pat.id = :id AND coaching.mondayThisWeek = c.mondayThisWeek
+                ) AS patient_weight'
+   			)
+	        ->from('AppBundle:Coaching', 'c')
+	        ->setParameter('id', $id)
+	        ->groupBy('c.mondayThisWeek')
+	        ->orderBy('c.mondayThisWeek', 'ASC');	        		
+
+	    try {
+	    	return $qb->getQuery()->getArrayResult();			
+		} catch (\Doctrine\ORM\NoResultException $e) { return null; } 
+	}
 }

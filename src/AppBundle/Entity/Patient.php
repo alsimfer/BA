@@ -127,12 +127,7 @@ class Patient
      * @ORM\JoinColumn(name="sys_user_id", referencedColumnName="id", onDelete="CASCADE") 
      */
     private $sysUser;
-    
-    /**
-    * @ORM\OneToMany(targetEntity="Progress", mappedBy="patient") 
-    */
-    private $progressItems;
-    
+        
 
     /**
      * @ORM\ManyToOne(targetEntity="Hospital", inversedBy="patients") 

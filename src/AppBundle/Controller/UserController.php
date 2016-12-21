@@ -255,10 +255,12 @@ class UserController extends Controller
      */
     public function userSettingsAction(Request $request)
     {
-        $sysUser = $request->attributes->get('user');
+        $sysUser = $this->getUser();
         $before = clone($sysUser);
 
-        $form = $this->createForm(SysUserSelfType::class, $sysUser);
+        $form = $this->createForm(SysUserSelfType::class, $sysUser, array(
+                'validation_groups' => array("create"),
+            ));
 
         $form->handleRequest($request);
         
@@ -269,7 +271,12 @@ class UserController extends Controller
             $sysUser->setPhoneNumber($form['phoneNumber']->getData());
             $sysUser->setSex($form['sex']->getData());
             $sysUser->setAddress($form['address']->getData());
-            $sysUser->setPassword(sha1($form['password']->getData()));
+            
+            $plainPassword = $form['password']->getData();
+            $encoder = $this->container->get('security.password_encoder');
+            $encoded = $encoder->encodePassword($sysUser, $plainPassword);
+            $sysUser->setPassword($encoded);
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($sysUser);
             $em->flush();

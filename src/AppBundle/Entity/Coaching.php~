@@ -43,6 +43,11 @@ class Coaching
     private $sysUser;
 
     /**
+    * @ORM\OneToOne(targetEntity="Progress", mappedBy="coaching")
+    */
+    private $progress;
+
+    /**
      * @ORM\Column(type="string", length=500)
      * @Assert\Length(
      *      max = 500,
@@ -62,6 +67,24 @@ class Coaching
      * )
      */
     private $dateAndTime;
+
+    /**
+     * @ORM\Column(type="integer")
+     * @Assert\Type(
+     *    type="integer",
+     *    message="Der Wert {{ value }} ist keine gültige Zahl"
+     * )
+     * @Assert\NotBlank(
+     *    message="Bitte geben Sie das Gewicht ein."  
+     * )
+     */
+    private $weight;
+
+    /**
+     * @ORM\Column(type="date")
+     */
+    private $mondayThisWeek;
+
 
     
 
@@ -198,5 +221,77 @@ class Coaching
         }
         
     
+    }
+
+    /**
+     * Set progress
+     *
+     * @param \AppBundle\Entity\Progress $progress
+     *
+     * @return Coaching
+     */
+    public function setProgress(\AppBundle\Entity\Progress $progress = null)
+    {
+        $this->progress = $progress;
+
+        return $this;
+    }
+
+    /**
+     * Get progress
+     *
+     * @return \AppBundle\Entity\Progress
+     */
+    public function getProgress()
+    {
+        return $this->progress;
+    }
+
+    /**
+     * Set weight
+     *
+     * @param integer $weight
+     *
+     * @return Coaching
+     */
+    public function setWeight($weight)
+    {
+        $this->weight = $weight;
+
+        return $this;
+    }
+
+    /**
+     * Get weight
+     *
+     * @return integer
+     */
+    public function getWeight()
+    {
+        return $this->weight;
+    }
+
+    /**
+     * Set mondayThisWeek
+     *
+     * @param \DateTime $mondayThisWeek
+     *
+     * @return Coaching
+     */
+    public function setMondayThisWeek($mondayThisWeek)
+    {
+        $this->mondayThisWeek = $mondayThisWeek;
+
+        return $this;
+    }
+
+    /**
+     * Get mondayThisWeek
+     *
+     * @return \DateTime
+     */
+    public function getMondayThisWeek()
+    {
+        return $this->mondayThisWeek;
     }
 }

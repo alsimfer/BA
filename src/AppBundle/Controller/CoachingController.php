@@ -44,14 +44,15 @@ class CoachingController extends Controller
         $coaching = new Coaching();
         $before = clone($coaching);
         $user = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
 
-        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findRelevantToUser($user);
+        $patients = $em->getRepository('AppBundle:Patient')->findRelevantToUser($user);
 
         // If we are logged in as a Coach, we can not choose any other Coach.
         if ($user->getUserGroup()->getId() === 5) {
-            $sysUsers = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findById($user->getId());    
+            $sysUsers = $em->getRepository('AppBundle:SysUser')->findById($user->getId());    
         } else {
-            $sysUsers = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findBy(array('userGroup' => 5));    
+            $sysUsers = $em->getRepository('AppBundle:SysUser')->findBy(array('userGroup' => 5));    
         }
         
         $form = $this->createForm(CoachingType::class, $coaching, array(
@@ -64,10 +65,14 @@ class CoachingController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $coaching->setPatient($form['patient']->getData());
             $coaching->setSysUser($form['sysUser']->getData());
-            $coaching->setDateAndTime($form['dateAndTime']->getData());
+            $exactDate = $form['dateAndTime']->getData();
+            $coaching->setDateAndTime($exactDate);
             $coaching->setWeekGoal($form['weekGoal']->getData());
+
+            $coaching->setWeight($form['weight']->getData());
+            $mondayDate = clone($exactDate);
+            $coaching->setMondayThisWeek($mondayDate->modify('monday this week'));
                         
-            $em = $this->getDoctrine()->getManager();
             $em->persist($coaching);
             $em->flush();
 
@@ -93,11 +98,12 @@ class CoachingController extends Controller
      */
     public function coachingEditAction(Request $request, $id)
     {
-        $coaching = $this->getDoctrine()->getRepository('AppBundle:Coaching')->findOneById($id);      
+        $em = $this->getDoctrine()->getManager();
+        $coaching = $em->getRepository('AppBundle:Coaching')->findOneById($id);      
         $before = clone($coaching);
 
-        $patients = $this->getDoctrine()->getRepository('AppBundle:Patient')->findRelevantToUser($this->getUser());
-        $sysUsers = $this->getDoctrine()->getRepository('AppBundle:SysUser')->findBy(array('userGroup' => 5));
+        $patients = $em->getRepository('AppBundle:Patient')->findRelevantToUser($this->getUser());
+        $sysUsers = $em->getRepository('AppBundle:SysUser')->findBy(array('userGroup' => 5));
         
         $form = $this->createForm(CoachingType::class, $coaching, array(
                 'patients' => $patients,
@@ -109,11 +115,14 @@ class CoachingController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $coaching->setPatient($form['patient']->getData());
             $coaching->setSysUser($form['sysUser']->getData());
-            $coaching->setDateAndTime($form['dateAndTime']->getData());
+            $exactDate = $form['dateAndTime']->getData();
+            $coaching->setDateAndTime($exactDate);
             $coaching->setWeekGoal($form['weekGoal']->getData());
-            
-            
-            $em = $this->getDoctrine()->getManager();
+
+            $coaching->setWeight($form['weight']->getData());
+            $mondayDate = clone($exactDate);
+            $coaching->setMondayThisWeek($mondayDate->modify('monday this week'));
+                        
             $em->persist($coaching);
             $em->flush();
 
@@ -156,10 +165,10 @@ class CoachingController extends Controller
      */
     public function coachingDeleteAction(Request $request, $id)
     {
-        $coaching = $this->getDoctrine()->getRepository('AppBundle:Coaching')->findOneById($id);
+        $em = $this->getDoctrine()->getManager();
+        $coaching = $em->getRepository('AppBundle:Coaching')->findOneById($id);
         $before = clone($coaching);
 
-        $em = $this->getDoctrine()->getManager();
         $em->remove($coaching);
         $em->flush();
 

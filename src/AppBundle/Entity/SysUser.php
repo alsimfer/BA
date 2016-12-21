@@ -143,12 +143,15 @@ class SysUser implements UserInterface, EquatableInterface, \Serializable
     private $phoneNumber;
 
     /**
+     * @Assert\NotBlank(
+     *     message="Bitte geben Sie das Passwort ein.",
+     *     groups = {"create"},
+     * )
      * @ORM\Column(type="string")
      */
     private $password;        
 
-    /**
-     * @Assert\NotBlank()
+    /**     
      * @Assert\Length(max=4096)
      */
     private $plainPassword;

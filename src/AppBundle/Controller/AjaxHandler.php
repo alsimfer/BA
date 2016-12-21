@@ -27,11 +27,11 @@ class AjaxHandler extends Controller
         $isAjax = $request->isXmlHttpRequest();
         if ($isAjax) {
             $id = $request->request->get('id');
-            $progressItems = $this->getDoctrine()->getRepository('AppBundle:Progress')->getForGraph($id);
+            $progressItems = $this->getDoctrine()->getRepository('AppBundle:Coaching')->getForGraph($id);
             
             foreach ($progressItems as $index => $value) {            
                 // Add date as a string to make Front End easier.
-                $progressItems[$index]['date'] = $value['dateTime']->format('Y-m-d');                    
+                $progressItems[$index]['date'] = $value['mondayThisWeek']->format('Y-m-d');                    
             }
 
 
@@ -40,26 +40,21 @@ class AjaxHandler extends Controller
         }
 
         
-$id = 86;
-$progressItems = $this->getDoctrine()->getRepository('AppBundle:Progress')->getForGraph(94);
-$nullIndexArray = array();
-foreach ($progressItems as $index => $value) {            
-                // Add date as a string to make Front End easier.
-                $progressItems[$index]['date'] = $value['dateTime']->format('Y-m-d');    
+        $id = 86;
+        $progressItems = $this->getDoctrine()->getRepository('AppBundle:Coaching')->getForGraph(86);
+        foreach ($progressItems as $index => $value) {            
+            // Add date as a string to make Front End easier.
+            $progressItems[$index]['date'] = $value['mondayThisWeek']->format('Y-m-d');                    
+        }
 
-                // If patient weight is not there, fill it with "expected" value.
-                if ($progressItems[$index]['patient_weight'] === NULL) {
-                    $nullIndexArray[] = $index;
-                    
-                }
-                
-            }
-foreach ($nullIndexArray as $key => $value) {
+        $nullIndexArray = array();
+        // If patient weight is not there, fill it with "expected" value.
+        if ($progressItems[$index]['patient_weight'] === NULL) {
+            $nullIndexArray[] = $index;
+            
+        }
+
     
-}
-dump($nullIndexArray); die();
-dump(json_encode($progressItems));
-dump($progressItems);die();
-        return new Response('This is not ajax!', 400);
+        dump($progressItems); dump($nullIndexArray); die();
     }
 }

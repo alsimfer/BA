@@ -6,8 +6,7 @@
             <th>Patient</th>
             <th>Betreuer</th>
             <th>Datum</th>
-            <th>Ziele</th>
-            
+            <th>Gewicht</th>          
         </tr>
     </thead>
 
@@ -38,10 +37,9 @@
                     {{ c.dateAndTime | date('d.m.Y H:i') }}
                 {% endif %}
             </td>
-
             <td>
-                {% if c.weekGoal is not empty %}
-                    {{ c.weekGoal }}            
+                {% if c.weight is not empty %}
+                    {{ c.weight }}            
                 {% endif %}
             </td>
             

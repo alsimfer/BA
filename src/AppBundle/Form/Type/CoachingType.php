@@ -26,6 +26,8 @@ class CoachingType extends AbstractType
 	        'data_class' => 'AppBundle\Entity\Coaching',
 	        'patients' => null,
 	        'sysUsers' => null,
+            'progress' => null,
+            'cascade_validation' => true,
 	    ));
 	}
 
@@ -34,6 +36,7 @@ class CoachingType extends AbstractType
     {
     	$patients = $options['patients'];
     	$sysUsers = $options['sysUsers'];
+        $progress = $options['progress'];
 
         $builder 
             ->add('patient', ChoiceType::class, array(
@@ -72,6 +75,12 @@ class CoachingType extends AbstractType
                 'attr' => array('class' => 'form-control'),
                 'empty_data' => ''
             ))            
+            ->add('weight', IntegerType::class, array(                
+                'label' => 'Aktuelles Gewicht',
+                'label_attr' => array('class' => 'col-sm-2 col-form-label'),
+                'attr' => array('class' => 'form-control'),
+                'empty_data' => ''
+            ))           
             ->add('save', SubmitType::class, array('label' => 'Ok', 'attr' => array('class' => 'btn btn-primary')))
         ;
     }

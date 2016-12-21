@@ -383,7 +383,7 @@ function drawC3(data) {
             type: 'spline',
             names: {
                 data1: 'Patient',
-                data2: 'Alle andere durchschnittlich'
+                data2: 'Alle durchschnittlich'
             }
         },
         axis: {
@@ -431,7 +431,7 @@ function fillArray(arr){
         nJumps, valJump;
 
     for (var currIndex = 0; currIndex < returnArr.length; currIndex++) {
-        if (returnArr[currIndex] == null) {
+        if (returnArr[currIndex] == null || returnArr[currIndex] == 0) {
             continue;
         } else if (prevIndex === undefined || (nJumps = (currIndex - prevIndex)) === 1) {
             prevIndex = currIndex;

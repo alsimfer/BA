@@ -24,7 +24,7 @@ class SysUserSelfType extends AbstractType
 	{
 	    $resolver->setDefaults(array(
 	        'data_class' => 'AppBundle\Entity\SysUser',
-	        'validation_groups' => array(),
+	        'validation_groups' => array('create'),
 	    ));
 	}
 

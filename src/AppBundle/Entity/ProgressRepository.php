@@ -49,6 +49,21 @@ class ProgressRepository extends \Doctrine\ORM\EntityRepository
 		} catch (\Doctrine\ORM\NoResultException $e) { return null; } 
 	}
 
+	public function findOneByCoachingId($id)
+	{
+	    $query = $this->getEntityManager()
+	        ->createQuery(
+	            'SELECT p, c FROM AppBundle:Progress p
+	            JOIN p.coaching c
+	            WHERE p.id = :id'
+	        )->setParameter('id', $id);
+
+	    try {
+	        return $query->getSingleResult();
+	    } catch (\Doctrine\ORM\NoResultException $e) {
+	        return null;
+	    }
+	}
 	
 	// SELECT 
 	// 	weight,

@@ -22,7 +22,7 @@ class Arrangement
     
     /**
     * @ORM\ManyToOne(targetEntity="SysUser", inversedBy="arrangements") 
-    * @ORM\JoinColumn(name="sys_user_id", referencedColumnName="id") 
+    * @ORM\JoinColumn(name="sys_user_id", referencedColumnName="id", onDelete="CASCADE") 
     */
     private $sysUser;
 

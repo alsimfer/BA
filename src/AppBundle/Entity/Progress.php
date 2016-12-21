@@ -18,19 +18,15 @@ class Progress
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    private $id;        
+    
     
     /**
-    * @ORM\ManyToOne(targetEntity="SysUser", inversedBy="arrangements") 
-    * @ORM\JoinColumn(name="sys_user_id", referencedColumnName="id", onDelete="CASCADE") 
+    * @ORM\OneToOne(targetEntity="Coaching", inversedBy="progress")
+    * @ORM\JoinColumn(name="coaching_id", referencedColumnName="id", onDelete="CASCADE")
     */
-    private $sysUser;
-    
-    /**
-    * @ORM\ManyToOne(targetEntity="Patient", inversedBy="progressItems") 
-    * @ORM\JoinColumn(name="patient_id", referencedColumnName="id", onDelete="CASCADE") 
-    */
-    private $patient;
+    private $coaching;
+
 
     /**
      * @ORM\Column(type="datetime")
@@ -156,5 +152,29 @@ class Progress
     public function getWeight()
     {
         return $this->weight;
+    }
+
+    /**
+     * Set coaching
+     *
+     * @param \AppBundle\Entity\Coaching $coaching
+     *
+     * @return Progress
+     */
+    public function setCoaching(\AppBundle\Entity\Coaching $coaching = null)
+    {
+        $this->coaching = $coaching;
+
+        return $this;
+    }
+
+    /**
+     * Get coaching
+     *
+     * @return \AppBundle\Entity\Coaching
+     */
+    public function getCoaching()
+    {
+        return $this->coaching;
     }
 }
