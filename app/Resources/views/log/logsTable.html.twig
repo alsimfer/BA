@@ -22,7 +22,9 @@
                 {% if l.userLastName is not empty %}
                     {{ l.userLastName }} 
                 {% endif %}
-
+                {% if l.userId is not empty %}
+                    {{ " (id: " ~ l.userId ~ ")" }} 
+                {% endif %}    
             </td>
             
             <td>{{ l.action }}</td>

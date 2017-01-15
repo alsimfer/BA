@@ -18,7 +18,12 @@ class Log
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-    
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $userId;
+
     /**
      * @ORM\Column(type="string", length=50)
      */
@@ -231,5 +236,29 @@ class Log
     public function getLog()
     {
         return $this->log;
+    }
+
+    /**
+     * Set userId
+     *
+     * @param integer $userId
+     *
+     * @return Log
+     */
+    public function setUserId($userId)
+    {
+        $this->userId = $userId;
+
+        return $this;
+    }
+
+    /**
+     * Get userId
+     *
+     * @return integer
+     */
+    public function getUserId()
+    {
+        return $this->userId;
     }
 }

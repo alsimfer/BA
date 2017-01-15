@@ -11,7 +11,10 @@ services:
             - { name: twig.extension }
     util:
         class: AppBundle\Service\Util
-        arguments: ['@doctrine.orm.entity_manager']
+        arguments: 
+            router: "@router"
+            em: '@doctrine.orm.entity_manager'
+            tokenStorage: "@security.token_storage" 
 
     error_redirect_listener:
         class: AppBundle\EventListener\ErrorRedirectListener

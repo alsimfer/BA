@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service;
 
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\TextType; 
@@ -27,11 +28,19 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 use Doctrine\ORM\PersistentCollection;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 class Util extends Controller
 {
-
+    protected $router;
     protected $em;
+    protected $tokenStorage; 
 
     protected $actionsMap = array(
         'patientCreate' => array('Patienten', 'erstellen'),
@@ -60,21 +69,11 @@ class Util extends Controller
         'userSettings' => array('Benutzer', 'einstellen'),
     );  
 
-    public function __construct(EntityManager $em)
+    public function __construct(Router $router, EntityManager $em, TokenStorage $tokenStorage)
     {
         $this->em = $em;
-    }
-
-    public function checkLoggedUser(Request $request) {
-        $session = $request->getSession();
-        $userId = $session->get('user_id');
-
-        if (!$userId) {
-            return FALSE;
-        } else {
-            $sysUser = $this->em->getRepository('AppBundle:SysUser')->findOneById($userId);
-            return $sysUser;
-        }
+        $this->router = $router;
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function getChanges($objectBefore, $objectAfter) {
@@ -95,9 +94,24 @@ class Util extends Controller
     }
 
     public function logAction(Request $request, $objectId, $objectBefore, $objectAfter) {
-        $user = $this->checkLoggedUser($request);
+        // Get logged user.
+        $token = $this->tokenStorage->getToken();
+
+        if ($token == NULL) { 
+            $route = 'loginPage';
+            $url = $this->router->generate($route);
+            $response = new RedirectResponse($url);
+            $event->setResponse($response);
+            return;
+        }
+
+        $user = $token->getUser();
 
         if (!$user) {
+            $route = 'loginPage';
+            $url = $this->router->generate($route);
+            $response = new RedirectResponse($url);
+            $event->setResponse($response);
             return;
         }
         
@@ -119,6 +133,7 @@ class Util extends Controller
             $dateTime = new \DateTime(date("Y-m-d H:i:s"));
 
             $log = new Log();
+            $log->setUserId($user->getId());
             $log->setUserLastName($user->getLastName());
             $log->setUserFirstName($user->getFirstName());
             $log->setField($field);

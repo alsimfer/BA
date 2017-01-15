@@ -206,4 +206,28 @@ class PatientArrangementReference
         
     
     }
+
+    /**
+     * Set assessed
+     *
+     * @param integer $assessed
+     *
+     * @return PatientArrangementReference
+     */
+    public function setAssessed($assessed)
+    {
+        $this->assessed = $assessed;
+
+        return $this;
+    }
+
+    /**
+     * Get assessed
+     *
+     * @return integer
+     */
+    public function getAssessed()
+    {
+        return $this->assessed;
+    }
 }

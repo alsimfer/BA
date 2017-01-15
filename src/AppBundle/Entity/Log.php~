@@ -18,7 +18,12 @@ class Log
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-    
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $userId;
+
     /**
      * @ORM\Column(type="string", length=50)
      */
