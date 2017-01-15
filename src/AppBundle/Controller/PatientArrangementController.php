@@ -81,11 +81,56 @@ class PatientArrangementController extends Controller
         ));
     }
 
+    /**
+     * @Route("/patient-arrangements/edit/{id}", name="patientArrangementAssessPage")
+     */
+    public function patientArrangementAssessAction(Request $request, $id)
+    {        
+        $patArrRef = $this->getDoctrine()->getRepository('AppBundle:PatientArrangementReference')->findOneById($id);
+        $before = clone($patArrRef);
+
+        $patients = $this->getDoctrine()->getRepository('AppBundle:PatientArrangementReference')->findPatientsByArrangementId($patArrRef->getArrangement()->getId());
+        
+        
+dump($patients); die();
+        $form = $this->createForm(PatArrRefType::class, $patArrRef, array(
+                'validation_groups' => array('create', 'edit'),
+                'patients' => $patients,
+                'arrangements' => $arrangements,
+            ));   
+
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            $patArrRef->setPatient($form['patient']->getData());
+            $patArrRef->setArrangement($form['arrangement']->getData());
+            $patArrRef->setAttended($form['attended']->getData());
+            $patArrRef->setComments($form['comments']->getData());
+            
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($patArrRef);
+            $em->flush();
+
+            $util = $this->get('util');        
+            $util->logAction($request, $id, $before, $patArrRef);
+
+            $this->addFlash('notice', 'Der Kursverlauf erfolgreich gespeichert');
+
+            return $this->redirectToRoute('patientArrangementPage');
+        }
+        
+        return $this->render('patientArrangement/patientArrangementEditPage.html.twig', array(
+            'title' => 'AOK | Kursverlauf',
+            
+            'form' => $form->createView(),
+        ));
+    }
+
 
     /**
-     * @Route("/patient-arrangements/edit/{id}", name="patientArrangementEditPage")
+     * @Route("/patient-arrangements/edit_legacy/{id}", name="patientArrangementEditLegacyPage")
      */
-    public function patientArrangementEditAction(Request $request, $id)
+    public function patientArrangementEditLegacyAction(Request $request, $id)
     {        
         $patArrRef = $this->getDoctrine()->getRepository('AppBundle:PatientArrangementReference')->findOneById($id);
         $before = clone($patArrRef);

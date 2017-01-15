@@ -75,4 +75,21 @@ class PatientArrangementReferenceRepository extends \Doctrine\ORM\EntityReposito
 	    	return $qb->getQuery()->getResult();			
 		} catch (\Doctrine\ORM\NoResultException $e) { return null; } 
 	}
+
+	// Find all patients who were registered for the arrangement with $id.
+	public function findPatientsByArrangementId($id) {
+		$qb = $this->getEntityManager()->createQueryBuilder();
+		
+	    $qb
+	        ->select('pat')
+	        ->from('AppBundle:PatientArrangementReference', 'ref')
+	        ->leftJoin('ref.arrangement', 'arr')
+	        ->leftJoin('arr.patients', 'pat')
+	        ->where('arr.id = :id')
+	        ->setParameter('id', $id);
+		
+	    try {
+	    	return $qb->getQuery()->getResult();			
+		} catch (\Doctrine\ORM\NoResultException $e) { return null; } 
+	}
 }

@@ -63,8 +63,13 @@ class PatientArrangementReference
      *      groups={"create", "edit"}  
      * )
      */
-    private $comments;    
-    
+    private $comments;  
+
+
+    /**
+     * @ORM\Column(type="integer", options={"default" : 0})
+     */
+    private $assessed;
 
     /**
      * Get id

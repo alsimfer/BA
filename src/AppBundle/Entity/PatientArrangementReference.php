@@ -63,8 +63,13 @@ class PatientArrangementReference
      *      groups={"create", "edit"}  
      * )
      */
-    private $comments;    
-    
+    private $comments;  
+
+
+    /**
+     * @ORM\Column(type="integer", options={"default" : 0})
+     */
+    private $assessed;
 
     /**
      * Get id
@@ -200,5 +205,29 @@ class PatientArrangementReference
         }
         
     
+    }
+
+    /**
+     * Set assessed
+     *
+     * @param integer $assessed
+     *
+     * @return PatientArrangementReference
+     */
+    public function setAssessed($assessed)
+    {
+        $this->assessed = $assessed;
+
+        return $this;
+    }
+
+    /**
+     * Get assessed
+     *
+     * @return integer
+     */
+    public function getAssessed()
+    {
+        return $this->assessed;
     }
 }
